@@ -40,7 +40,8 @@ exports.config = {
         // Dependencies and current project directories to watch
         watched: [
             "web/static",
-            "test/static"
+            "test/static",
+            "web/elm/App.elm"
         ],
 
         // Where to compile files to
@@ -57,6 +58,9 @@ exports.config = {
         babel: {
             // Do not use ES6 compiler in vendor code
             ignore: [/web\/static\/vendor/]
+        },
+        sass: {
+            mode: 'native'
         }
     },
 
@@ -70,6 +74,9 @@ exports.config = {
         enabled: true,
         // Whitelist the npm deps to be pulled in as front-end assets.
         // All other deps in package.json will be excluded from the bundle.
-        whitelist: ["phoenix", "phoenix_html"]
+        whitelist: ["phoenix", "phoenix_html", "bootstrap"],
+        styles: {
+            "bootstrap": ['/scss/bootstrap.scss']
+        }
     }
 };
