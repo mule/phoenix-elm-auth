@@ -18,3 +18,9 @@ Ready to run in production? Please [check our deployment guides](http://www.phoe
   * Docs: http://hexdocs.pm/phoenix
   * Mailing list: http://groups.google.com/group/phoenix-talk
   * Source: https://github.com/phoenixframework/phoenix
+
+
+  ## materialize-css
+
+  This project uses materialize-css but for some reason it does not quite work "out of the box" with npm.
+  So in a clean install: node_modules/materialize-css/js/date_picker needs to be copied to node_modules/materialize-css/bin
