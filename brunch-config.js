@@ -41,7 +41,7 @@ exports.config = {
         watched: [
             "web/static",
             "test/static",
-            "web/elm/App.elm"
+            "web/elm/AuthApp.elm"
         ],
 
         // Where to compile files to
@@ -52,8 +52,9 @@ exports.config = {
     plugins: {
         elmBrunch: {
             elmFolder: "web/elm",
-            mainModules: ["App.elm"],
-            outputFolder: "../static/vendor"
+            mainModules: [".\/AuthApp.elm"],
+            outputFolder: "../static/vendor/",
+            makeParameters : ['--warn']
         },
         babel: {
             // Do not use ES6 compiler in vendor code
@@ -74,9 +75,9 @@ exports.config = {
         enabled: true,
         // Whitelist the npm deps to be pulled in as front-end assets.
         // All other deps in package.json will be excluded from the bundle.
-        whitelist: ["phoenix", "phoenix_html", "bootstrap"],
+        whitelist: ["phoenix", "phoenix_html"],
         styles: {
-            "bootstrap": ['/scss/bootstrap.scss']
+            bootstrap: ['dist/css/bootstrap.css']
         }
     }
 };

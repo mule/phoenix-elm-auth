@@ -1,4 +1,4 @@
-module App exposing (..)
+module AuthApp exposing (..)
 
 import Html exposing (text)
 

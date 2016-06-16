@@ -21,4 +21,4 @@ import "phoenix_html"
 // import socket from "./socket"
 
 var elmDiv = document.getElementById('elm-main')
-  , elmApp = Elm.embed(Elm.App, elmDiv);
+  , elmApp = Elm.AuthApp.embed(elmDiv);
