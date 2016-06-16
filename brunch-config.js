@@ -33,8 +33,7 @@ exports.config = {
         // By default, we set this to "/web/static/assets". Files in this directory
         // will be copied to `paths.public`, which is "priv/static" by default.
         assets: [
-            /^(web\/static\/assets)/,
-            /^(node_modules\/materialize-css)/
+            /^(web\/static\/assets)/
         ]
     },
 
@@ -45,9 +44,7 @@ exports.config = {
             "web/static",
             "test/static",
             "web/elm/AuthApp.elm",
-            "node_modules/materialize-css/fonts",
-            "node_modules/materialize-css/dist/js/materialize.js",
-
+            "node_modules/materialize-css/sass"
         ],
 
         // Where to compile files to
