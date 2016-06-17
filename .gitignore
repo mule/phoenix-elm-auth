@@ -24,3 +24,7 @@ erl_crash.dump
 /config/prod.secret.exs
 
 elm-stuff/
+
+#Webstorm
+
+.idea/
