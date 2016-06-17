@@ -2,7 +2,7 @@ module App.View exposing (..)
 
 import Exts.RemoteData exposing (RemoteData(..), WebData)
 import Html exposing (..)
-import Html.Attributes exposing (class, classList, href, src, style, target)
+import Html.Attributes exposing (id, class, classList, href, src, style, target)
 import Html.App as Html
 import Html.Events exposing (onClick)
 import App.Model exposing (..)
@@ -13,6 +13,7 @@ import Pages.PageNotFound.View exposing (..)
 
 
 view : Model -> Html Msg
+{-
 view model =
     div []
         [ div [ class "ui container main" ]
@@ -26,21 +27,35 @@ view model =
             ]
         , viewFooter
         ]
+-}
+
+view model =
+         viewHeader model
 
 
 viewHeader : Model -> Html Msg
+-- viewHeader model =
+--     let
+--         navbar =
+--             case model.user of
+--                 Success _ ->
+--                     navbarAuthenticated
+--
+--                 _ ->
+--                     navbarAnonymous
+--     in
+--         div [ class "ui secondary pointing menu" ] (navbar model)
+
 viewHeader model =
-    let
-        navbar =
-            case model.user of
-                Success _ ->
-                    navbarAuthenticated
-
-                _ ->
-                    navbarAnonymous
-    in
-        div [ class "ui secondary pointing menu" ] (navbar model)
-
+    nav []
+        [ div [class "nav-wrapper" ]
+            [ a [ id "logo", href "#!", class "brand-logo"] [ text "Elm AuthKata" ]
+            , ul [class "right" ]
+                [ li [ class "waves-effect waves-light btn-large" ] [ text "Sign up" ]
+                , li [ class "waves-effect waves-light btn-large" ] [ text "Login" ]
+                ]
+            ]
+        ]
 
 navbarAnonymous : Model -> List (Html Msg)
 navbarAnonymous model =

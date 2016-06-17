@@ -44,7 +44,7 @@ exports.config = {
             "web/static",
             "test/static",
             "web/elm/Main.elm",
-            "node_modules/materialize-css/sass"
+            "node_modules/materialize-css/bin"
         ],
 
         // Where to compile files to

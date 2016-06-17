@@ -10147,25 +10147,8 @@ var _user$project$App_View$navbarAnonymous = function (model) {
 		]);
 };
 var _user$project$App_View$viewHeader = function (model) {
-	var navbar = function () {
-		var _p2 = model.user;
-		if (_p2.ctor === 'Success') {
-			return _user$project$App_View$navbarAuthenticated;
-		} else {
-			return _user$project$App_View$navbarAnonymous;
-		}
-	}();
 	return A2(
-		_elm_lang$html$Html$div,
-		_elm_lang$core$Native_List.fromArray(
-			[
-				_elm_lang$html$Html_Attributes$class('ui secondary pointing menu')
-			]),
-		navbar(model));
-};
-var _user$project$App_View$view = function (model) {
-	return A2(
-		_elm_lang$html$Html$div,
+		_elm_lang$html$Html$nav,
 		_elm_lang$core$Native_List.fromArray(
 			[]),
 		_elm_lang$core$Native_List.fromArray(
@@ -10174,60 +10157,56 @@ var _user$project$App_View$view = function (model) {
 				_elm_lang$html$Html$div,
 				_elm_lang$core$Native_List.fromArray(
 					[
-						_elm_lang$html$Html_Attributes$class('ui container main')
+						_elm_lang$html$Html_Attributes$class('nav-wrapper')
 					]),
 				_elm_lang$core$Native_List.fromArray(
 					[
-						_user$project$App_View$viewHeader(model),
-						_user$project$App_View$viewMainContent(model),
 						A2(
-						_elm_lang$html$Html$pre,
+						_elm_lang$html$Html$a,
 						_elm_lang$core$Native_List.fromArray(
 							[
-								_elm_lang$html$Html_Attributes$class('ui padded secondary segment')
+								_elm_lang$html$Html_Attributes$id('logo'),
+								_elm_lang$html$Html_Attributes$href('#!'),
+								_elm_lang$html$Html_Attributes$class('brand-logo')
+							]),
+						_elm_lang$core$Native_List.fromArray(
+							[
+								_elm_lang$html$Html$text('Elm AuthKata')
+							])),
+						A2(
+						_elm_lang$html$Html$ul,
+						_elm_lang$core$Native_List.fromArray(
+							[
+								_elm_lang$html$Html_Attributes$class('right')
 							]),
 						_elm_lang$core$Native_List.fromArray(
 							[
 								A2(
-								_elm_lang$html$Html$div,
-								_elm_lang$core$Native_List.fromArray(
-									[]),
+								_elm_lang$html$Html$li,
 								_elm_lang$core$Native_List.fromArray(
 									[
-										_elm_lang$html$Html$text(
-										A2(
-											_elm_lang$core$Basics_ops['++'],
-											'activePage: ',
-											_elm_lang$core$Basics$toString(model.activePage)))
+										_elm_lang$html$Html_Attributes$class('waves-effect waves-light btn-large')
+									]),
+								_elm_lang$core$Native_List.fromArray(
+									[
+										_elm_lang$html$Html$text('Sign up')
 									])),
 								A2(
-								_elm_lang$html$Html$div,
-								_elm_lang$core$Native_List.fromArray(
-									[]),
+								_elm_lang$html$Html$li,
 								_elm_lang$core$Native_List.fromArray(
 									[
-										_elm_lang$html$Html$text(
-										A2(
-											_elm_lang$core$Basics_ops['++'],
-											'pageLogin: ',
-											_elm_lang$core$Basics$toString(model.pageLogin)))
-									])),
-								A2(
-								_elm_lang$html$Html$div,
-								_elm_lang$core$Native_List.fromArray(
-									[]),
+										_elm_lang$html$Html_Attributes$class('waves-effect waves-light btn-large')
+									]),
 								_elm_lang$core$Native_List.fromArray(
 									[
-										_elm_lang$html$Html$text(
-										A2(
-											_elm_lang$core$Basics_ops['++'],
-											'user: ',
-											_elm_lang$core$Basics$toString(model.user)))
+										_elm_lang$html$Html$text('Login')
 									]))
 							]))
-					])),
-				_user$project$App_View$viewFooter
+					]))
 			]));
+};
+var _user$project$App_View$view = function (model) {
+	return _user$project$App_View$viewHeader(model);
 };
 
 var _user$project$Main$subscriptions = function (model) {
