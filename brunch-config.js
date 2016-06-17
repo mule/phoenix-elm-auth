@@ -43,7 +43,7 @@ exports.config = {
         watched: [
             "web/static",
             "test/static",
-            "web/elm/AuthApp.elm",
+            "web/elm/Main.elm",
             "node_modules/materialize-css/sass"
         ],
 
@@ -55,7 +55,7 @@ exports.config = {
     plugins: {
         elmBrunch: {
             elmFolder: "web/elm",
-            mainModules: [".\/AuthApp.elm"],
+            mainModules: ["Main.elm"],
             outputFolder: "../static/vendor/",
             makeParameters : ['--warn']
         },
