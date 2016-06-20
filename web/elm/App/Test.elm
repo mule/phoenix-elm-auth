@@ -11,6 +11,8 @@ setActivePage =
             (assertEqual PageNotFound (getPageAsAnonymous PageNotFound))
         , test "set Login page for anonymous user"
             (assertEqual Login (getPageAsAnonymous Login))
+        , test "set SignUp page for anonymous user"
+            (assertEqual SignUp (getPageAsAnonymous SignUp))
         , test "set My account page for anonymous user"
             (assertEqual AccessDenied (getPageAsAnonymous MyAccount))
         , test "set Login page for authenticated user"

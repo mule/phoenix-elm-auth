@@ -3,11 +3,13 @@ import App.Model exposing (..)
 import Exts.RemoteData exposing (RemoteData(..), WebData)
 import User.Model exposing (..)
 import Pages.Login.Update exposing (Msg)
+import Debug
 
 
 type Msg
     = Logout
     | PageLogin Pages.Login.Update.Msg
+    | PageSignUp
     | SetActivePage Page
 
 
@@ -18,7 +20,7 @@ init =
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    case msg of
+    case Debug.log "action" msg of
         Logout ->
             init
 
@@ -45,6 +47,9 @@ update msg model =
                             model'
             in
                 ( model'', Cmd.map PageLogin cmds )
+
+        PageSignUp ->
+            model ! []
 
         SetActivePage page ->
             { model | activePage = setActivePageAccess model.user page } ! []

@@ -1,6 +1,16 @@
-module Pages.Signup.View exposing (view)
+module Pages.SignUp.View exposing (view)
+import Pages.Components.AuthOptionsCard as AuthOptionsCard
+import Html exposing (..)
+import Html.Attributes exposing (..)
 
-view : WebData User -> Model -> Html Msg
+view : Html a
 
-view user model =
-    
+
+view  =
+    let signupOptions =
+        [ "Google", "Github", "AuthKata"]
+    in
+        div [ class "row" ]
+                [ div [ class "col s4" ]
+                    [ AuthOptionsCard.view "Signup with:" signupOptions ]
+                ]

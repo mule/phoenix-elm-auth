@@ -1,4 +1,4 @@
-module Pages.Signup.Model exposing (Model)
+module Pages.SignUp.Model exposing (Model)
 
 type alias Model =
     { email : String }

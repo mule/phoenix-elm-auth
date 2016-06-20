@@ -10,6 +10,7 @@ import App.Update exposing (..)
 import User.Model exposing (..)
 import Pages.Login.View exposing (..)
 import Pages.PageNotFound.View exposing (..)
+import Pages.SignUp.View exposing (..)
 
 view : Model -> Html Msg
 {-
@@ -50,6 +51,8 @@ viewHeader : Model -> Html Msg
 --                     navbarAnonymous
 --     in
 --         div [ class "ui secondary pointing menu" ] (navbar model)
+--
+--
 
 viewHeader model =
     let buttonClasses =
@@ -59,8 +62,8 @@ viewHeader model =
             [ div [class "nav-wrapper" ]
                 [ a [ id "logo", href "#!", class "brand-logo"] [ text "Elm AuthKata" ]
                 , ul [class "right" ]
-                    [ li [ class buttonClasses ] [ text "Sign up" ]
-                    , li [ class buttonClasses, onClick <| SetActivePage Login] [ text "Login" ]
+                    [ li [ class buttonClasses, onClick <| SetActivePage SignUp ] [ text "Sign up" ]
+                    , li [ class buttonClasses, onClick <| SetActivePage Login ] [ text "Login" ]
                     ]
                 ]
             ]
@@ -74,7 +77,6 @@ navbarAnonymous model =
         [ text "Login" ]
     , viewPageNotFoundItem model.activePage
     ]
-
 
 navbarAuthenticated : Model -> List (Html Msg)
 navbarAuthenticated model =
@@ -94,7 +96,6 @@ navbarAuthenticated model =
         ]
     ]
 
-
 viewPageNotFoundItem : Page -> Html Msg
 viewPageNotFoundItem activePage =
     a
@@ -102,7 +103,6 @@ viewPageNotFoundItem activePage =
         , onClick <| SetActivePage PageNotFound
         ]
         [ text "404 page" ]
-
 
 viewAvatar : WebData User -> Html Msg
 viewAvatar user =
@@ -122,7 +122,6 @@ viewAvatar user =
         _ ->
             div [] []
 
-
 viewMainContent : Model -> Html Msg
 viewMainContent model =
     case model.activePage of
@@ -132,13 +131,15 @@ viewMainContent model =
         Login ->
             Html.map PageLogin (Pages.Login.View.view model.user model.pageLogin)
 
+        SignUp ->
+            Pages.SignUp.View.view
+
         MyAccount ->
             div [] [ text "My account page" ]
 
         PageNotFound ->
             -- We don't need to pass any cmds, so we can call the view directly
             Pages.PageNotFound.View.view
-
 
 viewFooter : Html Msg
 viewFooter =
@@ -159,7 +160,6 @@ viewFooter =
                 [ text "Github" ]
             ]
         ]
-
 
 {-| Get menu items classes. This function gets the active page and checks if
 it is indeed the page used.

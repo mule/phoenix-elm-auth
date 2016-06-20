@@ -34,7 +34,8 @@ exports.config = {
         // will be copied to `paths.public`, which is "priv/static" by default.
         assets: [
             /^(web\/static\/assets)/
-        ]
+        ],
+        ignored: "web/elm/elm-stuff"
     },
 
     // Phoenix paths configuration
@@ -43,12 +44,13 @@ exports.config = {
         watched: [
             "web/static",
             "test/static",
-            "web/elm/Main.elm",
-            "node_modules/materialize-css/bin"
+            "web/elm/",
+            "node_modules/materialize-css/bin",
         ],
 
         // Where to compile files to
-        public: "priv/static"
+        public: "priv/static",
+       
     },
 
     // Configure your plugins
@@ -57,7 +59,7 @@ exports.config = {
             elmFolder: "web/elm",
             mainModules: ["Main.elm"],
             outputFolder: "../static/vendor/",
-            makeParameters : ['--warn']
+            makeParameters: ['--warn']
         },
         babel: {
             // Do not use ES6 compiler in vendor code
@@ -65,6 +67,11 @@ exports.config = {
         },
         sass: {
             mode: 'native'
+        },
+        copycat: {
+            "fonts": ["node_modules/materialize-css/fonts"],
+            verbose: true, //shows each file that is copied to the destination directory
+            onlyChanged: true //only copy a file if it's modified time has changed (only effective when using brunch watch)
         }
     },
 

@@ -8,6 +8,7 @@ import Html.Events exposing (onClick, onInput, onSubmit)
 import User.Model exposing (..)
 import Pages.Login.Model exposing (..)
 import Pages.Login.Update exposing (..)
+import Pages.Components.AuthOptionsCard as AuthOptionsCard
 
 
 view : WebData User -> Model -> Html Msg
@@ -51,31 +52,10 @@ view : WebData User -> Model -> Html Msg
 --             ]
 
 view user model =
-
-    div [ class "row" ]
-            [ div [ class "col s4" ]
-                [ loginOptionsCard model ]
-        ]
-
-loginOptionsCard : Model -> Html Msg
-
-loginOptionsCard model =
     let loginOptions =
         [ "Google", "Github", "AuthKata"]
     in
-        div [class "card"]
-            [ div [ class "card-content" ]
-                [ span [ class "card-title" ] [ text "Login with:"]
-                , ul [ class "collection"]
-                    (loginOptionItems loginOptions)
-                ]
+        div [ class "row" ]
+                [ div [ class "col s4" ]
+                    [ AuthOptionsCard.view "Login with:" loginOptions ]
             ]
-
-loginOptionItems : List String -> List (Html Msg)
-loginOptionItems items =
-    List.map (\provider ->  (
-        li [ class "collection-item "]
-            [
-                a [href "#!", class "waves-effect waves-light btn"] [text provider]
-            ]
-        )) items

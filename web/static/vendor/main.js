@@ -9638,6 +9638,7 @@ var _user$project$App_Model$Model = F3(
 	});
 var _user$project$App_Model$PageNotFound = {ctor: 'PageNotFound'};
 var _user$project$App_Model$MyAccount = {ctor: 'MyAccount'};
+var _user$project$App_Model$SignUp = {ctor: 'SignUp'};
 var _user$project$App_Model$Login = {ctor: 'Login'};
 var _user$project$App_Model$emptyModel = {activePage: _user$project$App_Model$Login, pageLogin: _user$project$Pages_Login_Model$emptyModel, user: _krisajenkins$elm_exts$Exts_RemoteData$NotAsked};
 var _user$project$App_Model$AccessDenied = {ctor: 'AccessDenied'};
@@ -9751,12 +9752,13 @@ var _user$project$App_Update$init = A2(
 var _user$project$App_Update$SetActivePage = function (a) {
 	return {ctor: 'SetActivePage', _0: a};
 };
+var _user$project$App_Update$PageSignUp = {ctor: 'PageSignUp'};
 var _user$project$App_Update$PageLogin = function (a) {
 	return {ctor: 'PageLogin', _0: a};
 };
 var _user$project$App_Update$update = F2(
 	function (msg, model) {
-		var _p1 = msg;
+		var _p1 = A2(_elm_lang$core$Debug$log, 'action', msg);
 		switch (_p1.ctor) {
 			case 'Logout':
 				return _user$project$App_Update$init;
@@ -9785,6 +9787,12 @@ var _user$project$App_Update$update = F2(
 					_0: model$$,
 					_1: A2(_elm_lang$core$Platform_Cmd$map, _user$project$App_Update$PageLogin, cmds)
 				};
+			case 'PageSignUp':
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					model,
+					_elm_lang$core$Native_List.fromArray(
+						[]));
 			default:
 				return A2(
 					_elm_lang$core$Platform_Cmd_ops['!'],
@@ -9800,7 +9808,7 @@ var _user$project$App_Update$update = F2(
 var _user$project$App_Update$Logout = {ctor: 'Logout'};
 
 var _user$project$App_Router$location2messages = function (location) {
-	var _p0 = location.hash;
+	var _p0 = A2(_elm_lang$core$Debug$log, 'action', location.hash);
 	switch (_p0) {
 		case '':
 			return _elm_lang$core$Native_List.fromArray(
@@ -9809,6 +9817,11 @@ var _user$project$App_Router$location2messages = function (location) {
 			return _elm_lang$core$Native_List.fromArray(
 				[
 					_user$project$App_Update$SetActivePage(_user$project$App_Model$Login)
+				]);
+		case '#signup':
+			return _elm_lang$core$Native_List.fromArray(
+				[
+					_user$project$App_Update$SetActivePage(_user$project$App_Model$SignUp)
 				]);
 		case '#my-account':
 			return _elm_lang$core$Native_List.fromArray(
@@ -9829,13 +9842,16 @@ var _user$project$App_Router$location2messages = function (location) {
 };
 var _user$project$App_Router$delta2url = F2(
 	function (previous, current) {
-		var _p1 = current.activePage;
+		var _p1 = A2(_elm_lang$core$Debug$log, 'action', current.activePage);
 		switch (_p1.ctor) {
 			case 'AccessDenied':
 				return _elm_lang$core$Maybe$Nothing;
 			case 'Login':
 				return _elm_lang$core$Maybe$Just(
 					A2(_rgrempel$elm_route_url$RouteUrl$UrlChange, _rgrempel$elm_route_url$RouteUrl$NewEntry, '/#login'));
+			case 'SignUp':
+				return _elm_lang$core$Maybe$Just(
+					A2(_rgrempel$elm_route_url$RouteUrl$UrlChange, _rgrempel$elm_route_url$RouteUrl$NewEntry, '/#signup'));
 			case 'MyAccount':
 				return _elm_lang$core$Maybe$Just(
 					A2(_rgrempel$elm_route_url$RouteUrl$UrlChange, _rgrempel$elm_route_url$RouteUrl$NewEntry, '/#my-account'));
@@ -9845,7 +9861,7 @@ var _user$project$App_Router$delta2url = F2(
 		}
 	});
 
-var _user$project$Pages_Login_View$loginOptionItems = function (items) {
+var _user$project$Pages_Components_AuthOptionsCard$providerItems = function (items) {
 	return A2(
 		_elm_lang$core$List$map,
 		function (provider) {
@@ -9872,47 +9888,49 @@ var _user$project$Pages_Login_View$loginOptionItems = function (items) {
 		},
 		items);
 };
-var _user$project$Pages_Login_View$loginOptionsCard = function (model) {
-	var loginOptions = _elm_lang$core$Native_List.fromArray(
-		['Google', 'Github', 'AuthKata']);
-	return A2(
-		_elm_lang$html$Html$div,
-		_elm_lang$core$Native_List.fromArray(
-			[
-				_elm_lang$html$Html_Attributes$class('card')
-			]),
-		_elm_lang$core$Native_List.fromArray(
-			[
-				A2(
-				_elm_lang$html$Html$div,
-				_elm_lang$core$Native_List.fromArray(
-					[
-						_elm_lang$html$Html_Attributes$class('card-content')
-					]),
-				_elm_lang$core$Native_List.fromArray(
-					[
-						A2(
-						_elm_lang$html$Html$span,
-						_elm_lang$core$Native_List.fromArray(
-							[
-								_elm_lang$html$Html_Attributes$class('card-title')
-							]),
-						_elm_lang$core$Native_List.fromArray(
-							[
-								_elm_lang$html$Html$text('Login with:')
-							])),
-						A2(
-						_elm_lang$html$Html$ul,
-						_elm_lang$core$Native_List.fromArray(
-							[
-								_elm_lang$html$Html_Attributes$class('collection')
-							]),
-						_user$project$Pages_Login_View$loginOptionItems(loginOptions))
-					]))
-			]));
-};
+var _user$project$Pages_Components_AuthOptionsCard$view = F2(
+	function (title, providers) {
+		return A2(
+			_elm_lang$html$Html$div,
+			_elm_lang$core$Native_List.fromArray(
+				[
+					_elm_lang$html$Html_Attributes$class('card')
+				]),
+			_elm_lang$core$Native_List.fromArray(
+				[
+					A2(
+					_elm_lang$html$Html$div,
+					_elm_lang$core$Native_List.fromArray(
+						[
+							_elm_lang$html$Html_Attributes$class('card-content')
+						]),
+					_elm_lang$core$Native_List.fromArray(
+						[
+							A2(
+							_elm_lang$html$Html$span,
+							_elm_lang$core$Native_List.fromArray(
+								[
+									_elm_lang$html$Html_Attributes$class('card-title')
+								]),
+							_elm_lang$core$Native_List.fromArray(
+								[
+									_elm_lang$html$Html$text(title)
+								])),
+							A2(
+							_elm_lang$html$Html$ul,
+							_elm_lang$core$Native_List.fromArray(
+								[
+									_elm_lang$html$Html_Attributes$class('collection')
+								]),
+							_user$project$Pages_Components_AuthOptionsCard$providerItems(providers))
+						]))
+				]));
+	});
+
 var _user$project$Pages_Login_View$view = F2(
 	function (user, model) {
+		var loginOptions = _elm_lang$core$Native_List.fromArray(
+			['Google', 'Github', 'AuthKata']);
 		return A2(
 			_elm_lang$html$Html$div,
 			_elm_lang$core$Native_List.fromArray(
@@ -9929,7 +9947,7 @@ var _user$project$Pages_Login_View$view = F2(
 						]),
 					_elm_lang$core$Native_List.fromArray(
 						[
-							_user$project$Pages_Login_View$loginOptionsCard(model)
+							A2(_user$project$Pages_Components_AuthOptionsCard$view, 'Login with:', loginOptions)
 						]))
 				]));
 	});
@@ -9951,6 +9969,30 @@ var _user$project$Pages_PageNotFound_View$view = A2(
 					_elm_lang$html$Html$text('This is a 404 page!')
 				]))
 		]));
+
+var _user$project$Pages_SignUp_View$view = function () {
+	var signupOptions = _elm_lang$core$Native_List.fromArray(
+		['Google', 'Github', 'AuthKata']);
+	return A2(
+		_elm_lang$html$Html$div,
+		_elm_lang$core$Native_List.fromArray(
+			[
+				_elm_lang$html$Html_Attributes$class('row')
+			]),
+		_elm_lang$core$Native_List.fromArray(
+			[
+				A2(
+				_elm_lang$html$Html$div,
+				_elm_lang$core$Native_List.fromArray(
+					[
+						_elm_lang$html$Html_Attributes$class('col s4')
+					]),
+				_elm_lang$core$Native_List.fromArray(
+					[
+						A2(_user$project$Pages_Components_AuthOptionsCard$view, 'Signup with:', signupOptions)
+					]))
+			]));
+}();
 
 var _user$project$App_View$classByPage = F2(
 	function (page, activePage) {
@@ -10030,6 +10072,8 @@ var _user$project$App_View$viewMainContent = function (model) {
 				_elm_lang$html$Html_App$map,
 				_user$project$App_Update$PageLogin,
 				A2(_user$project$Pages_Login_View$view, model.user, model.pageLogin));
+		case 'SignUp':
+			return _user$project$Pages_SignUp_View$view;
 		case 'MyAccount':
 			return A2(
 				_elm_lang$html$Html$div,
@@ -10186,7 +10230,9 @@ var _user$project$App_View$viewHeader = function (model) {
 								_elm_lang$html$Html$li,
 								_elm_lang$core$Native_List.fromArray(
 									[
-										_elm_lang$html$Html_Attributes$class(buttonClasses)
+										_elm_lang$html$Html_Attributes$class(buttonClasses),
+										_elm_lang$html$Html_Events$onClick(
+										_user$project$App_Update$SetActivePage(_user$project$App_Model$SignUp))
 									]),
 								_elm_lang$core$Native_List.fromArray(
 									[
@@ -10233,8 +10279,11 @@ var _user$project$Main$subscriptions = function (model) {
 	return _elm_lang$core$Platform_Sub$none;
 };
 var _user$project$Main$main = {
-	main: _rgrempel$elm_route_url$RouteUrl$program(
-		{delta2url: _user$project$App_Router$delta2url, location2messages: _user$project$App_Router$location2messages, init: _user$project$App_Update$init, update: _user$project$App_Update$update, view: _user$project$App_View$view, subscriptions: _user$project$Main$subscriptions})
+	main: function () {
+		var test = _elm_lang$core$Debug$log('Starting authkata');
+		return _rgrempel$elm_route_url$RouteUrl$program(
+			{delta2url: _user$project$App_Router$delta2url, location2messages: _user$project$App_Router$location2messages, init: _user$project$App_Update$init, update: _user$project$App_Update$update, view: _user$project$App_View$view, subscriptions: _user$project$Main$subscriptions});
+	}()
 };
 
 var Elm = {};

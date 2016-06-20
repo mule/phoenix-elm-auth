@@ -13,5 +13,7 @@
     "sass-brunch": "^2.6.3",
     "uglify-js-brunch": "~1.7.0"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "copycat-brunch": "^1.1.0"
+  }
 }
