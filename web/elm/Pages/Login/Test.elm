@@ -4,10 +4,10 @@ import ElmTest exposing (..)
 import Exts.RemoteData exposing (RemoteData(..), WebData)
 import Pages.Login.Model exposing (..)
 import Pages.Login.Update exposing (..)
+import Pages.Login.View exposing (..)
 import User.Model exposing (..)
-
-
-
+import Html exposing (..)
+import Debug
 
 setName : Test
 setName =
@@ -21,9 +21,19 @@ setName =
         , test "set name should result with NotAsked user status if name changed"
             (assertEqual NotAsked (getUserStatusAfterSetName Loading "someName" emptyModel))
         , test "set name should result with existing user status if name didn't change"
-            (assertEqual Loading (getUserStatusAfterSetName Loading "  someName  " { name = "someName" }))
+            (assertEqual Loading (getUserStatusAfterSetName Loading "someName" { name = "someName" }))
         ]
 
+showView : Test
+
+showView =
+    let webDataUser =
+        getUserStatusAfterSetName Loading "someName" { name = "someName" }
+    in
+        suite "show login view"
+            [ test "should show requested login options correctly"
+                (assert ( (toString <| getView webDataUser)  == ""))
+            ]
 
 dummyUser : User
 dummyUser =
@@ -47,6 +57,10 @@ getUserStatusAfterSetName user name model =
     in
         user
 
+getView :  WebData User -> Model -> Html Msg
+
+getView model =
+    view model
 
 
 {- Test the returned status after TryLogin msg. -}

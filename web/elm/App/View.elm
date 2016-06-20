@@ -11,7 +11,6 @@ import User.Model exposing (..)
 import Pages.Login.View exposing (..)
 import Pages.PageNotFound.View exposing (..)
 
-
 view : Model -> Html Msg
 {-
 view model =
@@ -30,8 +29,14 @@ view model =
 -}
 
 view model =
-         viewHeader model
-
+        div []
+            [
+                (viewHeader model),
+                div [class "container"]
+                [
+                    (viewMainContent model)
+                ]
+            ]
 
 viewHeader : Model -> Html Msg
 -- viewHeader model =
@@ -47,15 +52,18 @@ viewHeader : Model -> Html Msg
 --         div [ class "ui secondary pointing menu" ] (navbar model)
 
 viewHeader model =
-    nav []
-        [ div [class "nav-wrapper" ]
-            [ a [ id "logo", href "#!", class "brand-logo"] [ text "Elm AuthKata" ]
-            , ul [class "right" ]
-                [ li [ class "waves-effect waves-light btn-large" ] [ text "Sign up" ]
-                , li [ class "waves-effect waves-light btn-large" ] [ text "Login" ]
+    let buttonClasses =
+        "waves-effect waves-light btn-large"
+    in
+        nav []
+            [ div [class "nav-wrapper" ]
+                [ a [ id "logo", href "#!", class "brand-logo"] [ text "Elm AuthKata" ]
+                , ul [class "right" ]
+                    [ li [ class buttonClasses ] [ text "Sign up" ]
+                    , li [ class buttonClasses, onClick <| SetActivePage Login] [ text "Login" ]
+                    ]
                 ]
             ]
-        ]
 
 navbarAnonymous : Model -> List (Html Msg)
 navbarAnonymous model =

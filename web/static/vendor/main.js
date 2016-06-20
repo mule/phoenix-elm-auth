@@ -9845,31 +9845,79 @@ var _user$project$App_Router$delta2url = F2(
 		}
 	});
 
+var _user$project$Pages_Login_View$loginOptionItems = function (items) {
+	return A2(
+		_elm_lang$core$List$map,
+		function (provider) {
+			return A2(
+				_elm_lang$html$Html$li,
+				_elm_lang$core$Native_List.fromArray(
+					[
+						_elm_lang$html$Html_Attributes$class('collection-item ')
+					]),
+				_elm_lang$core$Native_List.fromArray(
+					[
+						A2(
+						_elm_lang$html$Html$a,
+						_elm_lang$core$Native_List.fromArray(
+							[
+								_elm_lang$html$Html_Attributes$href('#!'),
+								_elm_lang$html$Html_Attributes$class('waves-effect waves-light btn')
+							]),
+						_elm_lang$core$Native_List.fromArray(
+							[
+								_elm_lang$html$Html$text(provider)
+							]))
+					]));
+		},
+		items);
+};
+var _user$project$Pages_Login_View$loginOptionsCard = function (model) {
+	var loginOptions = _elm_lang$core$Native_List.fromArray(
+		['Google', 'Github', 'AuthKata']);
+	return A2(
+		_elm_lang$html$Html$div,
+		_elm_lang$core$Native_List.fromArray(
+			[
+				_elm_lang$html$Html_Attributes$class('card')
+			]),
+		_elm_lang$core$Native_List.fromArray(
+			[
+				A2(
+				_elm_lang$html$Html$div,
+				_elm_lang$core$Native_List.fromArray(
+					[
+						_elm_lang$html$Html_Attributes$class('card-content')
+					]),
+				_elm_lang$core$Native_List.fromArray(
+					[
+						A2(
+						_elm_lang$html$Html$span,
+						_elm_lang$core$Native_List.fromArray(
+							[
+								_elm_lang$html$Html_Attributes$class('card-title')
+							]),
+						_elm_lang$core$Native_List.fromArray(
+							[
+								_elm_lang$html$Html$text('Login with:')
+							])),
+						A2(
+						_elm_lang$html$Html$ul,
+						_elm_lang$core$Native_List.fromArray(
+							[
+								_elm_lang$html$Html_Attributes$class('collection')
+							]),
+						_user$project$Pages_Login_View$loginOptionItems(loginOptions))
+					]))
+			]));
+};
 var _user$project$Pages_Login_View$view = F2(
 	function (user, model) {
-		var isLoading = function () {
-			var _p0 = user;
-			if (_p0.ctor === 'Loading') {
-				return true;
-			} else {
-				return false;
-			}
-		}();
-		var spinner = A2(
-			_elm_lang$html$Html$i,
-			_elm_lang$core$Native_List.fromArray(
-				[
-					_elm_lang$html$Html_Attributes$class('notched circle loading icon')
-				]),
-			_elm_lang$core$Native_List.fromArray(
-				[]));
 		return A2(
-			_elm_lang$html$Html$form,
+			_elm_lang$html$Html$div,
 			_elm_lang$core$Native_List.fromArray(
 				[
-					_elm_lang$html$Html_Events$onSubmit(_user$project$Pages_Login_Update$TryLogin),
-					_elm_lang$html$Html_Attributes$action('javascript:void(0);'),
-					_elm_lang$html$Html_Attributes$class('ui form')
+					_elm_lang$html$Html_Attributes$class('row')
 				]),
 			_elm_lang$core$Native_List.fromArray(
 				[
@@ -9877,59 +9925,11 @@ var _user$project$Pages_Login_View$view = F2(
 					_elm_lang$html$Html$div,
 					_elm_lang$core$Native_List.fromArray(
 						[
-							_elm_lang$html$Html_Attributes$class('field')
+							_elm_lang$html$Html_Attributes$class('col s4')
 						]),
 					_elm_lang$core$Native_List.fromArray(
 						[
-							A2(
-							_elm_lang$html$Html$label,
-							_elm_lang$core$Native_List.fromArray(
-								[]),
-							_elm_lang$core$Native_List.fromArray(
-								[
-									_elm_lang$html$Html$text('GitHub Name')
-								])),
-							A2(
-							_elm_lang$html$Html$input,
-							_elm_lang$core$Native_List.fromArray(
-								[
-									_elm_lang$html$Html_Attributes$type$('text'),
-									_elm_lang$html$Html_Attributes$placeholder('Name'),
-									_elm_lang$html$Html_Events$onInput(_user$project$Pages_Login_Update$SetName),
-									_elm_lang$html$Html_Attributes$value(model.name)
-								]),
-							_elm_lang$core$Native_List.fromArray(
-								[]))
-						])),
-					A2(
-					_elm_lang$html$Html$button,
-					_elm_lang$core$Native_List.fromArray(
-						[
-							_elm_lang$html$Html_Events$onClick(_user$project$Pages_Login_Update$TryLogin),
-							_elm_lang$html$Html_Attributes$disabled(isLoading),
-							_elm_lang$html$Html_Attributes$class('ui primary button')
-						]),
-					_elm_lang$core$Native_List.fromArray(
-						[
-							A2(
-							_elm_lang$html$Html$span,
-							_elm_lang$core$Native_List.fromArray(
-								[
-									_elm_lang$html$Html_Attributes$hidden(
-									_elm_lang$core$Basics$not(isLoading))
-								]),
-							_elm_lang$core$Native_List.fromArray(
-								[spinner])),
-							A2(
-							_elm_lang$html$Html$span,
-							_elm_lang$core$Native_List.fromArray(
-								[
-									_elm_lang$html$Html_Attributes$hidden(isLoading)
-								]),
-							_elm_lang$core$Native_List.fromArray(
-								[
-									_elm_lang$html$Html$text('Login')
-								]))
+							_user$project$Pages_Login_View$loginOptionsCard(model)
 						]))
 				]));
 	});
@@ -10147,6 +10147,7 @@ var _user$project$App_View$navbarAnonymous = function (model) {
 		]);
 };
 var _user$project$App_View$viewHeader = function (model) {
+	var buttonClasses = 'waves-effect waves-light btn-large';
 	return A2(
 		_elm_lang$html$Html$nav,
 		_elm_lang$core$Native_List.fromArray(
@@ -10185,7 +10186,7 @@ var _user$project$App_View$viewHeader = function (model) {
 								_elm_lang$html$Html$li,
 								_elm_lang$core$Native_List.fromArray(
 									[
-										_elm_lang$html$Html_Attributes$class('waves-effect waves-light btn-large')
+										_elm_lang$html$Html_Attributes$class(buttonClasses)
 									]),
 								_elm_lang$core$Native_List.fromArray(
 									[
@@ -10195,7 +10196,9 @@ var _user$project$App_View$viewHeader = function (model) {
 								_elm_lang$html$Html$li,
 								_elm_lang$core$Native_List.fromArray(
 									[
-										_elm_lang$html$Html_Attributes$class('waves-effect waves-light btn-large')
+										_elm_lang$html$Html_Attributes$class(buttonClasses),
+										_elm_lang$html$Html_Events$onClick(
+										_user$project$App_Update$SetActivePage(_user$project$App_Model$Login))
 									]),
 								_elm_lang$core$Native_List.fromArray(
 									[
@@ -10206,7 +10209,24 @@ var _user$project$App_View$viewHeader = function (model) {
 			]));
 };
 var _user$project$App_View$view = function (model) {
-	return _user$project$App_View$viewHeader(model);
+	return A2(
+		_elm_lang$html$Html$div,
+		_elm_lang$core$Native_List.fromArray(
+			[]),
+		_elm_lang$core$Native_List.fromArray(
+			[
+				_user$project$App_View$viewHeader(model),
+				A2(
+				_elm_lang$html$Html$div,
+				_elm_lang$core$Native_List.fromArray(
+					[
+						_elm_lang$html$Html_Attributes$class('container')
+					]),
+				_elm_lang$core$Native_List.fromArray(
+					[
+						_user$project$App_View$viewMainContent(model)
+					]))
+			]));
 };
 
 var _user$project$Main$subscriptions = function (model) {
