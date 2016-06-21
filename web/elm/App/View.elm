@@ -5,7 +5,6 @@ import Html exposing (..)
 import Html.Attributes exposing (id, class, classList, href, src, style, target)
 import Html.App as Html
 import Html.Events exposing (onClick)
-import App.Model exposing (..)
 import App.Update exposing (..)
 import User.Model exposing (..)
 import Pages.Login.View exposing (..)

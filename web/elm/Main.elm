@@ -1,10 +1,12 @@
 module Main exposing (..) 
-import App.Model exposing (Model)
 import App.Router exposing (..)
-import App.Update exposing (init, update, Msg)
+import App.Update exposing (init, update, Model, Msg)
 import App.View exposing (view)
 import Html.App as Html
 import RouteUrl
+import Phoenix.Socket
+import Phoenix.Channel
+import Phoenix.Push
 import Debug
 
 main : Program Never
@@ -26,6 +28,10 @@ main =
 -- SUBSCRIPTIONS
 
 
+--subscriptions : Model -> Sub Msg
+--subscriptions model =
+ --   Sub.none
+
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Sub.none
+   Phoenix.Socket.listen model.phxSocket App.Update.PhoenixMsg
