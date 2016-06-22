@@ -10,3 +10,4 @@ require Logger
 
     {:ok, socket}
   end
+end
