@@ -13,6 +13,7 @@ type Page
     = AccessDenied
     | Login
     | SignUp
+    | SignUpForm
     | MyAccount
     | PageNotFound
 

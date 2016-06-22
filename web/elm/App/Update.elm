@@ -1,5 +1,5 @@
-module App.Update exposing (init, update, Msg(..), Page(..), Model)
-
+module App.Update exposing (init, update, Model)
+import App.Common exposing (..)
 import Exts.RemoteData exposing (RemoteData(..), WebData)
 import User.Model exposing (..)
 import Pages.Login.Update exposing (Msg)
@@ -9,19 +9,15 @@ import Phoenix.Channel
 import Phoenix.Push
 import Debug
 
-type Page
-    = AccessDenied
-    | Login
-    | SignUp
-    | MyAccount
-    | PageNotFound
+
+    
 
 
 type alias Model =
     { activePage : Page
     , user : WebData User
-    ,pageLogin : Pages.Login.Model.Model
-    , phxSocket : Phoenix.Socket.Socket Msg
+    , pageLogin : Pages.Login.Model.Model
+    , phxSocket : Phoenix.Socket.Socket App.Common.Msg
     }
 
 
@@ -34,48 +30,23 @@ emptyModel =
         |> Phoenix.Socket.withDebug
     }
 
-type Msg
-    = Logout
-    | PageLogin Pages.Login.Update.Msg
-    | PageSignUp
-    | SetActivePage Page
-    | PhoenixMsg (Phoenix.Socket.Msg Msg)
 
 
-init : ( Model, Cmd Msg )
+
+init : ( Model, Cmd App.Common.Msg )
 init =
     emptyModel ! []
 
 
-update : Msg -> Model -> ( Model, Cmd Msg )
+update : App.Common.Msg -> Model -> ( Model, Cmd App.Common.Msg )
 update msg model =
     case Debug.log "action" msg of
         Logout ->
             init
 
         PageLogin msg ->
-            let
-                ( val, cmds, user ) =
-                    Pages.Login.Update.update model.user msg model.pageLogin
+        model ! []
 
-                model' =
-                    { model
-                        | pageLogin = val
-                        , user = user
-                    }
-
-                model'' =
-                    case user of
-                        -- If user was successfuly fetched, reditect to my
-                        -- account page.
-                        Success _ ->
-                            update (SetActivePage MyAccount) model'
-                                |> fst
-
-                        _ ->
-                            model'
-            in
-                ( model'', Cmd.map PageLogin cmds )
         PhoenixMsg msg ->
             let
                 ( phxSocket, phxCmd ) = Phoenix.Socket.update msg model.phxSocket
@@ -83,7 +54,11 @@ update msg model =
                 ( { model | phxSocket = phxSocket }
                 , Cmd.map PhoenixMsg phxCmd
                 )
+
         PageSignUp ->
+            model ! []
+
+        PageSignUpForm ->
             model ! []
 
         SetActivePage page ->

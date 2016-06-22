@@ -10834,6 +10834,7 @@ var _user$project$App_Update$Model = F4(
 	});
 var _user$project$App_Update$PageNotFound = {ctor: 'PageNotFound'};
 var _user$project$App_Update$MyAccount = {ctor: 'MyAccount'};
+var _user$project$App_Update$SignUpForm = {ctor: 'SignUpForm'};
 var _user$project$App_Update$SignUp = {ctor: 'SignUp'};
 var _user$project$App_Update$Login = {ctor: 'Login'};
 var _user$project$App_Update$emptyModel = {
@@ -10864,6 +10865,7 @@ var _user$project$App_Update$PhoenixMsg = function (a) {
 var _user$project$App_Update$SetActivePage = function (a) {
 	return {ctor: 'SetActivePage', _0: a};
 };
+var _user$project$App_Update$PageSignUpForm = {ctor: 'PageSignUpForm'};
 var _user$project$App_Update$PageSignUp = {ctor: 'PageSignUp'};
 var _user$project$App_Update$PageLogin = function (a) {
 	return {ctor: 'PageLogin', _0: a};
@@ -10916,6 +10918,12 @@ var _user$project$App_Update$update = F2(
 					model,
 					_elm_lang$core$Native_List.fromArray(
 						[]));
+			case 'PageSignUpForm':
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					model,
+					_elm_lang$core$Native_List.fromArray(
+						[]));
 			default:
 				return A2(
 					_elm_lang$core$Platform_Cmd_ops['!'],
@@ -10946,6 +10954,11 @@ var _user$project$App_Router$location2messages = function (location) {
 				[
 					_user$project$App_Update$SetActivePage(_user$project$App_Update$SignUp)
 				]);
+		case '#signupform':
+			return _elm_lang$core$Native_List.fromArray(
+				[
+					_user$project$App_Update$SetActivePage(_user$project$App_Update$SignUpForm)
+				]);
 		case '#my-account':
 			return _elm_lang$core$Native_List.fromArray(
 				[
@@ -10975,6 +10988,9 @@ var _user$project$App_Router$delta2url = F2(
 			case 'SignUp':
 				return _elm_lang$core$Maybe$Just(
 					A2(_rgrempel$elm_route_url$RouteUrl$UrlChange, _rgrempel$elm_route_url$RouteUrl$NewEntry, '/#signup'));
+			case 'SignUpForm':
+				return _elm_lang$core$Maybe$Just(
+					A2(_rgrempel$elm_route_url$RouteUrl$UrlChange, _rgrempel$elm_route_url$RouteUrl$NewEntry, '/#signupform'));
 			case 'MyAccount':
 				return _elm_lang$core$Maybe$Just(
 					A2(_rgrempel$elm_route_url$RouteUrl$UrlChange, _rgrempel$elm_route_url$RouteUrl$NewEntry, '/#my-account'));
@@ -11117,6 +11133,57 @@ var _user$project$Pages_SignUp_View$view = function () {
 			]));
 }();
 
+var _user$project$Pages_LayoutTemplates_Master$view = F3(
+	function (left, center, right) {
+		return A2(
+			_elm_lang$html$Html$div,
+			_elm_lang$core$Native_List.fromArray(
+				[
+					_elm_lang$html$Html_Attributes$class('row')
+				]),
+			_elm_lang$core$Native_List.fromArray(
+				[
+					A2(
+					_elm_lang$html$Html$div,
+					_elm_lang$core$Native_List.fromArray(
+						[
+							_elm_lang$html$Html_Attributes$class('col s2')
+						]),
+					left),
+					A2(
+					_elm_lang$html$Html$div,
+					_elm_lang$core$Native_List.fromArray(
+						[
+							_elm_lang$html$Html_Attributes$class('col s8')
+						]),
+					center),
+					A2(
+					_elm_lang$html$Html$div,
+					_elm_lang$core$Native_List.fromArray(
+						[
+							_elm_lang$html$Html_Attributes$class('col s2')
+						]),
+					right)
+				]));
+	});
+
+var _user$project$Pages_SignUpForm_View$signUpForm = A2(
+	_elm_lang$html$Html$div,
+	_elm_lang$core$Native_List.fromArray(
+		[]),
+	_elm_lang$core$Native_List.fromArray(
+		[
+			_elm_lang$html$Html$text('signup form')
+		]));
+var _user$project$Pages_SignUpForm_View$view = A3(
+	_user$project$Pages_LayoutTemplates_Master$view,
+	_elm_lang$core$Native_List.fromArray(
+		[]),
+	_elm_lang$core$Native_List.fromArray(
+		[_user$project$Pages_SignUpForm_View$signUpForm]),
+	_elm_lang$core$Native_List.fromArray(
+		[]));
+
 var _user$project$App_View$classByPage = F2(
 	function (page, activePage) {
 		return _elm_lang$html$Html_Attributes$classList(
@@ -11197,6 +11264,8 @@ var _user$project$App_View$viewMainContent = function (model) {
 				A2(_user$project$Pages_Login_View$view, model.user, model.pageLogin));
 		case 'SignUp':
 			return _user$project$Pages_SignUp_View$view;
+		case 'SignUpForm':
+			return _user$project$Pages_SignUpForm_View$view;
 		case 'MyAccount':
 			return A2(
 				_elm_lang$html$Html$div,

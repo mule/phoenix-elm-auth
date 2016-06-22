@@ -9,9 +9,10 @@ import User.Model exposing (..)
 import Pages.Login.Model exposing (..)
 import Pages.Login.Update exposing (..)
 import Pages.Components.AuthOptionsCard as AuthOptionsCard
+import App.Common exposing (Msg(..), Page(..))
 
 
-view : WebData User -> Model -> Html Msg
+view :  Model -> Html App.Common.Msg
 -- view user model =
 --     let
 --         spinner =
@@ -51,9 +52,13 @@ view : WebData User -> Model -> Html Msg
 --                 ]
 --             ]
 
-view user model =
+view model =
     let loginOptions =
-        [ "Google", "Github", "AuthKata"]
+        [
+            ("Google", onClick <| SetActivePage PageNotFound), 
+            ("Github", onClick <| SetActivePage PageNotFound), 
+            ("AuthKata", onClick <| SetActivePage PageNotFound)
+        ]
     in
         div [ class "row" ]
                 [ div [ class "col s4" ]

@@ -1,6 +1,7 @@
 module App.Router exposing (delta2url, location2messages)
 
 import App.Update exposing (..)
+import App.Common exposing (Msg(..), Page(..))
 import Navigation exposing (Location)
 import RouteUrl exposing (HistoryEntry(..), UrlChange)
 import Debug
@@ -17,6 +18,9 @@ delta2url previous current =
 
         SignUp ->
             Just <| UrlChange NewEntry "/#signup"
+
+        SignUpForm ->
+            Just <| UrlChange NewEntry "/#signupform"
 
         MyAccount ->
             Just <| UrlChange NewEntry "/#my-account"
@@ -37,6 +41,9 @@ location2messages location =
         "#signup" ->
             [ SetActivePage SignUp ]
 
+        "#signupform" ->
+            [ SetActivePage SignUpForm ]
+            
         "#my-account" ->
             [ SetActivePage MyAccount ]
 

@@ -10,6 +10,8 @@ import User.Model exposing (..)
 import Pages.Login.View exposing (..)
 import Pages.PageNotFound.View exposing (..)
 import Pages.SignUp.View exposing (..)
+import Pages.SignUpForm.View exposing (..)
+import App.Common exposing (Msg(..), Page(..))
 
 view : Model -> Html Msg
 {-
@@ -128,10 +130,13 @@ viewMainContent model =
             div [] [ text "Access denied" ]
 
         Login ->
-            Html.map PageLogin (Pages.Login.View.view model.user model.pageLogin)
+            Pages.Login.View.view
 
         SignUp ->
             Pages.SignUp.View.view
+
+        SignUpForm -> 
+            Pages.SignUpForm.View.view
 
         MyAccount ->
             div [] [ text "My account page" ]
