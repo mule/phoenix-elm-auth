@@ -3,6 +3,7 @@ defmodule PhoenixAuthKata.UserSocket do
 
   ## Channels
   # channel "rooms:*", PhoenixAuthKata.RoomChannel
+  channel "clients:*", PhoenixAuthKata.ClientChannel
 
   ## Transports
   transport :websocket, Phoenix.Transports.WebSocket

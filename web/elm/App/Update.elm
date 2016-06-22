@@ -30,7 +30,8 @@ emptyModel =
     { activePage = Login
     , pageLogin = Pages.Login.Model.emptyModel
     , user = NotAsked
-    , phxSocket = Phoenix.Socket.init "test"
+    , phxSocket = Phoenix.Socket.init "ws://localhost:4000/socket/websocket"
+        |> Phoenix.Socket.withDebug
     }
 
 type Msg

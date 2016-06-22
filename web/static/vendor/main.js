@@ -10840,7 +10840,8 @@ var _user$project$App_Update$emptyModel = {
 	activePage: _user$project$App_Update$Login,
 	pageLogin: _user$project$Pages_Login_Model$emptyModel,
 	user: _krisajenkins$elm_exts$Exts_RemoteData$NotAsked,
-	phxSocket: _fbonetti$elm_phoenix_socket$Phoenix_Socket$init('test')
+	phxSocket: _fbonetti$elm_phoenix_socket$Phoenix_Socket$withDebug(
+		_fbonetti$elm_phoenix_socket$Phoenix_Socket$init('ws://localhost:4000/socket/websocket'))
 };
 var _user$project$App_Update$init = A2(
 	_elm_lang$core$Platform_Cmd_ops['!'],
@@ -11398,7 +11399,7 @@ var _user$project$App_View$view = function (model) {
 };
 
 var _user$project$Main$subscriptions = function (model) {
-	return _elm_lang$core$Platform_Sub$none;
+	return A2(_fbonetti$elm_phoenix_socket$Phoenix_Socket$listen, model.phxSocket, _user$project$App_Update$PhoenixMsg);
 };
 var _user$project$Main$main = {
 	main: function () {
