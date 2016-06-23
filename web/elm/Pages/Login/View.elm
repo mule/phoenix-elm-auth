@@ -8,10 +8,10 @@ import Html.Events exposing (onClick, onInput, onSubmit)
 import User.Model exposing (..)
 --import Pages.Login.Model exposing (..)
 --import Pages.Login.Update exposing (..)
-import Pages.Components.AuthOptionsCard as AuthOptionsCard
+import Components.AuthOptionsCard as AuthOptionsCard
 import App.Common exposing (Msg(..), Page(..))
 import App.Update exposing (Model)
-
+import LayoutTemplates.Master as Master
 
 view :  Model -> Html App.Common.Msg
 -- view user model =
@@ -60,8 +60,14 @@ view model =
             ("Github", onClick <| SetActivePage PageNotFound), 
             ("AuthKata", onClick <| SetActivePage PageNotFound)
         ]
+
+        marginCol =
+            []
+            
+        content = 
+            [ AuthOptionsCard.view "Login with:" loginOptions ]
+         
     in
-        div [ class "row" ]
-                [ div [ class "col s4" ]
-                    [ AuthOptionsCard.view "Login with:" loginOptions ]
-            ]
+        Master.view marginCol content marginCol
+
+

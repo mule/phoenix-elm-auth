@@ -13,6 +13,7 @@ import Pages.SignUp.View exposing (..)
 import Pages.SignUpForm.View exposing (..)
 import App.Common exposing (Msg(..), Page(..))
 import Pages.MyAccount.View exposing (..)
+import Components.Navbar as Navbar
 import Debug
 
 view : Model -> Html Msg
@@ -35,10 +36,10 @@ view model =
 view model =
         div []
             [
-                (viewHeader model),
+                (Navbar.view model),
                 div [class "container"]
                 [
-                    (viewMainContent model)
+                   viewMainContent model
                 ]
             ]
 
@@ -61,7 +62,7 @@ viewHeader model =
     let buttonClasses =
         "waves-effect waves-light btn-large"
     in
-        nav []
+        nav [ ]
             [ div [class "nav-wrapper" ]
                 [ a [ id "logo", href "#!", class "brand-logo"] [ text "Elm AuthKata" ]
                 , ul [class "right" ]

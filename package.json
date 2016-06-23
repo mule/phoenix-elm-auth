@@ -2,6 +2,7 @@
   "repository": {},
   "dependencies": {
     "babel-brunch": "~6.0.0",
+    "bootstrap": "^4.0.0-alpha.2",
     "brunch": "^2.8.2",
     "clean-css-brunch": "~1.8.0",
     "css-brunch": "~1.7.0",

@@ -44,8 +44,7 @@ exports.config = {
         watched: [
             "web/static",
             "test/static",
-            "web/elm/",
-            "node_modules/materialize-css/bin",
+            "web/elm/"
         ],
 
         // Where to compile files to
@@ -67,12 +66,12 @@ exports.config = {
         },
         sass: {
             mode: 'native'
-        },
-        copycat: {
-            "fonts": ["node_modules/materialize-css/fonts"],
-            verbose: true, //shows each file that is copied to the destination directory
-            onlyChanged: true //only copy a file if it's modified time has changed (only effective when using brunch watch)
         }
+        // copycat: {
+        //     "fonts": ["node_modules/materialize-css/fonts"],
+        //     verbose: true, //shows each file that is copied to the destination directory
+        //     onlyChanged: true //only copy a file if it's modified time has changed (only effective when using brunch watch)
+        // }
     },
 
     modules: {
@@ -85,9 +84,9 @@ exports.config = {
         enabled: true,
         // Whitelist the npm deps to be pulled in as front-end assets.
         // All other deps in package.json will be excluded from the bundle.
-        whitelist: ["phoenix", "phoenix_html", "materialize-css"],
+        whitelist: ["phoenix", "phoenix_html", "bootstrap"],
         styles: {
-            "materialize-css": ['dist/css/materialize.css']
+            "bootstrap": ['dist/css']
         }
     }
 };

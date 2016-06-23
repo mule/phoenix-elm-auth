@@ -1,4 +1,4 @@
-module Pages.Components.AuthOptionsCard exposing (view)
+module Components.AuthOptionsCard exposing (view)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
@@ -7,9 +7,9 @@ view : String -> List (String, Attribute msg) -> Html msg
 
 view title providers =
             div [class "card"]
-                [ div [ class "card-content" ]
+                [ div [ class "card-block" ]
                     [ span [ class "card-title" ] [ text title]
-                    , ul [ class "collection"]
+                    , ul [ class "ist-group list-group-flush"]
                         (providerItems providers)
                     ]
                 ]
@@ -17,8 +17,8 @@ view title providers =
 providerItems :  List (String, Attribute msg) -> List (Html msg)
 providerItems items =
     List.map (\provider ->  (
-        li [ class "collection-item "]
+        li [ class "list-group-item"]
             [
-                a [ class "waves-effect waves-light btn", snd provider ] [ text  <| fst provider ]
+                a [ class "btn btn-primary btn-lg btn-block", snd provider ] [ text  <| fst provider ]
             ]
         )) items

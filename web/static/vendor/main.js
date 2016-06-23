@@ -10975,7 +10975,7 @@ var _user$project$App_Router$delta2url = F2(
 		}
 	});
 
-var _user$project$Pages_Components_AuthOptionsCard$providerItems = function (items) {
+var _user$project$Components_AuthOptionsCard$providerItems = function (items) {
 	return A2(
 		_elm_lang$core$List$map,
 		function (provider) {
@@ -10983,7 +10983,7 @@ var _user$project$Pages_Components_AuthOptionsCard$providerItems = function (ite
 				_elm_lang$html$Html$li,
 				_elm_lang$core$Native_List.fromArray(
 					[
-						_elm_lang$html$Html_Attributes$class('collection-item ')
+						_elm_lang$html$Html_Attributes$class('list-group-item')
 					]),
 				_elm_lang$core$Native_List.fromArray(
 					[
@@ -10991,7 +10991,7 @@ var _user$project$Pages_Components_AuthOptionsCard$providerItems = function (ite
 						_elm_lang$html$Html$a,
 						_elm_lang$core$Native_List.fromArray(
 							[
-								_elm_lang$html$Html_Attributes$class('waves-effect waves-light btn'),
+								_elm_lang$html$Html_Attributes$class('btn btn-primary btn-lg btn-block'),
 								_elm_lang$core$Basics$snd(provider)
 							]),
 						_elm_lang$core$Native_List.fromArray(
@@ -11003,7 +11003,7 @@ var _user$project$Pages_Components_AuthOptionsCard$providerItems = function (ite
 		},
 		items);
 };
-var _user$project$Pages_Components_AuthOptionsCard$view = F2(
+var _user$project$Components_AuthOptionsCard$view = F2(
 	function (title, providers) {
 		return A2(
 			_elm_lang$html$Html$div,
@@ -11017,7 +11017,7 @@ var _user$project$Pages_Components_AuthOptionsCard$view = F2(
 					_elm_lang$html$Html$div,
 					_elm_lang$core$Native_List.fromArray(
 						[
-							_elm_lang$html$Html_Attributes$class('card-content')
+							_elm_lang$html$Html_Attributes$class('card-block')
 						]),
 					_elm_lang$core$Native_List.fromArray(
 						[
@@ -11035,14 +11035,50 @@ var _user$project$Pages_Components_AuthOptionsCard$view = F2(
 							_elm_lang$html$Html$ul,
 							_elm_lang$core$Native_List.fromArray(
 								[
-									_elm_lang$html$Html_Attributes$class('collection')
+									_elm_lang$html$Html_Attributes$class('ist-group list-group-flush')
 								]),
-							_user$project$Pages_Components_AuthOptionsCard$providerItems(providers))
+							_user$project$Components_AuthOptionsCard$providerItems(providers))
 						]))
 				]));
 	});
 
+var _user$project$LayoutTemplates_Master$view = F3(
+	function (left, center, right) {
+		return A2(
+			_elm_lang$html$Html$div,
+			_elm_lang$core$Native_List.fromArray(
+				[
+					_elm_lang$html$Html_Attributes$class('row')
+				]),
+			_elm_lang$core$Native_List.fromArray(
+				[
+					A2(
+					_elm_lang$html$Html$div,
+					_elm_lang$core$Native_List.fromArray(
+						[
+							_elm_lang$html$Html_Attributes$class('col-xs-1')
+						]),
+					left),
+					A2(
+					_elm_lang$html$Html$div,
+					_elm_lang$core$Native_List.fromArray(
+						[
+							_elm_lang$html$Html_Attributes$class('col-xs-10')
+						]),
+					center),
+					A2(
+					_elm_lang$html$Html$div,
+					_elm_lang$core$Native_List.fromArray(
+						[
+							_elm_lang$html$Html_Attributes$class('co-xs-1')
+						]),
+					right)
+				]));
+	});
+
 var _user$project$Pages_Login_View$view = function (model) {
+	var marginCol = _elm_lang$core$Native_List.fromArray(
+		[]);
 	var loginOptions = _elm_lang$core$Native_List.fromArray(
 		[
 			{
@@ -11064,25 +11100,11 @@ var _user$project$Pages_Login_View$view = function (model) {
 				_user$project$App_Common$SetActivePage(_user$project$App_Common$PageNotFound))
 		}
 		]);
-	return A2(
-		_elm_lang$html$Html$div,
-		_elm_lang$core$Native_List.fromArray(
-			[
-				_elm_lang$html$Html_Attributes$class('row')
-			]),
-		_elm_lang$core$Native_List.fromArray(
-			[
-				A2(
-				_elm_lang$html$Html$div,
-				_elm_lang$core$Native_List.fromArray(
-					[
-						_elm_lang$html$Html_Attributes$class('col s4')
-					]),
-				_elm_lang$core$Native_List.fromArray(
-					[
-						A2(_user$project$Pages_Components_AuthOptionsCard$view, 'Login with:', loginOptions)
-					]))
-			]));
+	var content = _elm_lang$core$Native_List.fromArray(
+		[
+			A2(_user$project$Components_AuthOptionsCard$view, 'Login with:', loginOptions)
+		]);
+	return A3(_user$project$LayoutTemplates_Master$view, marginCol, content, marginCol);
 };
 
 var _user$project$Pages_PageNotFound_View$view = function (model) {
@@ -11136,84 +11158,66 @@ var _user$project$Pages_SignUp_View$view = function (model) {
 				_elm_lang$html$Html$div,
 				_elm_lang$core$Native_List.fromArray(
 					[
-						_elm_lang$html$Html_Attributes$class('col s4')
+						_elm_lang$html$Html_Attributes$class('col-xs-10')
 					]),
 				_elm_lang$core$Native_List.fromArray(
 					[
-						A2(_user$project$Pages_Components_AuthOptionsCard$view, 'Signup with:', signupOptions)
+						A2(_user$project$Components_AuthOptionsCard$view, 'Signup with:', signupOptions)
 					]))
 			]));
 };
 
-var _user$project$Pages_LayoutTemplates_Master$view = F3(
-	function (left, center, right) {
-		return A2(
-			_elm_lang$html$Html$div,
-			_elm_lang$core$Native_List.fromArray(
-				[
-					_elm_lang$html$Html_Attributes$class('row')
-				]),
-			_elm_lang$core$Native_List.fromArray(
-				[
-					A2(
-					_elm_lang$html$Html$div,
-					_elm_lang$core$Native_List.fromArray(
-						[
-							_elm_lang$html$Html_Attributes$class('col s2')
-						]),
-					left),
-					A2(
-					_elm_lang$html$Html$div,
-					_elm_lang$core$Native_List.fromArray(
-						[
-							_elm_lang$html$Html_Attributes$class('col s8')
-						]),
-					center),
-					A2(
-					_elm_lang$html$Html$div,
-					_elm_lang$core$Native_List.fromArray(
-						[
-							_elm_lang$html$Html_Attributes$class('col s2')
-						]),
-					right)
-				]));
-	});
-
 var _user$project$Pages_SignUpForm_View$signUpForm = function (model) {
-	return A2(
-		_elm_lang$html$Html$div,
+	var emailField = A2(
+		_elm_lang$html$Html$fieldset,
 		_elm_lang$core$Native_List.fromArray(
 			[
-				_elm_lang$html$Html_Attributes$class('input-field')
+				_elm_lang$html$Html_Attributes$class('form-group')
 			]),
 		_elm_lang$core$Native_List.fromArray(
 			[
 				A2(
-				_elm_lang$html$Html$input,
-				_elm_lang$core$Native_List.fromArray(
-					[
-						_elm_lang$html$Html_Attributes$id('email'),
-						_elm_lang$html$Html_Attributes$type$('email'),
-						_elm_lang$html$Html_Attributes$class('validate')
-					]),
-				_elm_lang$core$Native_List.fromArray(
-					[])),
-				A2(
 				_elm_lang$html$Html$label,
 				_elm_lang$core$Native_List.fromArray(
 					[
-						_elm_lang$html$Html_Attributes$class('active'),
 						_elm_lang$html$Html_Attributes$for('email')
 					]),
 				_elm_lang$core$Native_List.fromArray(
 					[
 						_elm_lang$html$Html$text('Email')
+					])),
+				A2(
+				_elm_lang$html$Html$input,
+				_elm_lang$core$Native_List.fromArray(
+					[
+						_elm_lang$html$Html_Attributes$type$('email'),
+						_elm_lang$html$Html_Attributes$id('email'),
+						_elm_lang$html$Html_Attributes$class('form-control'),
+						_elm_lang$html$Html_Attributes$placeholder('Enter email')
+					]),
+				_elm_lang$core$Native_List.fromArray(
+					[])),
+				A2(
+				_elm_lang$html$Html$small,
+				_elm_lang$core$Native_List.fromArray(
+					[
+						_elm_lang$html$Html_Attributes$class('text-muted')
+					]),
+				_elm_lang$core$Native_List.fromArray(
+					[
+						_elm_lang$html$Html$text('We shall never share your email with anyone else')
 					]))
 			]));
+	return A2(
+		_elm_lang$html$Html$form,
+		_elm_lang$core$Native_List.fromArray(
+			[]),
+		_elm_lang$core$Native_List.fromArray(
+			[emailField]));
 };
 var _user$project$Pages_SignUpForm_View$view = function (model) {
 	return A3(
-		_user$project$Pages_LayoutTemplates_Master$view,
+		_user$project$LayoutTemplates_Master$view,
 		_elm_lang$core$Native_List.fromArray(
 			[]),
 		_elm_lang$core$Native_List.fromArray(
@@ -11269,6 +11273,59 @@ var _user$project$Pages_MyAccount_View$view = function (model) {
 							]))
 					]))
 			]));
+};
+
+var _user$project$Components_Navbar$view = function (model) {
+	var brand = A2(
+		_elm_lang$html$Html$a,
+		_elm_lang$core$Native_List.fromArray(
+			[
+				_elm_lang$html$Html_Attributes$class('navbar-brand')
+			]),
+		_elm_lang$core$Native_List.fromArray(
+			[
+				_elm_lang$html$Html$text('AuthKata')
+			]));
+	var btnClasses = 'btn btn-primary active m-l-1';
+	var navbarButtons = A2(
+		_elm_lang$html$Html$form,
+		_elm_lang$core$Native_List.fromArray(
+			[
+				_elm_lang$html$Html_Attributes$class('form-inline pull-xs-right')
+			]),
+		_elm_lang$core$Native_List.fromArray(
+			[
+				A2(
+				_elm_lang$html$Html$a,
+				_elm_lang$core$Native_List.fromArray(
+					[
+						_elm_lang$html$Html_Attributes$href('#signup'),
+						_elm_lang$html$Html_Attributes$class(btnClasses)
+					]),
+				_elm_lang$core$Native_List.fromArray(
+					[
+						_elm_lang$html$Html$text('Signup')
+					])),
+				A2(
+				_elm_lang$html$Html$a,
+				_elm_lang$core$Native_List.fromArray(
+					[
+						_elm_lang$html$Html_Attributes$href('#login'),
+						_elm_lang$html$Html_Attributes$class(btnClasses)
+					]),
+				_elm_lang$core$Native_List.fromArray(
+					[
+						_elm_lang$html$Html$text('Login')
+					]))
+			]));
+	return A2(
+		_elm_lang$html$Html$nav,
+		_elm_lang$core$Native_List.fromArray(
+			[
+				_elm_lang$html$Html_Attributes$class('navbar navbar-light bg-faded')
+			]),
+		_elm_lang$core$Native_List.fromArray(
+			[brand, navbarButtons]));
 };
 
 var _user$project$App_View$classByPage = F2(
@@ -11521,7 +11578,7 @@ var _user$project$App_View$view = function (model) {
 			[]),
 		_elm_lang$core$Native_List.fromArray(
 			[
-				_user$project$App_View$viewHeader(model),
+				_user$project$Components_Navbar$view(model),
 				A2(
 				_elm_lang$html$Html$div,
 				_elm_lang$core$Native_List.fromArray(

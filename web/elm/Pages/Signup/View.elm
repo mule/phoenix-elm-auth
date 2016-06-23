@@ -1,5 +1,5 @@
 module Pages.SignUp.View exposing (view)
-import Pages.Components.AuthOptionsCard as AuthOptionsCard
+import Components.AuthOptionsCard as AuthOptionsCard
 --import Pages.SignUp.Model exposing (..)
 import App.Update exposing (Model)
 import Html exposing (..)
@@ -19,6 +19,6 @@ view model =
         ]
     in
         div [ class "row" ]
-                [ div [ class "col s4" ]
+                [ div [ class "col-xs-10" ]
                     [ AuthOptionsCard.view "Signup with:" signupOptions ]
                 ]
