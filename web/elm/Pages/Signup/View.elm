@@ -1,19 +1,21 @@
 module Pages.SignUp.View exposing (view)
 import Pages.Components.AuthOptionsCard as AuthOptionsCard
+--import Pages.SignUp.Model exposing (..)
+import App.Update exposing (Model)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick, onInput, onSubmit)
 import App.Common exposing (Msg(..), Page(..))
 
-view : Html Msg
+view : Model -> Html App.Common.Msg
 
 
-view  =
+view model =
     let signupOptions =
         [
-            ("Google", onClick <| SetActivePage PageNotFound), 
-            ("Github", onClick <| SetActivePage PageNotFound), 
-            ("AuthKata", onClick <|SetActivePage SignUpForm)
+            ("Google", href "#!" ), 
+            ("Github", href "#!" ), 
+            ("AuthKata", href "#signupform" )
         ]
     in
         div [ class "row" ]

@@ -62,25 +62,24 @@ update msg model =
             model ! []
 
         SetActivePage page ->
-            { model | activePage = setActivePageAccess model.user page } ! []
+            { model | activePage = page } ! []
+        
+        Noop -> 
+            model ! []
 
 
-{-| Determine is a page can be accessed by a user (anonymous or authenticated),
-and if not return a access denied page.
-If the user is authenticated, don't allow them to revisit Login page. Do the
-opposite for anonumous user - don't allow them to visit the MyAccount page.
--}
-setActivePageAccess : WebData User -> Page -> Page
-setActivePageAccess user page =
-    case user of
-        Success _ ->
-            if page == Login then
-                AccessDenied
-            else
-                page
 
-        _ ->
-            if page == MyAccount then
-                AccessDenied
-            else
-                page
+-- setActivePageAccess : WebData User -> Page -> Page
+-- setActivePageAccess user page =
+--     case user of
+--         Success _ ->
+--             if page == Login then
+--                 AccessDenied
+--             else
+--                 page
+
+--         _ ->
+--             if page == MyAccount then
+--                 AccessDenied
+--             else
+--                 page

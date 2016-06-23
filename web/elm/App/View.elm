@@ -12,6 +12,8 @@ import Pages.PageNotFound.View exposing (..)
 import Pages.SignUp.View exposing (..)
 import Pages.SignUpForm.View exposing (..)
 import App.Common exposing (Msg(..), Page(..))
+import Pages.MyAccount.View exposing (..)
+import Debug
 
 view : Model -> Html Msg
 {-
@@ -123,27 +125,25 @@ viewAvatar user =
         _ ->
             div [] []
 
-viewMainContent : Model -> Html Msg
+viewMainContent : App.Update.Model -> Html Msg
 viewMainContent model =
-    case model.activePage of
-        AccessDenied ->
-            div [] [ text "Access denied" ]
+    case Debug.log "view" model.activePage of
 
         Login ->
-            Pages.Login.View.view
+            Pages.Login.View.view model
 
         SignUp ->
-            Pages.SignUp.View.view
+            Pages.SignUp.View.view model
 
         SignUpForm -> 
-            Pages.SignUpForm.View.view
+            Pages.SignUpForm.View.view model
 
         MyAccount ->
-            div [] [ text "My account page" ]
+            Pages.MyAccount.View.view model
 
         PageNotFound ->
             -- We don't need to pass any cmds, so we can call the view directly
-            Pages.PageNotFound.View.view
+            Pages.PageNotFound.View.view model
 
 viewFooter : Html Msg
 viewFooter =

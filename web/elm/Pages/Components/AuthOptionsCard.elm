@@ -19,6 +19,6 @@ providerItems items =
     List.map (\provider ->  (
         li [ class "collection-item "]
             [
-                a [href "#!", class "waves-effect waves-light btn", snd provider ] [ text  <| fst provider ]
+                a [ class "waves-effect waves-light btn", snd provider ] [ text  <| fst provider ]
             ]
         )) items

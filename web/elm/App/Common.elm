@@ -7,12 +7,12 @@ import Phoenix.Push
 
 
 type Page
-    = AccessDenied
-    | Login
+    = Login
     | SignUp
     | SignUpForm
     | MyAccount
     | PageNotFound
+
 
 type Msg
     = Logout
@@ -21,3 +21,4 @@ type Msg
     | PageSignUpForm
     | SetActivePage Page
     | PhoenixMsg (Phoenix.Socket.Msg Msg)
+    | Noop

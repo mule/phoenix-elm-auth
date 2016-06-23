@@ -4,17 +4,19 @@ import Exts.RemoteData exposing (RemoteData(..), WebData)
 
 import Html exposing (a, div, h2, i, p, text, Html)
 import Html.Attributes exposing (class, href)
+import App.Common exposing (Msg(..), Page(..))
 import User.Model exposing (..)
+import App.Update exposing (Model)
 
 
 -- VIEW
 
 
-view : WebData User -> Html a
-view user =
+view : Model -> Html App.Common.Msg
+view model =
     let
         name =
-            case user of
+            case model.user of
                 Success user' ->
                     user'.name
 

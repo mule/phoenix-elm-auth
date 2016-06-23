@@ -6,10 +6,11 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick, onInput, onSubmit)
 import User.Model exposing (..)
-import Pages.Login.Model exposing (..)
-import Pages.Login.Update exposing (..)
+--import Pages.Login.Model exposing (..)
+--import Pages.Login.Update exposing (..)
 import Pages.Components.AuthOptionsCard as AuthOptionsCard
 import App.Common exposing (Msg(..), Page(..))
+import App.Update exposing (Model)
 
 
 view :  Model -> Html App.Common.Msg

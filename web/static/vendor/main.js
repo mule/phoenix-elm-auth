@@ -10828,17 +10828,27 @@ var _user$project$Pages_Login_Update$update = F3(
 		}
 	});
 
-var _user$project$App_Update$Model = F4(
-	function (a, b, c, d) {
-		return {activePage: a, user: b, pageLogin: c, phxSocket: d};
-	});
-var _user$project$App_Update$PageNotFound = {ctor: 'PageNotFound'};
-var _user$project$App_Update$MyAccount = {ctor: 'MyAccount'};
-var _user$project$App_Update$SignUpForm = {ctor: 'SignUpForm'};
-var _user$project$App_Update$SignUp = {ctor: 'SignUp'};
-var _user$project$App_Update$Login = {ctor: 'Login'};
+var _user$project$App_Common$PageNotFound = {ctor: 'PageNotFound'};
+var _user$project$App_Common$MyAccount = {ctor: 'MyAccount'};
+var _user$project$App_Common$SignUpForm = {ctor: 'SignUpForm'};
+var _user$project$App_Common$SignUp = {ctor: 'SignUp'};
+var _user$project$App_Common$Login = {ctor: 'Login'};
+var _user$project$App_Common$Noop = {ctor: 'Noop'};
+var _user$project$App_Common$PhoenixMsg = function (a) {
+	return {ctor: 'PhoenixMsg', _0: a};
+};
+var _user$project$App_Common$SetActivePage = function (a) {
+	return {ctor: 'SetActivePage', _0: a};
+};
+var _user$project$App_Common$PageSignUpForm = {ctor: 'PageSignUpForm'};
+var _user$project$App_Common$PageSignUp = {ctor: 'PageSignUp'};
+var _user$project$App_Common$PageLogin = function (a) {
+	return {ctor: 'PageLogin', _0: a};
+};
+var _user$project$App_Common$Logout = {ctor: 'Logout'};
+
 var _user$project$App_Update$emptyModel = {
-	activePage: _user$project$App_Update$Login,
+	activePage: _user$project$App_Common$Login,
 	pageLogin: _user$project$Pages_Login_Model$emptyModel,
 	user: _krisajenkins$elm_exts$Exts_RemoteData$NotAsked,
 	phxSocket: _fbonetti$elm_phoenix_socket$Phoenix_Socket$withDebug(
@@ -10849,68 +10859,28 @@ var _user$project$App_Update$init = A2(
 	_user$project$App_Update$emptyModel,
 	_elm_lang$core$Native_List.fromArray(
 		[]));
-var _user$project$App_Update$AccessDenied = {ctor: 'AccessDenied'};
-var _user$project$App_Update$setActivePageAccess = F2(
-	function (user, page) {
-		var _p0 = user;
-		if (_p0.ctor === 'Success') {
-			return _elm_lang$core$Native_Utils.eq(page, _user$project$App_Update$Login) ? _user$project$App_Update$AccessDenied : page;
-		} else {
-			return _elm_lang$core$Native_Utils.eq(page, _user$project$App_Update$MyAccount) ? _user$project$App_Update$AccessDenied : page;
-		}
-	});
-var _user$project$App_Update$PhoenixMsg = function (a) {
-	return {ctor: 'PhoenixMsg', _0: a};
-};
-var _user$project$App_Update$SetActivePage = function (a) {
-	return {ctor: 'SetActivePage', _0: a};
-};
-var _user$project$App_Update$PageSignUpForm = {ctor: 'PageSignUpForm'};
-var _user$project$App_Update$PageSignUp = {ctor: 'PageSignUp'};
-var _user$project$App_Update$PageLogin = function (a) {
-	return {ctor: 'PageLogin', _0: a};
-};
 var _user$project$App_Update$update = F2(
 	function (msg, model) {
-		var _p1 = A2(_elm_lang$core$Debug$log, 'action', msg);
-		switch (_p1.ctor) {
+		var _p0 = A2(_elm_lang$core$Debug$log, 'action', msg);
+		switch (_p0.ctor) {
 			case 'Logout':
 				return _user$project$App_Update$init;
 			case 'PageLogin':
-				var _p2 = A3(_user$project$Pages_Login_Update$update, model.user, _p1._0, model.pageLogin);
-				var val = _p2._0;
-				var cmds = _p2._1;
-				var user = _p2._2;
-				var model$ = _elm_lang$core$Native_Utils.update(
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
 					model,
-					{pageLogin: val, user: user});
-				var model$$ = function () {
-					var _p3 = user;
-					if (_p3.ctor === 'Success') {
-						return _elm_lang$core$Basics$fst(
-							A2(
-								_user$project$App_Update$update,
-								_user$project$App_Update$SetActivePage(_user$project$App_Update$MyAccount),
-								model$));
-					} else {
-						return model$;
-					}
-				}();
-				return {
-					ctor: '_Tuple2',
-					_0: model$$,
-					_1: A2(_elm_lang$core$Platform_Cmd$map, _user$project$App_Update$PageLogin, cmds)
-				};
+					_elm_lang$core$Native_List.fromArray(
+						[]));
 			case 'PhoenixMsg':
-				var _p4 = A2(_fbonetti$elm_phoenix_socket$Phoenix_Socket$update, _p1._0, model.phxSocket);
-				var phxSocket = _p4._0;
-				var phxCmd = _p4._1;
+				var _p1 = A2(_fbonetti$elm_phoenix_socket$Phoenix_Socket$update, _p0._0, model.phxSocket);
+				var phxSocket = _p1._0;
+				var phxCmd = _p1._1;
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
 						{phxSocket: phxSocket}),
-					_1: A2(_elm_lang$core$Platform_Cmd$map, _user$project$App_Update$PhoenixMsg, phxCmd)
+					_1: A2(_elm_lang$core$Platform_Cmd$map, _user$project$App_Common$PhoenixMsg, phxCmd)
 				};
 			case 'PageSignUp':
 				return A2(
@@ -10924,22 +10894,29 @@ var _user$project$App_Update$update = F2(
 					model,
 					_elm_lang$core$Native_List.fromArray(
 						[]));
-			default:
+			case 'SetActivePage':
 				return A2(
 					_elm_lang$core$Platform_Cmd_ops['!'],
 					_elm_lang$core$Native_Utils.update(
 						model,
-						{
-							activePage: A2(_user$project$App_Update$setActivePageAccess, model.user, _p1._0)
-						}),
+						{activePage: _p0._0}),
+					_elm_lang$core$Native_List.fromArray(
+						[]));
+			default:
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					model,
 					_elm_lang$core$Native_List.fromArray(
 						[]));
 		}
 	});
-var _user$project$App_Update$Logout = {ctor: 'Logout'};
+var _user$project$App_Update$Model = F4(
+	function (a, b, c, d) {
+		return {activePage: a, user: b, pageLogin: c, phxSocket: d};
+	});
 
 var _user$project$App_Router$location2messages = function (location) {
-	var _p0 = A2(_elm_lang$core$Debug$log, 'action', location.hash);
+	var _p0 = A2(_elm_lang$core$Debug$log, 'location2messages', location.hash);
 	switch (_p0) {
 		case '':
 			return _elm_lang$core$Native_List.fromArray(
@@ -10947,41 +10924,39 @@ var _user$project$App_Router$location2messages = function (location) {
 		case '#login':
 			return _elm_lang$core$Native_List.fromArray(
 				[
-					_user$project$App_Update$SetActivePage(_user$project$App_Update$Login)
+					_user$project$App_Common$SetActivePage(_user$project$App_Common$Login)
 				]);
 		case '#signup':
 			return _elm_lang$core$Native_List.fromArray(
 				[
-					_user$project$App_Update$SetActivePage(_user$project$App_Update$SignUp)
+					_user$project$App_Common$SetActivePage(_user$project$App_Common$SignUp)
 				]);
 		case '#signupform':
 			return _elm_lang$core$Native_List.fromArray(
 				[
-					_user$project$App_Update$SetActivePage(_user$project$App_Update$SignUpForm)
+					_user$project$App_Common$SetActivePage(_user$project$App_Common$SignUpForm)
 				]);
 		case '#my-account':
 			return _elm_lang$core$Native_List.fromArray(
 				[
-					_user$project$App_Update$SetActivePage(_user$project$App_Update$MyAccount)
+					_user$project$App_Common$SetActivePage(_user$project$App_Common$MyAccount)
 				]);
 		case '#404':
 			return _elm_lang$core$Native_List.fromArray(
 				[
-					_user$project$App_Update$SetActivePage(_user$project$App_Update$PageNotFound)
+					_user$project$App_Common$SetActivePage(_user$project$App_Common$PageNotFound)
 				]);
 		default:
 			return _elm_lang$core$Native_List.fromArray(
 				[
-					_user$project$App_Update$SetActivePage(_user$project$App_Update$PageNotFound)
+					_user$project$App_Common$SetActivePage(_user$project$App_Common$PageNotFound)
 				]);
 	}
 };
 var _user$project$App_Router$delta2url = F2(
 	function (previous, current) {
-		var _p1 = A2(_elm_lang$core$Debug$log, 'action', current.activePage);
+		var _p1 = A2(_elm_lang$core$Debug$log, 'delta2url', current.activePage);
 		switch (_p1.ctor) {
-			case 'AccessDenied':
-				return _elm_lang$core$Maybe$Nothing;
 			case 'Login':
 				return _elm_lang$core$Maybe$Just(
 					A2(_rgrempel$elm_route_url$RouteUrl$UrlChange, _rgrempel$elm_route_url$RouteUrl$NewEntry, '/#login'));
@@ -11016,12 +10991,13 @@ var _user$project$Pages_Components_AuthOptionsCard$providerItems = function (ite
 						_elm_lang$html$Html$a,
 						_elm_lang$core$Native_List.fromArray(
 							[
-								_elm_lang$html$Html_Attributes$href('#!'),
-								_elm_lang$html$Html_Attributes$class('waves-effect waves-light btn')
+								_elm_lang$html$Html_Attributes$class('waves-effect waves-light btn'),
+								_elm_lang$core$Basics$snd(provider)
 							]),
 						_elm_lang$core$Native_List.fromArray(
 							[
-								_elm_lang$html$Html$text(provider)
+								_elm_lang$html$Html$text(
+								_elm_lang$core$Basics$fst(provider))
 							]))
 					]));
 		},
@@ -11066,52 +11042,88 @@ var _user$project$Pages_Components_AuthOptionsCard$view = F2(
 				]));
 	});
 
-var _user$project$Pages_Login_View$view = F2(
-	function (user, model) {
-		var loginOptions = _elm_lang$core$Native_List.fromArray(
-			['Google', 'Github', 'AuthKata']);
-		return A2(
-			_elm_lang$html$Html$div,
-			_elm_lang$core$Native_List.fromArray(
-				[
-					_elm_lang$html$Html_Attributes$class('row')
-				]),
-			_elm_lang$core$Native_List.fromArray(
-				[
-					A2(
-					_elm_lang$html$Html$div,
-					_elm_lang$core$Native_List.fromArray(
-						[
-							_elm_lang$html$Html_Attributes$class('col s4')
-						]),
-					_elm_lang$core$Native_List.fromArray(
-						[
-							A2(_user$project$Pages_Components_AuthOptionsCard$view, 'Login with:', loginOptions)
-						]))
-				]));
-	});
-
-var _user$project$Pages_PageNotFound_View$view = A2(
-	_elm_lang$html$Html$div,
-	_elm_lang$core$Native_List.fromArray(
+var _user$project$Pages_Login_View$view = function (model) {
+	var loginOptions = _elm_lang$core$Native_List.fromArray(
 		[
-			_elm_lang$html$Html_Attributes$class('ui segment center aligned')
-		]),
-	_elm_lang$core$Native_List.fromArray(
-		[
-			A2(
-			_elm_lang$html$Html$h2,
-			_elm_lang$core$Native_List.fromArray(
-				[]),
-			_elm_lang$core$Native_List.fromArray(
-				[
-					_elm_lang$html$Html$text('This is a 404 page!')
-				]))
-		]));
+			{
+			ctor: '_Tuple2',
+			_0: 'Google',
+			_1: _elm_lang$html$Html_Events$onClick(
+				_user$project$App_Common$SetActivePage(_user$project$App_Common$PageNotFound))
+		},
+			{
+			ctor: '_Tuple2',
+			_0: 'Github',
+			_1: _elm_lang$html$Html_Events$onClick(
+				_user$project$App_Common$SetActivePage(_user$project$App_Common$PageNotFound))
+		},
+			{
+			ctor: '_Tuple2',
+			_0: 'AuthKata',
+			_1: _elm_lang$html$Html_Events$onClick(
+				_user$project$App_Common$SetActivePage(_user$project$App_Common$PageNotFound))
+		}
+		]);
+	return A2(
+		_elm_lang$html$Html$div,
+		_elm_lang$core$Native_List.fromArray(
+			[
+				_elm_lang$html$Html_Attributes$class('row')
+			]),
+		_elm_lang$core$Native_List.fromArray(
+			[
+				A2(
+				_elm_lang$html$Html$div,
+				_elm_lang$core$Native_List.fromArray(
+					[
+						_elm_lang$html$Html_Attributes$class('col s4')
+					]),
+				_elm_lang$core$Native_List.fromArray(
+					[
+						A2(_user$project$Pages_Components_AuthOptionsCard$view, 'Login with:', loginOptions)
+					]))
+			]));
+};
 
-var _user$project$Pages_SignUp_View$view = function () {
+var _user$project$Pages_PageNotFound_View$view = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		_elm_lang$core$Native_List.fromArray(
+			[
+				_elm_lang$html$Html_Attributes$class('ui segment center aligned')
+			]),
+		_elm_lang$core$Native_List.fromArray(
+			[
+				A2(
+				_elm_lang$html$Html$h2,
+				_elm_lang$core$Native_List.fromArray(
+					[]),
+				_elm_lang$core$Native_List.fromArray(
+					[
+						_elm_lang$html$Html$text('This is a 404 page!')
+					]))
+			]));
+};
+
+var _user$project$Pages_SignUp_View$view = function (model) {
 	var signupOptions = _elm_lang$core$Native_List.fromArray(
-		['Google', 'Github', 'AuthKata']);
+		[
+			{
+			ctor: '_Tuple2',
+			_0: 'Google',
+			_1: _elm_lang$html$Html_Attributes$href('#!')
+		},
+			{
+			ctor: '_Tuple2',
+			_0: 'Github',
+			_1: _elm_lang$html$Html_Attributes$href('#!')
+		},
+			{
+			ctor: '_Tuple2',
+			_0: 'AuthKata',
+			_1: _elm_lang$html$Html_Attributes$href('#signupform')
+		}
+		]);
 	return A2(
 		_elm_lang$html$Html$div,
 		_elm_lang$core$Native_List.fromArray(
@@ -11131,7 +11143,7 @@ var _user$project$Pages_SignUp_View$view = function () {
 						A2(_user$project$Pages_Components_AuthOptionsCard$view, 'Signup with:', signupOptions)
 					]))
 			]));
-}();
+};
 
 var _user$project$Pages_LayoutTemplates_Master$view = F3(
 	function (left, center, right) {
@@ -11175,14 +11187,63 @@ var _user$project$Pages_SignUpForm_View$signUpForm = A2(
 		[
 			_elm_lang$html$Html$text('signup form')
 		]));
-var _user$project$Pages_SignUpForm_View$view = A3(
-	_user$project$Pages_LayoutTemplates_Master$view,
-	_elm_lang$core$Native_List.fromArray(
-		[]),
-	_elm_lang$core$Native_List.fromArray(
-		[_user$project$Pages_SignUpForm_View$signUpForm]),
-	_elm_lang$core$Native_List.fromArray(
-		[]));
+var _user$project$Pages_SignUpForm_View$view = function (model) {
+	return A3(
+		_user$project$Pages_LayoutTemplates_Master$view,
+		_elm_lang$core$Native_List.fromArray(
+			[]),
+		_elm_lang$core$Native_List.fromArray(
+			[_user$project$Pages_SignUpForm_View$signUpForm]),
+		_elm_lang$core$Native_List.fromArray(
+			[]));
+};
+
+var _user$project$Pages_MyAccount_View$view = function (model) {
+	var name = function () {
+		var _p0 = model.user;
+		if (_p0.ctor === 'Success') {
+			return _p0._0.name;
+		} else {
+			return '';
+		}
+	}();
+	return A2(
+		_elm_lang$html$Html$div,
+		_elm_lang$core$Native_List.fromArray(
+			[
+				_elm_lang$html$Html_Attributes$class('ui icon message')
+			]),
+		_elm_lang$core$Native_List.fromArray(
+			[
+				A2(
+				_elm_lang$html$Html$i,
+				_elm_lang$core$Native_List.fromArray(
+					[
+						_elm_lang$html$Html_Attributes$class('user icon')
+					]),
+				_elm_lang$core$Native_List.fromArray(
+					[])),
+				A2(
+				_elm_lang$html$Html$div,
+				_elm_lang$core$Native_List.fromArray(
+					[
+						_elm_lang$html$Html_Attributes$class('content')
+					]),
+				_elm_lang$core$Native_List.fromArray(
+					[
+						_elm_lang$html$Html$text(
+						A2(_elm_lang$core$Basics_ops['++'], 'Welcome ', name)),
+						A2(
+						_elm_lang$html$Html$p,
+						_elm_lang$core$Native_List.fromArray(
+							[]),
+						_elm_lang$core$Native_List.fromArray(
+							[
+								_elm_lang$html$Html$text('This is an account page')
+							]))
+					]))
+			]));
+};
 
 var _user$project$App_View$classByPage = F2(
 	function (page, activePage) {
@@ -11246,37 +11307,18 @@ var _user$project$App_View$viewFooter = A2(
 				]))
 		]));
 var _user$project$App_View$viewMainContent = function (model) {
-	var _p0 = model.activePage;
+	var _p0 = A2(_elm_lang$core$Debug$log, 'view', model.activePage);
 	switch (_p0.ctor) {
-		case 'AccessDenied':
-			return A2(
-				_elm_lang$html$Html$div,
-				_elm_lang$core$Native_List.fromArray(
-					[]),
-				_elm_lang$core$Native_List.fromArray(
-					[
-						_elm_lang$html$Html$text('Access denied')
-					]));
 		case 'Login':
-			return A2(
-				_elm_lang$html$Html_App$map,
-				_user$project$App_Update$PageLogin,
-				A2(_user$project$Pages_Login_View$view, model.user, model.pageLogin));
+			return _user$project$Pages_Login_View$view(model);
 		case 'SignUp':
-			return _user$project$Pages_SignUp_View$view;
+			return _user$project$Pages_SignUp_View$view(model);
 		case 'SignUpForm':
-			return _user$project$Pages_SignUpForm_View$view;
+			return _user$project$Pages_SignUpForm_View$view(model);
 		case 'MyAccount':
-			return A2(
-				_elm_lang$html$Html$div,
-				_elm_lang$core$Native_List.fromArray(
-					[]),
-				_elm_lang$core$Native_List.fromArray(
-					[
-						_elm_lang$html$Html$text('My account page')
-					]));
+			return _user$project$Pages_MyAccount_View$view(model);
 		default:
-			return _user$project$Pages_PageNotFound_View$view;
+			return _user$project$Pages_PageNotFound_View$view(model);
 	}
 };
 var _user$project$App_View$viewAvatar = function (user) {
@@ -11287,7 +11329,7 @@ var _user$project$App_View$viewAvatar = function (user) {
 			_elm_lang$core$Native_List.fromArray(
 				[
 					_elm_lang$html$Html_Events$onClick(
-					_user$project$App_Update$SetActivePage(_user$project$App_Update$MyAccount)),
+					_user$project$App_Common$SetActivePage(_user$project$App_Common$MyAccount)),
 					_elm_lang$html$Html_Attributes$class('ui item')
 				]),
 			_elm_lang$core$Native_List.fromArray(
@@ -11316,9 +11358,9 @@ var _user$project$App_View$viewPageNotFoundItem = function (activePage) {
 		_elm_lang$html$Html$a,
 		_elm_lang$core$Native_List.fromArray(
 			[
-				A2(_user$project$App_View$classByPage, _user$project$App_Update$PageNotFound, activePage),
+				A2(_user$project$App_View$classByPage, _user$project$App_Common$PageNotFound, activePage),
 				_elm_lang$html$Html_Events$onClick(
-				_user$project$App_Update$SetActivePage(_user$project$App_Update$PageNotFound))
+				_user$project$App_Common$SetActivePage(_user$project$App_Common$PageNotFound))
 			]),
 		_elm_lang$core$Native_List.fromArray(
 			[
@@ -11332,9 +11374,9 @@ var _user$project$App_View$navbarAuthenticated = function (model) {
 			_elm_lang$html$Html$a,
 			_elm_lang$core$Native_List.fromArray(
 				[
-					A2(_user$project$App_View$classByPage, _user$project$App_Update$MyAccount, model.activePage),
+					A2(_user$project$App_View$classByPage, _user$project$App_Common$MyAccount, model.activePage),
 					_elm_lang$html$Html_Events$onClick(
-					_user$project$App_Update$SetActivePage(_user$project$App_Update$MyAccount))
+					_user$project$App_Common$SetActivePage(_user$project$App_Common$MyAccount))
 				]),
 			_elm_lang$core$Native_List.fromArray(
 				[
@@ -11355,7 +11397,7 @@ var _user$project$App_View$navbarAuthenticated = function (model) {
 					_elm_lang$core$Native_List.fromArray(
 						[
 							_elm_lang$html$Html_Attributes$class('ui item'),
-							_elm_lang$html$Html_Events$onClick(_user$project$App_Update$Logout)
+							_elm_lang$html$Html_Events$onClick(_user$project$App_Common$Logout)
 						]),
 					_elm_lang$core$Native_List.fromArray(
 						[
@@ -11371,9 +11413,9 @@ var _user$project$App_View$navbarAnonymous = function (model) {
 			_elm_lang$html$Html$a,
 			_elm_lang$core$Native_List.fromArray(
 				[
-					A2(_user$project$App_View$classByPage, _user$project$App_Update$Login, model.activePage),
+					A2(_user$project$App_View$classByPage, _user$project$App_Common$Login, model.activePage),
 					_elm_lang$html$Html_Events$onClick(
-					_user$project$App_Update$SetActivePage(_user$project$App_Update$Login))
+					_user$project$App_Common$SetActivePage(_user$project$App_Common$Login))
 				]),
 			_elm_lang$core$Native_List.fromArray(
 				[
@@ -11424,7 +11466,7 @@ var _user$project$App_View$viewHeader = function (model) {
 									[
 										_elm_lang$html$Html_Attributes$class(buttonClasses),
 										_elm_lang$html$Html_Events$onClick(
-										_user$project$App_Update$SetActivePage(_user$project$App_Update$SignUp))
+										_user$project$App_Common$SetActivePage(_user$project$App_Common$SignUp))
 									]),
 								_elm_lang$core$Native_List.fromArray(
 									[
@@ -11436,7 +11478,7 @@ var _user$project$App_View$viewHeader = function (model) {
 									[
 										_elm_lang$html$Html_Attributes$class(buttonClasses),
 										_elm_lang$html$Html_Events$onClick(
-										_user$project$App_Update$SetActivePage(_user$project$App_Update$Login))
+										_user$project$App_Common$SetActivePage(_user$project$App_Common$Login))
 									]),
 								_elm_lang$core$Native_List.fromArray(
 									[
@@ -11468,7 +11510,7 @@ var _user$project$App_View$view = function (model) {
 };
 
 var _user$project$Main$subscriptions = function (model) {
-	return A2(_fbonetti$elm_phoenix_socket$Phoenix_Socket$listen, model.phxSocket, _user$project$App_Update$PhoenixMsg);
+	return A2(_fbonetti$elm_phoenix_socket$Phoenix_Socket$listen, model.phxSocket, _user$project$App_Common$PhoenixMsg);
 };
 var _user$project$Main$main = {
 	main: function () {

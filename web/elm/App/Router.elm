@@ -9,9 +9,7 @@ import Debug
 
 delta2url : Model -> Model -> Maybe UrlChange
 delta2url previous current =
-    case Debug.log "action" current.activePage of
-        AccessDenied ->
-            Nothing
+    case Debug.log "delta2url" current.activePage of
 
         Login ->
             Just <| UrlChange NewEntry "/#login"
@@ -31,7 +29,7 @@ delta2url previous current =
 
 location2messages : Location -> List Msg
 location2messages location =
-    case Debug.log "action" location.hash of
+    case Debug.log "location2messages" location.hash of
         "" ->
             []
 

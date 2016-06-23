@@ -1,7 +1,8 @@
 module Main exposing (..) 
 import App.Router exposing (..)
-import App.Update exposing (init, update, Model, Msg)
+import App.Update exposing (init, update, Model)
 import App.View exposing (view)
+import App.Common exposing (Msg(..))
 import Html.App as Html
 import RouteUrl
 import Phoenix.Socket
@@ -34,4 +35,4 @@ main =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-   Phoenix.Socket.listen model.phxSocket App.Update.PhoenixMsg
+   Phoenix.Socket.listen model.phxSocket PhoenixMsg
