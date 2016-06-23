@@ -11179,21 +11179,47 @@ var _user$project$Pages_LayoutTemplates_Master$view = F3(
 				]));
 	});
 
-var _user$project$Pages_SignUpForm_View$signUpForm = A2(
-	_elm_lang$html$Html$div,
-	_elm_lang$core$Native_List.fromArray(
-		[]),
-	_elm_lang$core$Native_List.fromArray(
-		[
-			_elm_lang$html$Html$text('signup form')
-		]));
+var _user$project$Pages_SignUpForm_View$signUpForm = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		_elm_lang$core$Native_List.fromArray(
+			[
+				_elm_lang$html$Html_Attributes$class('input-field')
+			]),
+		_elm_lang$core$Native_List.fromArray(
+			[
+				A2(
+				_elm_lang$html$Html$input,
+				_elm_lang$core$Native_List.fromArray(
+					[
+						_elm_lang$html$Html_Attributes$id('email'),
+						_elm_lang$html$Html_Attributes$type$('email'),
+						_elm_lang$html$Html_Attributes$class('validate')
+					]),
+				_elm_lang$core$Native_List.fromArray(
+					[])),
+				A2(
+				_elm_lang$html$Html$label,
+				_elm_lang$core$Native_List.fromArray(
+					[
+						_elm_lang$html$Html_Attributes$class('active'),
+						_elm_lang$html$Html_Attributes$for('email')
+					]),
+				_elm_lang$core$Native_List.fromArray(
+					[
+						_elm_lang$html$Html$text('Email')
+					]))
+			]));
+};
 var _user$project$Pages_SignUpForm_View$view = function (model) {
 	return A3(
 		_user$project$Pages_LayoutTemplates_Master$view,
 		_elm_lang$core$Native_List.fromArray(
 			[]),
 		_elm_lang$core$Native_List.fromArray(
-			[_user$project$Pages_SignUpForm_View$signUpForm]),
+			[
+				_user$project$Pages_SignUpForm_View$signUpForm(model)
+			]),
 		_elm_lang$core$Native_List.fromArray(
 			[]));
 };

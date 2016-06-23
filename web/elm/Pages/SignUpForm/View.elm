@@ -17,5 +17,5 @@ signUpForm model =
     div [ class "input-field" ] 
         [
             input [ id "email", type' "email", class "validate" ] [],
-            label [ for "email"] [ text "Email" ]
+            label [ class "active",  for "email"] [ text "Email" ]
         ]

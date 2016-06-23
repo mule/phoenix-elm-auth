@@ -35,7 +35,7 @@ exports.config = {
         assets: [
             /^(web\/static\/assets)/
         ],
-        ignored: "web/elm/elm-stuff"
+        ignored: /^(web\/elm\/elm-stuff)/
     },
 
     // Phoenix paths configuration
