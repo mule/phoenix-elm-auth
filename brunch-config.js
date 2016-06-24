@@ -2,7 +2,16 @@ exports.config = {
     // See http://brunch.io/#documentation for docs.
     files: {
         javascripts: {
-            joinTo: "js/app.js"
+            joinTo: {
+              //"js/init.js": /^(web\/static\/js\/init\.js)/  
+              //"js/elmApp.js": /^(web\/static\/elmBuild)/,
+              "js/app.js": /^(web\/static\/js)/,
+              "js/vendor.js": /^(node_modules)/  
+            },
+            order: {
+                before: [ "web/static/js/main.js", "web/static/js/app.js" ]
+            }
+
 
             // To use a separate vendor.js bundle, specify two files path
             // https://github.com/brunch/brunch/blob/stable/docs/config.md#files
@@ -57,12 +66,14 @@ exports.config = {
         elmBrunch: {
             elmFolder: "web/elm",
             mainModules: ["Main.elm"],
-            outputFolder: "../static/vendor/",
+            outputFolder: "../static/js/",
             makeParameters: ['--warn']
         },
         babel: {
             // Do not use ES6 compiler in vendor code
-            ignore: [/web\/static\/vendor/]
+            ignore: [
+                /web\/static\/js\/main\.js/
+             ]
         },
         sass: {
             mode: 'native'
@@ -84,9 +95,15 @@ exports.config = {
         enabled: true,
         // Whitelist the npm deps to be pulled in as front-end assets.
         // All other deps in package.json will be excluded from the bundle.
-        whitelist: ["phoenix", "phoenix_html", "bootstrap"],
+        whitelist: ["phoenix", "phoenix_html", "jquery", "tether", "bootstrap"],
         styles: {
             "bootstrap": ['dist/css']
-        }
+        },
+
+    globals: {
+      $: 'jquery',
+      jQuery: 'jquery',
+      Tether: 'tether',
+    }
     }
 };
