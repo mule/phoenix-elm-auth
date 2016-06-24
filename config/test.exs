@@ -13,8 +13,8 @@ config :logger, level: :warn
 config :phoenixAuthKata, PhoenixAuthKata.Repo,
   adapter: Ecto.Adapters.Postgres,
   username: "postgres",
-  password: "postgres",
+  password: "password",
   database: "phoenixauthkata_test",
   hostname: "192.168.99.100",
-  port: 32771
+  port: 5342
   pool: Ecto.Adapters.SQL.Sandbox

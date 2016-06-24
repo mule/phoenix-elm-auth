@@ -36,8 +36,8 @@ config :phoenix, :stacktrace_depth, 20
 config :phoenixAuthKata, PhoenixAuthKata.Repo,
   adapter: Ecto.Adapters.Postgres,
   username: "postgres",
-  password: "postgres",
+  password: "password",
   database: "phoenixauthkata_dev",
   hostname: "192.168.99.100",
-  port: 32771,
+  port: 5432,
   pool_size: 10
