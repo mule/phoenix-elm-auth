@@ -11127,44 +11127,126 @@ var _user$project$Pages_PageNotFound_View$view = function (model) {
 			]));
 };
 
-var _user$project$Pages_SignUp_View$view = function (model) {
-	var signupOptions = _elm_lang$core$Native_List.fromArray(
-		[
-			{
-			ctor: '_Tuple2',
-			_0: 'Google',
-			_1: _elm_lang$html$Html_Attributes$href('#!')
-		},
-			{
-			ctor: '_Tuple2',
-			_0: 'Github',
-			_1: _elm_lang$html$Html_Attributes$href('#!')
-		},
-			{
-			ctor: '_Tuple2',
-			_0: 'AuthKata',
-			_1: _elm_lang$html$Html_Attributes$href('#signupform')
-		}
-		]);
-	return A2(
-		_elm_lang$html$Html$div,
+var _user$project$Pages_SignUp_View$signUpForm = function (model) {
+	var registerButton = A2(
+		_elm_lang$html$Html$button,
 		_elm_lang$core$Native_List.fromArray(
 			[
-				_elm_lang$html$Html_Attributes$class('row')
+				_elm_lang$html$Html_Attributes$type$('submit'),
+				_elm_lang$html$Html_Attributes$class('btn btn-primary')
+			]),
+		_elm_lang$core$Native_List.fromArray(
+			[
+				_elm_lang$html$Html$text('Register')
+			]));
+	var confirmPasswordField = A2(
+		_elm_lang$html$Html$fieldset,
+		_elm_lang$core$Native_List.fromArray(
+			[
+				_elm_lang$html$Html_Attributes$class('form-group')
 			]),
 		_elm_lang$core$Native_List.fromArray(
 			[
 				A2(
-				_elm_lang$html$Html$div,
+				_elm_lang$html$Html$input,
 				_elm_lang$core$Native_List.fromArray(
 					[
-						_elm_lang$html$Html_Attributes$class('col-xs-10')
+						_elm_lang$html$Html_Attributes$type$('password'),
+						_elm_lang$html$Html_Attributes$id('passwordConfirm'),
+						_elm_lang$html$Html_Attributes$class('form-control'),
+						_elm_lang$html$Html_Attributes$placeholder('Confirm password')
+					]),
+				_elm_lang$core$Native_List.fromArray(
+					[]))
+			]));
+	var passwordField = A2(
+		_elm_lang$html$Html$fieldset,
+		_elm_lang$core$Native_List.fromArray(
+			[
+				_elm_lang$html$Html_Attributes$class('form-group')
+			]),
+		_elm_lang$core$Native_List.fromArray(
+			[
+				A2(
+				_elm_lang$html$Html$label,
+				_elm_lang$core$Native_List.fromArray(
+					[
+						_elm_lang$html$Html_Attributes$for('password')
 					]),
 				_elm_lang$core$Native_List.fromArray(
 					[
-						A2(_user$project$Components_AuthOptionsCard$view, 'Signup with:', signupOptions)
+						_elm_lang$html$Html$text('Password')
+					])),
+				A2(
+				_elm_lang$html$Html$input,
+				_elm_lang$core$Native_List.fromArray(
+					[
+						_elm_lang$html$Html_Attributes$type$('password'),
+						_elm_lang$html$Html_Attributes$id('password'),
+						_elm_lang$html$Html_Attributes$class('form-control'),
+						_elm_lang$html$Html_Attributes$placeholder('Enter password')
+					]),
+				_elm_lang$core$Native_List.fromArray(
+					[]))
+			]));
+	var emailField = A2(
+		_elm_lang$html$Html$fieldset,
+		_elm_lang$core$Native_List.fromArray(
+			[
+				_elm_lang$html$Html_Attributes$class('form-group')
+			]),
+		_elm_lang$core$Native_List.fromArray(
+			[
+				A2(
+				_elm_lang$html$Html$label,
+				_elm_lang$core$Native_List.fromArray(
+					[
+						_elm_lang$html$Html_Attributes$for('email')
+					]),
+				_elm_lang$core$Native_List.fromArray(
+					[
+						_elm_lang$html$Html$text('Email')
+					])),
+				A2(
+				_elm_lang$html$Html$input,
+				_elm_lang$core$Native_List.fromArray(
+					[
+						_elm_lang$html$Html_Attributes$type$('email'),
+						_elm_lang$html$Html_Attributes$id('email'),
+						_elm_lang$html$Html_Attributes$class('form-control'),
+						_elm_lang$html$Html_Attributes$placeholder('Enter email')
+					]),
+				_elm_lang$core$Native_List.fromArray(
+					[])),
+				A2(
+				_elm_lang$html$Html$small,
+				_elm_lang$core$Native_List.fromArray(
+					[
+						_elm_lang$html$Html_Attributes$class('text-muted')
+					]),
+				_elm_lang$core$Native_List.fromArray(
+					[
+						_elm_lang$html$Html$text('We shall never share your email with anyone else')
 					]))
 			]));
+	return A2(
+		_elm_lang$html$Html$form,
+		_elm_lang$core$Native_List.fromArray(
+			[]),
+		_elm_lang$core$Native_List.fromArray(
+			[emailField, passwordField, confirmPasswordField, registerButton]));
+};
+var _user$project$Pages_SignUp_View$view = function (model) {
+	return A3(
+		_user$project$LayoutTemplates_Master$view,
+		_elm_lang$core$Native_List.fromArray(
+			[]),
+		_elm_lang$core$Native_List.fromArray(
+			[
+				_user$project$Pages_SignUp_View$signUpForm(model)
+			]),
+		_elm_lang$core$Native_List.fromArray(
+			[]));
 };
 
 var _user$project$Pages_SignUpForm_View$signUpForm = function (model) {
