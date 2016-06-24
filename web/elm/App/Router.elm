@@ -17,9 +17,6 @@ delta2url previous current =
         SignUp ->
             Just <| UrlChange NewEntry "/#signup"
 
-        SignUpForm ->
-            Just <| UrlChange NewEntry "/#signupform"
-
         MyAccount ->
             Just <| UrlChange NewEntry "/#my-account"
 
@@ -38,9 +35,6 @@ location2messages location =
 
         "#signup" ->
             [ SetActivePage SignUp ]
-
-        "#signupform" ->
-            [ SetActivePage SignUpForm ]
             
         "#my-account" ->
             [ SetActivePage MyAccount ]

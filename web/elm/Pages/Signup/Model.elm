@@ -1,7 +1,9 @@
-module Pages.SignUp.Model exposing (Model)
+module Pages.SignUp.Model exposing (..)
 
 type alias Model =
-    { email : String }
+    { email : String
+    , emailValid : Bool
+    , emailValidationPending : Bool }
 
 -- type Msg
 --     = FetchProfileFail Http.Error
@@ -12,4 +14,6 @@ type alias Model =
 
 init :  Model
 init =
-    { email = "" }
+    { email = ""
+    , emailValid = False
+    , emailValidationPending = False }

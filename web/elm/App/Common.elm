@@ -9,7 +9,6 @@ import Phoenix.Push
 type Page
     = Login
     | SignUp
-    | SignUpForm
     | MyAccount
     | PageNotFound
 
@@ -18,7 +17,6 @@ type Msg
     = Logout
     | PageLogin Pages.Login.Update.Msg
     | PageSignUp
-    | PageSignUpForm
     | SetActivePage Page
     | PhoenixMsg (Phoenix.Socket.Msg Msg)
     | Noop

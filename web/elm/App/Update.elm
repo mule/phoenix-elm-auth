@@ -4,19 +4,17 @@ import Exts.RemoteData exposing (RemoteData(..), WebData)
 import User.Model exposing (..)
 import Pages.Login.Update exposing (Msg)
 import Pages.Login.Model
+import Pages.SignUp.Model
 import Phoenix.Socket
 import Phoenix.Channel
 import Phoenix.Push
 import Debug
 
-
-    
-
-
 type alias Model =
     { activePage : Page
     , user : WebData User
     , pageLogin : Pages.Login.Model.Model
+    , pageSignUp: Pages.SignUp.Model.Model
     , phxSocket : Phoenix.Socket.Socket App.Common.Msg
     }
 
@@ -25,6 +23,7 @@ emptyModel : Model
 emptyModel =
     { activePage = Login
     , pageLogin = Pages.Login.Model.emptyModel
+    , pageSignUp = Pages.SignUp.Model.init
     , user = NotAsked
     , phxSocket = Phoenix.Socket.init "ws://localhost:4000/socket/websocket"
         |> Phoenix.Socket.withDebug
@@ -56,9 +55,6 @@ update msg model =
                 )
 
         PageSignUp ->
-            model ! []
-
-        PageSignUpForm ->
             model ! []
 
         SetActivePage page ->

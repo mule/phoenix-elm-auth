@@ -1,7 +1,7 @@
 module Pages.SignUp.View exposing (view)
 import Components.AuthOptionsCard as AuthOptionsCard
---import Pages.SignUp.Model exposing (..)
-import App.Update exposing (Model)
+import Pages.SignUp.Model exposing (..)
+--import App.Update exposing (Model)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick, onInput, onSubmit)

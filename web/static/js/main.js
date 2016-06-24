@@ -10830,7 +10830,6 @@ var _user$project$Pages_Login_Update$update = F3(
 
 var _user$project$App_Common$PageNotFound = {ctor: 'PageNotFound'};
 var _user$project$App_Common$MyAccount = {ctor: 'MyAccount'};
-var _user$project$App_Common$SignUpForm = {ctor: 'SignUpForm'};
 var _user$project$App_Common$SignUp = {ctor: 'SignUp'};
 var _user$project$App_Common$Login = {ctor: 'Login'};
 var _user$project$App_Common$Noop = {ctor: 'Noop'};
@@ -10840,16 +10839,22 @@ var _user$project$App_Common$PhoenixMsg = function (a) {
 var _user$project$App_Common$SetActivePage = function (a) {
 	return {ctor: 'SetActivePage', _0: a};
 };
-var _user$project$App_Common$PageSignUpForm = {ctor: 'PageSignUpForm'};
 var _user$project$App_Common$PageSignUp = {ctor: 'PageSignUp'};
 var _user$project$App_Common$PageLogin = function (a) {
 	return {ctor: 'PageLogin', _0: a};
 };
 var _user$project$App_Common$Logout = {ctor: 'Logout'};
 
+var _user$project$Pages_SignUp_Model$init = {email: '', emailValid: false, emailValidationPending: false};
+var _user$project$Pages_SignUp_Model$Model = F3(
+	function (a, b, c) {
+		return {email: a, emailValid: b, emailValidationPending: c};
+	});
+
 var _user$project$App_Update$emptyModel = {
 	activePage: _user$project$App_Common$Login,
 	pageLogin: _user$project$Pages_Login_Model$emptyModel,
+	pageSignUp: _user$project$Pages_SignUp_Model$init,
 	user: _krisajenkins$elm_exts$Exts_RemoteData$NotAsked,
 	phxSocket: _fbonetti$elm_phoenix_socket$Phoenix_Socket$withDebug(
 		_fbonetti$elm_phoenix_socket$Phoenix_Socket$init('ws://localhost:4000/socket/websocket'))
@@ -10888,12 +10893,6 @@ var _user$project$App_Update$update = F2(
 					model,
 					_elm_lang$core$Native_List.fromArray(
 						[]));
-			case 'PageSignUpForm':
-				return A2(
-					_elm_lang$core$Platform_Cmd_ops['!'],
-					model,
-					_elm_lang$core$Native_List.fromArray(
-						[]));
 			case 'SetActivePage':
 				return A2(
 					_elm_lang$core$Platform_Cmd_ops['!'],
@@ -10910,9 +10909,9 @@ var _user$project$App_Update$update = F2(
 						[]));
 		}
 	});
-var _user$project$App_Update$Model = F4(
-	function (a, b, c, d) {
-		return {activePage: a, user: b, pageLogin: c, phxSocket: d};
+var _user$project$App_Update$Model = F5(
+	function (a, b, c, d, e) {
+		return {activePage: a, user: b, pageLogin: c, pageSignUp: d, phxSocket: e};
 	});
 
 var _user$project$App_Router$location2messages = function (location) {
@@ -10930,11 +10929,6 @@ var _user$project$App_Router$location2messages = function (location) {
 			return _elm_lang$core$Native_List.fromArray(
 				[
 					_user$project$App_Common$SetActivePage(_user$project$App_Common$SignUp)
-				]);
-		case '#signupform':
-			return _elm_lang$core$Native_List.fromArray(
-				[
-					_user$project$App_Common$SetActivePage(_user$project$App_Common$SignUpForm)
 				]);
 		case '#my-account':
 			return _elm_lang$core$Native_List.fromArray(
@@ -10963,9 +10957,6 @@ var _user$project$App_Router$delta2url = F2(
 			case 'SignUp':
 				return _elm_lang$core$Maybe$Just(
 					A2(_rgrempel$elm_route_url$RouteUrl$UrlChange, _rgrempel$elm_route_url$RouteUrl$NewEntry, '/#signup'));
-			case 'SignUpForm':
-				return _elm_lang$core$Maybe$Just(
-					A2(_rgrempel$elm_route_url$RouteUrl$UrlChange, _rgrempel$elm_route_url$RouteUrl$NewEntry, '/#signupform'));
 			case 'MyAccount':
 				return _elm_lang$core$Maybe$Just(
 					A2(_rgrempel$elm_route_url$RouteUrl$UrlChange, _rgrempel$elm_route_url$RouteUrl$NewEntry, '/#my-account'));
