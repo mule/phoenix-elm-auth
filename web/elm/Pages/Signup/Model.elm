@@ -12,8 +12,8 @@ type alias Model =
 --     | TrySignup
 
 
-init :  Model
-init =
+emptyModel :  Model
+emptyModel =
     { email = ""
     , emailValid = False
     , emailValidationPending = False }

@@ -5,10 +5,11 @@ import Pages.SignUp.Model exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick, onInput, onSubmit)
-import App.Common exposing (Msg(..), Page(..))
+--import App.Common exposing (Msg(..), Page(..))
+import Pages.SignUp.Update exposing (Msg(..)) 
 import LayoutTemplates.Master as Layout
 
-view : Model -> Html App.Common.Msg
+view : Model -> Html Msg
 
 view model  =
     Layout.view [] [ signUpForm model ] []
@@ -20,7 +21,7 @@ signUpForm model =
             fieldset [ class "form-group" ] 
             [ 
                 label [ for "email" ] [ text "Email" ],
-                input [type' "email", id "email", class "form-control", placeholder "Enter email" ] [],
+                input [type' "email", id "email", class "form-control", placeholder "Enter email", value model.email, onInput SetEmail ] [],
                 small [ class "text-muted" ] [ text "We shall never share your email with anyone else" ]
             ]
 

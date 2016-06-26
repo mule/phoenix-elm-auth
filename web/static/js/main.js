@@ -9965,17 +9965,23 @@ var _krisajenkins$elm_exts$Exts_RemoteData$fromResult = function (result) {
 		return _krisajenkins$elm_exts$Exts_RemoteData$Success(_p4._0);
 	}
 };
+var _krisajenkins$elm_exts$Exts_RemoteData$fromTask = function (_p5) {
+	return A2(
+		_elm_lang$core$Task$map,
+		_krisajenkins$elm_exts$Exts_RemoteData$fromResult,
+		_elm_lang$core$Task$toResult(_p5));
+};
 var _krisajenkins$elm_exts$Exts_RemoteData$Loading = {ctor: 'Loading'};
 var _krisajenkins$elm_exts$Exts_RemoteData$NotAsked = {ctor: 'NotAsked'};
 var _krisajenkins$elm_exts$Exts_RemoteData$map = F2(
 	function (f, data) {
-		var _p5 = data;
-		switch (_p5.ctor) {
+		var _p6 = data;
+		switch (_p6.ctor) {
 			case 'Success':
 				return _krisajenkins$elm_exts$Exts_RemoteData$Success(
-					f(_p5._0));
+					f(_p6._0));
 			case 'Failure':
-				return _krisajenkins$elm_exts$Exts_RemoteData$Failure(_p5._0);
+				return _krisajenkins$elm_exts$Exts_RemoteData$Failure(_p6._0);
 			case 'Loading':
 				return _krisajenkins$elm_exts$Exts_RemoteData$Loading;
 			default:
@@ -9984,13 +9990,13 @@ var _krisajenkins$elm_exts$Exts_RemoteData$map = F2(
 	});
 var _krisajenkins$elm_exts$Exts_RemoteData$mapFailure = F2(
 	function (f, data) {
-		var _p6 = data;
-		switch (_p6.ctor) {
+		var _p7 = data;
+		switch (_p7.ctor) {
 			case 'Success':
-				return _krisajenkins$elm_exts$Exts_RemoteData$Success(_p6._0);
+				return _krisajenkins$elm_exts$Exts_RemoteData$Success(_p7._0);
 			case 'Failure':
 				return _krisajenkins$elm_exts$Exts_RemoteData$Failure(
-					f(_p6._0));
+					f(_p7._0));
 			case 'Loading':
 				return _krisajenkins$elm_exts$Exts_RemoteData$Loading;
 			default:
@@ -9999,14 +10005,14 @@ var _krisajenkins$elm_exts$Exts_RemoteData$mapFailure = F2(
 	});
 var _krisajenkins$elm_exts$Exts_RemoteData$mapBoth = F3(
 	function (successFn, errorFn, data) {
-		var _p7 = data;
-		switch (_p7.ctor) {
+		var _p8 = data;
+		switch (_p8.ctor) {
 			case 'Success':
 				return _krisajenkins$elm_exts$Exts_RemoteData$Success(
-					successFn(_p7._0));
+					successFn(_p8._0));
 			case 'Failure':
 				return _krisajenkins$elm_exts$Exts_RemoteData$Failure(
-					errorFn(_p7._0));
+					errorFn(_p8._0));
 			case 'Loading':
 				return _krisajenkins$elm_exts$Exts_RemoteData$Loading;
 			default:
@@ -10015,12 +10021,12 @@ var _krisajenkins$elm_exts$Exts_RemoteData$mapBoth = F3(
 	});
 var _krisajenkins$elm_exts$Exts_RemoteData$andThen = F2(
 	function (data, f) {
-		var _p8 = data;
-		switch (_p8.ctor) {
+		var _p9 = data;
+		switch (_p9.ctor) {
 			case 'Success':
-				return f(_p8._0);
+				return f(_p9._0);
 			case 'Failure':
-				return _krisajenkins$elm_exts$Exts_RemoteData$Failure(_p8._0);
+				return _krisajenkins$elm_exts$Exts_RemoteData$Failure(_p9._0);
 			case 'NotAsked':
 				return _krisajenkins$elm_exts$Exts_RemoteData$NotAsked;
 			default:
@@ -10029,7 +10035,7 @@ var _krisajenkins$elm_exts$Exts_RemoteData$andThen = F2(
 	});
 var _krisajenkins$elm_exts$Exts_RemoteData$append = F2(
 	function (a, b) {
-		var _p9 = {ctor: '_Tuple2', _0: a, _1: b};
+		var _p10 = {ctor: '_Tuple2', _0: a, _1: b};
 		_v8_5:
 		do {
 			_v8_4:
@@ -10038,12 +10044,12 @@ var _krisajenkins$elm_exts$Exts_RemoteData$append = F2(
 				do {
 					_v8_2:
 					do {
-						switch (_p9._0.ctor) {
+						switch (_p10._0.ctor) {
 							case 'Success':
-								switch (_p9._1.ctor) {
+								switch (_p10._1.ctor) {
 									case 'Success':
 										return _krisajenkins$elm_exts$Exts_RemoteData$Success(
-											{ctor: '_Tuple2', _0: _p9._0._0, _1: _p9._1._0});
+											{ctor: '_Tuple2', _0: _p10._0._0, _1: _p10._1._0});
 									case 'Failure':
 										break _v8_2;
 									case 'NotAsked':
@@ -10052,9 +10058,9 @@ var _krisajenkins$elm_exts$Exts_RemoteData$append = F2(
 										return _krisajenkins$elm_exts$Exts_RemoteData$Loading;
 								}
 							case 'Failure':
-								return _krisajenkins$elm_exts$Exts_RemoteData$Failure(_p9._0._0);
+								return _krisajenkins$elm_exts$Exts_RemoteData$Failure(_p10._0._0);
 							case 'NotAsked':
-								switch (_p9._1.ctor) {
+								switch (_p10._1.ctor) {
 									case 'Failure':
 										break _v8_2;
 									case 'NotAsked':
@@ -10065,7 +10071,7 @@ var _krisajenkins$elm_exts$Exts_RemoteData$append = F2(
 										break _v8_3;
 								}
 							default:
-								switch (_p9._1.ctor) {
+								switch (_p10._1.ctor) {
 									case 'Failure':
 										break _v8_2;
 									case 'NotAsked':
@@ -10077,7 +10083,7 @@ var _krisajenkins$elm_exts$Exts_RemoteData$append = F2(
 								}
 						}
 					} while(false);
-					return _krisajenkins$elm_exts$Exts_RemoteData$Failure(_p9._1._0);
+					return _krisajenkins$elm_exts$Exts_RemoteData$Failure(_p10._1._0);
 				} while(false);
 				return _krisajenkins$elm_exts$Exts_RemoteData$NotAsked;
 			} while(false);
@@ -10828,36 +10834,66 @@ var _user$project$Pages_Login_Update$update = F3(
 		}
 	});
 
+var _user$project$Pages_SignUp_Model$emptyModel = {email: '', emailValid: false, emailValidationPending: false};
+var _user$project$Pages_SignUp_Model$Model = F3(
+	function (a, b, c) {
+		return {email: a, emailValid: b, emailValidationPending: c};
+	});
+
+var _user$project$Pages_SignUp_Update$update = F2(
+	function (msg, model) {
+		var _p0 = A2(_elm_lang$core$Debug$log, 'Signup action', msg);
+		return {
+			ctor: '_Tuple2',
+			_0: _elm_lang$core$Native_Utils.update(
+				model,
+				{email: _p0._0}),
+			_1: _elm_lang$core$Platform_Cmd$none
+		};
+	});
+var _user$project$Pages_SignUp_Update$init = A2(
+	_elm_lang$core$Platform_Cmd_ops['!'],
+	_user$project$Pages_SignUp_Model$emptyModel,
+	_elm_lang$core$Native_List.fromArray(
+		[]));
+var _user$project$Pages_SignUp_Update$SetEmail = function (a) {
+	return {ctor: 'SetEmail', _0: a};
+};
+
 var _user$project$App_Common$PageNotFound = {ctor: 'PageNotFound'};
 var _user$project$App_Common$MyAccount = {ctor: 'MyAccount'};
 var _user$project$App_Common$SignUp = {ctor: 'SignUp'};
 var _user$project$App_Common$Login = {ctor: 'Login'};
 var _user$project$App_Common$Noop = {ctor: 'Noop'};
+var _user$project$App_Common$ReceiveCommandMessage = function (a) {
+	return {ctor: 'ReceiveCommandMessage', _0: a};
+};
 var _user$project$App_Common$PhoenixMsg = function (a) {
 	return {ctor: 'PhoenixMsg', _0: a};
 };
 var _user$project$App_Common$SetActivePage = function (a) {
 	return {ctor: 'SetActivePage', _0: a};
 };
-var _user$project$App_Common$PageSignUp = {ctor: 'PageSignUp'};
+var _user$project$App_Common$PageSignUp = function (a) {
+	return {ctor: 'PageSignUp', _0: a};
+};
 var _user$project$App_Common$PageLogin = function (a) {
 	return {ctor: 'PageLogin', _0: a};
 };
 var _user$project$App_Common$Logout = {ctor: 'Logout'};
 
-var _user$project$Pages_SignUp_Model$init = {email: '', emailValid: false, emailValidationPending: false};
-var _user$project$Pages_SignUp_Model$Model = F3(
-	function (a, b, c) {
-		return {email: a, emailValid: b, emailValidationPending: c};
-	});
-
 var _user$project$App_Update$emptyModel = {
 	activePage: _user$project$App_Common$Login,
 	pageLogin: _user$project$Pages_Login_Model$emptyModel,
-	pageSignUp: _user$project$Pages_SignUp_Model$init,
+	pageSignUp: _user$project$Pages_SignUp_Model$emptyModel,
 	user: _krisajenkins$elm_exts$Exts_RemoteData$NotAsked,
-	phxSocket: _fbonetti$elm_phoenix_socket$Phoenix_Socket$withDebug(
-		_fbonetti$elm_phoenix_socket$Phoenix_Socket$init('ws://localhost:4000/socket/websocket'))
+	phxSocket: A4(
+		_fbonetti$elm_phoenix_socket$Phoenix_Socket$on,
+		'new:msg',
+		'commands:lobby',
+		_user$project$App_Common$ReceiveCommandMessage,
+		_fbonetti$elm_phoenix_socket$Phoenix_Socket$withDebug(
+			_fbonetti$elm_phoenix_socket$Phoenix_Socket$init('ws://localhost:4000/socket/websocket')))
 };
 var _user$project$App_Update$init = A2(
 	_elm_lang$core$Platform_Cmd_ops['!'],
@@ -10865,8 +10901,8 @@ var _user$project$App_Update$init = A2(
 	_elm_lang$core$Native_List.fromArray(
 		[]));
 var _user$project$App_Update$update = F2(
-	function (msg, model) {
-		var _p0 = A2(_elm_lang$core$Debug$log, 'action', msg);
+	function (appMsg, model) {
+		var _p0 = A2(_elm_lang$core$Debug$log, 'App action', appMsg);
 		switch (_p0.ctor) {
 			case 'Logout':
 				return _user$project$App_Update$init;
@@ -10888,17 +10924,28 @@ var _user$project$App_Update$update = F2(
 					_1: A2(_elm_lang$core$Platform_Cmd$map, _user$project$App_Common$PhoenixMsg, phxCmd)
 				};
 			case 'PageSignUp':
-				return A2(
-					_elm_lang$core$Platform_Cmd_ops['!'],
-					model,
-					_elm_lang$core$Native_List.fromArray(
-						[]));
+				var _p2 = A2(_user$project$Pages_SignUp_Update$update, _p0._0, model.pageSignUp);
+				var signUpModel = _p2._0;
+				var cmd = _p2._1;
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{pageSignUp: signUpModel}),
+					_1: A2(_elm_lang$core$Platform_Cmd$map, _user$project$App_Common$PageSignUp, cmd)
+				};
 			case 'SetActivePage':
 				return A2(
 					_elm_lang$core$Platform_Cmd_ops['!'],
 					_elm_lang$core$Native_Utils.update(
 						model,
 						{activePage: _p0._0}),
+					_elm_lang$core$Native_List.fromArray(
+						[]));
+			case 'ReceiveCommandMessage':
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					model,
 					_elm_lang$core$Native_List.fromArray(
 						[]));
 			default:
@@ -10911,7 +10958,7 @@ var _user$project$App_Update$update = F2(
 	});
 var _user$project$App_Update$Model = F5(
 	function (a, b, c, d, e) {
-		return {activePage: a, user: b, pageLogin: c, pageSignUp: d, phxSocket: e};
+		return {activePage: a, user: b, pageSignUp: c, pageLogin: d, phxSocket: e};
 	});
 
 var _user$project$App_Router$location2messages = function (location) {
@@ -11205,7 +11252,9 @@ var _user$project$Pages_SignUp_View$signUpForm = function (model) {
 						_elm_lang$html$Html_Attributes$type$('email'),
 						_elm_lang$html$Html_Attributes$id('email'),
 						_elm_lang$html$Html_Attributes$class('form-control'),
-						_elm_lang$html$Html_Attributes$placeholder('Enter email')
+						_elm_lang$html$Html_Attributes$placeholder('Enter email'),
+						_elm_lang$html$Html_Attributes$value(model.email),
+						_elm_lang$html$Html_Events$onInput(_user$project$Pages_SignUp_Update$SetEmail)
 					]),
 				_elm_lang$core$Native_List.fromArray(
 					[])),
@@ -11414,99 +11463,20 @@ var _user$project$App_View$classByPage = F2(
 				}
 				]));
 	});
-var _user$project$App_View$viewFooter = A2(
-	_elm_lang$html$Html$div,
-	_elm_lang$core$Native_List.fromArray(
-		[
-			_elm_lang$html$Html_Attributes$class('ui inverted vertical footer segment form-page')
-		]),
-	_elm_lang$core$Native_List.fromArray(
-		[
-			A2(
-			_elm_lang$html$Html$div,
-			_elm_lang$core$Native_List.fromArray(
-				[
-					_elm_lang$html$Html_Attributes$class('ui container')
-				]),
-			_elm_lang$core$Native_List.fromArray(
-				[
-					A2(
-					_elm_lang$html$Html$a,
-					_elm_lang$core$Native_List.fromArray(
-						[
-							_elm_lang$html$Html_Attributes$href('http://gizra.com'),
-							_elm_lang$html$Html_Attributes$target('_blank')
-						]),
-					_elm_lang$core$Native_List.fromArray(
-						[
-							_elm_lang$html$Html$text('Gizra')
-						])),
-					A2(
-					_elm_lang$html$Html$span,
-					_elm_lang$core$Native_List.fromArray(
-						[]),
-					_elm_lang$core$Native_List.fromArray(
-						[
-							_elm_lang$html$Html$text(' // ')
-						])),
-					A2(
-					_elm_lang$html$Html$a,
-					_elm_lang$core$Native_List.fromArray(
-						[
-							_elm_lang$html$Html_Attributes$href('https://github.com/Gizra/elm-spa-example'),
-							_elm_lang$html$Html_Attributes$target('_blank')
-						]),
-					_elm_lang$core$Native_List.fromArray(
-						[
-							_elm_lang$html$Html$text('Github')
-						]))
-				]))
-		]));
 var _user$project$App_View$viewMainContent = function (model) {
 	var _p0 = A2(_elm_lang$core$Debug$log, 'view', model.activePage);
 	switch (_p0.ctor) {
 		case 'Login':
 			return _user$project$Pages_Login_View$view(model);
 		case 'SignUp':
-			return _user$project$Pages_SignUp_View$view(model);
-		case 'SignUpForm':
-			return _user$project$Pages_SignUpForm_View$view(model);
+			return A2(
+				_elm_lang$html$Html_App$map,
+				_user$project$App_Common$PageSignUp,
+				_user$project$Pages_SignUp_View$view(model.pageSignUp));
 		case 'MyAccount':
 			return _user$project$Pages_MyAccount_View$view(model);
 		default:
 			return _user$project$Pages_PageNotFound_View$view(model);
-	}
-};
-var _user$project$App_View$viewAvatar = function (user) {
-	var _p1 = user;
-	if (_p1.ctor === 'Success') {
-		return A2(
-			_elm_lang$html$Html$a,
-			_elm_lang$core$Native_List.fromArray(
-				[
-					_elm_lang$html$Html_Events$onClick(
-					_user$project$App_Common$SetActivePage(_user$project$App_Common$MyAccount)),
-					_elm_lang$html$Html_Attributes$class('ui item')
-				]),
-			_elm_lang$core$Native_List.fromArray(
-				[
-					A2(
-					_elm_lang$html$Html$img,
-					_elm_lang$core$Native_List.fromArray(
-						[
-							_elm_lang$html$Html_Attributes$class('ui avatar image'),
-							_elm_lang$html$Html_Attributes$src(_p1._0.avatarUrl)
-						]),
-					_elm_lang$core$Native_List.fromArray(
-						[]))
-				]));
-	} else {
-		return A2(
-			_elm_lang$html$Html$div,
-			_elm_lang$core$Native_List.fromArray(
-				[]),
-			_elm_lang$core$Native_List.fromArray(
-				[]));
 	}
 };
 var _user$project$App_View$viewPageNotFoundItem = function (activePage) {
@@ -11522,63 +11492,6 @@ var _user$project$App_View$viewPageNotFoundItem = function (activePage) {
 			[
 				_elm_lang$html$Html$text('404 page')
 			]));
-};
-var _user$project$App_View$navbarAuthenticated = function (model) {
-	return _elm_lang$core$Native_List.fromArray(
-		[
-			A2(
-			_elm_lang$html$Html$a,
-			_elm_lang$core$Native_List.fromArray(
-				[
-					A2(_user$project$App_View$classByPage, _user$project$App_Common$MyAccount, model.activePage),
-					_elm_lang$html$Html_Events$onClick(
-					_user$project$App_Common$SetActivePage(_user$project$App_Common$MyAccount))
-				]),
-			_elm_lang$core$Native_List.fromArray(
-				[
-					_elm_lang$html$Html$text('My Account')
-				])),
-			_user$project$App_View$viewPageNotFoundItem(model.activePage),
-			A2(
-			_elm_lang$html$Html$div,
-			_elm_lang$core$Native_List.fromArray(
-				[
-					_elm_lang$html$Html_Attributes$class('right menu')
-				]),
-			_elm_lang$core$Native_List.fromArray(
-				[
-					_user$project$App_View$viewAvatar(model.user),
-					A2(
-					_elm_lang$html$Html$a,
-					_elm_lang$core$Native_List.fromArray(
-						[
-							_elm_lang$html$Html_Attributes$class('ui item'),
-							_elm_lang$html$Html_Events$onClick(_user$project$App_Common$Logout)
-						]),
-					_elm_lang$core$Native_List.fromArray(
-						[
-							_elm_lang$html$Html$text('Logout')
-						]))
-				]))
-		]);
-};
-var _user$project$App_View$navbarAnonymous = function (model) {
-	return _elm_lang$core$Native_List.fromArray(
-		[
-			A2(
-			_elm_lang$html$Html$a,
-			_elm_lang$core$Native_List.fromArray(
-				[
-					A2(_user$project$App_View$classByPage, _user$project$App_Common$Login, model.activePage),
-					_elm_lang$html$Html_Events$onClick(
-					_user$project$App_Common$SetActivePage(_user$project$App_Common$Login))
-				]),
-			_elm_lang$core$Native_List.fromArray(
-				[
-					_elm_lang$html$Html$text('Login')
-				])),
-			_user$project$App_View$viewPageNotFoundItem(model.activePage)
-		]);
 };
 var _user$project$App_View$viewHeader = function (model) {
 	var buttonClasses = 'waves-effect waves-light btn-large';

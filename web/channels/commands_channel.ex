@@ -1,7 +1,7 @@
 defmodule PhoenixAuthKata.CommandsChannel do
   use PhoenixAuthKata.Web, :channel
 
-  def join("validate:lobby", payload, socket) do
+  def join("commands:lobby", payload, socket) do
     if authorized?(payload) do
       {:ok, socket}
     else

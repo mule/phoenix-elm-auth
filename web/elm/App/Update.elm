@@ -5,6 +5,7 @@ import User.Model exposing (..)
 import Pages.Login.Update exposing (Msg)
 import Pages.Login.Model
 import Pages.SignUp.Model
+import Pages.SignUp.Update exposing (Msg)
 import Phoenix.Socket
 import Phoenix.Channel
 import Phoenix.Push
@@ -13,8 +14,8 @@ import Debug
 type alias Model =
     { activePage : Page
     , user : WebData User
+    , pageSignUp : Pages.SignUp.Model.Model 
     , pageLogin : Pages.Login.Model.Model
-    , pageSignUp: Pages.SignUp.Model.Model
     , phxSocket : Phoenix.Socket.Socket App.Common.Msg
     }
 
@@ -23,23 +24,20 @@ emptyModel : Model
 emptyModel =
     { activePage = Login
     , pageLogin = Pages.Login.Model.emptyModel
-    , pageSignUp = Pages.SignUp.Model.init
+    , pageSignUp = Pages.SignUp.Model.emptyModel
     , user = NotAsked
     , phxSocket = Phoenix.Socket.init "ws://localhost:4000/socket/websocket"
-        |> Phoenix.Socket.withDebug
+        |> Phoenix.Socket.withDebug 
+        |> Phoenix.Socket.on "new:msg" "commands:lobby" ReceiveCommandMessage
     }
-
-
-
 
 init : ( Model, Cmd App.Common.Msg )
 init =
     emptyModel ! []
 
-
 update : App.Common.Msg -> Model -> ( Model, Cmd App.Common.Msg )
-update msg model =
-    case Debug.log "action" msg of
+update appMsg model =
+    case Debug.log "App action" appMsg of
         Logout ->
             init
 
@@ -54,16 +52,22 @@ update msg model =
                 , Cmd.map PhoenixMsg phxCmd
                 )
 
-        PageSignUp ->
-            model ! []
+        PageSignUp msg ->
+            let 
+                ( signUpModel, cmd ) = Pages.SignUp.Update.update msg model.pageSignUp
+            in
+                ( { model | pageSignUp = signUpModel }
+                , Cmd.map PageSignUp cmd
+                )
 
         SetActivePage page ->
             { model | activePage = page } ! []
         
+        ReceiveCommandMessage raw ->
+             model ! [] 
+
         Noop -> 
-            model ! []
-
-
+            model ! []  
 
 -- setActivePageAccess : WebData User -> Page -> Page
 -- setActivePageAccess user page =
