@@ -1,7 +1,8 @@
 module Pages.SignUp.Model exposing (..)
 
 type alias Model =
-    { email : String
+    { displayName : String
+    , email : String
     , emailValid : Bool
     , emailValidationPending : Bool }
 
@@ -14,6 +15,7 @@ type alias Model =
 
 emptyModel :  Model
 emptyModel =
-    { email = ""
+    { displayName = ""
+    , email = ""
     , emailValid = False
     , emailValidationPending = False }
