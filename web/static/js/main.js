@@ -9965,17 +9965,23 @@ var _krisajenkins$elm_exts$Exts_RemoteData$fromResult = function (result) {
 		return _krisajenkins$elm_exts$Exts_RemoteData$Success(_p4._0);
 	}
 };
+var _krisajenkins$elm_exts$Exts_RemoteData$fromTask = function (_p5) {
+	return A2(
+		_elm_lang$core$Task$map,
+		_krisajenkins$elm_exts$Exts_RemoteData$fromResult,
+		_elm_lang$core$Task$toResult(_p5));
+};
 var _krisajenkins$elm_exts$Exts_RemoteData$Loading = {ctor: 'Loading'};
 var _krisajenkins$elm_exts$Exts_RemoteData$NotAsked = {ctor: 'NotAsked'};
 var _krisajenkins$elm_exts$Exts_RemoteData$map = F2(
 	function (f, data) {
-		var _p5 = data;
-		switch (_p5.ctor) {
+		var _p6 = data;
+		switch (_p6.ctor) {
 			case 'Success':
 				return _krisajenkins$elm_exts$Exts_RemoteData$Success(
-					f(_p5._0));
+					f(_p6._0));
 			case 'Failure':
-				return _krisajenkins$elm_exts$Exts_RemoteData$Failure(_p5._0);
+				return _krisajenkins$elm_exts$Exts_RemoteData$Failure(_p6._0);
 			case 'Loading':
 				return _krisajenkins$elm_exts$Exts_RemoteData$Loading;
 			default:
@@ -9984,13 +9990,13 @@ var _krisajenkins$elm_exts$Exts_RemoteData$map = F2(
 	});
 var _krisajenkins$elm_exts$Exts_RemoteData$mapFailure = F2(
 	function (f, data) {
-		var _p6 = data;
-		switch (_p6.ctor) {
+		var _p7 = data;
+		switch (_p7.ctor) {
 			case 'Success':
-				return _krisajenkins$elm_exts$Exts_RemoteData$Success(_p6._0);
+				return _krisajenkins$elm_exts$Exts_RemoteData$Success(_p7._0);
 			case 'Failure':
 				return _krisajenkins$elm_exts$Exts_RemoteData$Failure(
-					f(_p6._0));
+					f(_p7._0));
 			case 'Loading':
 				return _krisajenkins$elm_exts$Exts_RemoteData$Loading;
 			default:
@@ -9999,14 +10005,14 @@ var _krisajenkins$elm_exts$Exts_RemoteData$mapFailure = F2(
 	});
 var _krisajenkins$elm_exts$Exts_RemoteData$mapBoth = F3(
 	function (successFn, errorFn, data) {
-		var _p7 = data;
-		switch (_p7.ctor) {
+		var _p8 = data;
+		switch (_p8.ctor) {
 			case 'Success':
 				return _krisajenkins$elm_exts$Exts_RemoteData$Success(
-					successFn(_p7._0));
+					successFn(_p8._0));
 			case 'Failure':
 				return _krisajenkins$elm_exts$Exts_RemoteData$Failure(
-					errorFn(_p7._0));
+					errorFn(_p8._0));
 			case 'Loading':
 				return _krisajenkins$elm_exts$Exts_RemoteData$Loading;
 			default:
@@ -10015,12 +10021,12 @@ var _krisajenkins$elm_exts$Exts_RemoteData$mapBoth = F3(
 	});
 var _krisajenkins$elm_exts$Exts_RemoteData$andThen = F2(
 	function (data, f) {
-		var _p8 = data;
-		switch (_p8.ctor) {
+		var _p9 = data;
+		switch (_p9.ctor) {
 			case 'Success':
-				return f(_p8._0);
+				return f(_p9._0);
 			case 'Failure':
-				return _krisajenkins$elm_exts$Exts_RemoteData$Failure(_p8._0);
+				return _krisajenkins$elm_exts$Exts_RemoteData$Failure(_p9._0);
 			case 'NotAsked':
 				return _krisajenkins$elm_exts$Exts_RemoteData$NotAsked;
 			default:
@@ -10029,7 +10035,7 @@ var _krisajenkins$elm_exts$Exts_RemoteData$andThen = F2(
 	});
 var _krisajenkins$elm_exts$Exts_RemoteData$append = F2(
 	function (a, b) {
-		var _p9 = {ctor: '_Tuple2', _0: a, _1: b};
+		var _p10 = {ctor: '_Tuple2', _0: a, _1: b};
 		_v8_5:
 		do {
 			_v8_4:
@@ -10038,12 +10044,12 @@ var _krisajenkins$elm_exts$Exts_RemoteData$append = F2(
 				do {
 					_v8_2:
 					do {
-						switch (_p9._0.ctor) {
+						switch (_p10._0.ctor) {
 							case 'Success':
-								switch (_p9._1.ctor) {
+								switch (_p10._1.ctor) {
 									case 'Success':
 										return _krisajenkins$elm_exts$Exts_RemoteData$Success(
-											{ctor: '_Tuple2', _0: _p9._0._0, _1: _p9._1._0});
+											{ctor: '_Tuple2', _0: _p10._0._0, _1: _p10._1._0});
 									case 'Failure':
 										break _v8_2;
 									case 'NotAsked':
@@ -10052,9 +10058,9 @@ var _krisajenkins$elm_exts$Exts_RemoteData$append = F2(
 										return _krisajenkins$elm_exts$Exts_RemoteData$Loading;
 								}
 							case 'Failure':
-								return _krisajenkins$elm_exts$Exts_RemoteData$Failure(_p9._0._0);
+								return _krisajenkins$elm_exts$Exts_RemoteData$Failure(_p10._0._0);
 							case 'NotAsked':
-								switch (_p9._1.ctor) {
+								switch (_p10._1.ctor) {
 									case 'Failure':
 										break _v8_2;
 									case 'NotAsked':
@@ -10065,7 +10071,7 @@ var _krisajenkins$elm_exts$Exts_RemoteData$append = F2(
 										break _v8_3;
 								}
 							default:
-								switch (_p9._1.ctor) {
+								switch (_p10._1.ctor) {
 									case 'Failure':
 										break _v8_2;
 									case 'NotAsked':
@@ -10077,7 +10083,7 @@ var _krisajenkins$elm_exts$Exts_RemoteData$append = F2(
 								}
 						}
 					} while(false);
-					return _krisajenkins$elm_exts$Exts_RemoteData$Failure(_p9._1._0);
+					return _krisajenkins$elm_exts$Exts_RemoteData$Failure(_p10._1._0);
 				} while(false);
 				return _krisajenkins$elm_exts$Exts_RemoteData$NotAsked;
 			} while(false);
@@ -10837,22 +10843,25 @@ var _user$project$Pages_SignUp_Model$Model = F4(
 var _user$project$Pages_SignUp_Update$update = F2(
 	function (msg, model) {
 		var _p0 = A2(_elm_lang$core$Debug$log, 'Signup action', msg);
-		if (_p0.ctor === 'SetEmail') {
-			return {
-				ctor: '_Tuple2',
-				_0: _elm_lang$core$Native_Utils.update(
-					model,
-					{email: _p0._0}),
-				_1: _elm_lang$core$Platform_Cmd$none
-			};
-		} else {
-			return {
-				ctor: '_Tuple2',
-				_0: _elm_lang$core$Native_Utils.update(
-					model,
-					{displayName: _p0._0}),
-				_1: _elm_lang$core$Platform_Cmd$none
-			};
+		switch (_p0.ctor) {
+			case 'SetEmail':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{email: _p0._0}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'SetDisplayName':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{displayName: _p0._0}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			default:
+				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 		}
 	});
 var _user$project$Pages_SignUp_Update$init = A2(
@@ -10860,6 +10869,9 @@ var _user$project$Pages_SignUp_Update$init = A2(
 	_user$project$Pages_SignUp_Model$emptyModel,
 	_elm_lang$core$Native_List.fromArray(
 		[]));
+var _user$project$Pages_SignUp_Update$ValidateEmail = function (a) {
+	return {ctor: 'ValidateEmail', _0: a};
+};
 var _user$project$Pages_SignUp_Update$SetDisplayName = function (a) {
 	return {ctor: 'SetDisplayName', _0: a};
 };

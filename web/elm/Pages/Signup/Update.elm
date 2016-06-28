@@ -5,6 +5,7 @@ import Debug
 type Msg
  = SetEmail String
  | SetDisplayName String
+ | ValidateEmail String
      
 
 init : ( Model, Cmd Msg )
@@ -19,3 +20,5 @@ update  msg model =
             ( {model | email = emailStr }, Cmd.none )
         SetDisplayName nameStr ->
             ( {model | displayName = nameStr }, Cmd.none )
+        ValidateEmail emailStr ->
+            ( model, Cmd.none )

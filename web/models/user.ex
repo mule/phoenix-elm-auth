@@ -4,11 +4,12 @@ defmodule PhoenixAuthKata.User do
   schema "users" do
     field :email, :string
     field :crypted_password, :string
+    field :display_name, :string
 
     timestamps
   end
 
-  @required_fields ~w(email crypted_password)
+  @required_fields ~w(email crypted_password display_name)
   @optional_fields ~w()
 
   @doc """
