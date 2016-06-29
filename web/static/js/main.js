@@ -11056,11 +11056,89 @@ var _user$project$Components_AuthOptionsCard$providerItems = function (items) {
 };
 var _user$project$Components_AuthOptionsCard$view = F2(
 	function (title, providers) {
+		var submitBtn = A2(
+			_elm_lang$html$Html$button,
+			_elm_lang$core$Native_List.fromArray(
+				[
+					_elm_lang$html$Html_Attributes$type$('submit'),
+					_elm_lang$html$Html_Attributes$class('btn btn-primary m-l-1')
+				]),
+			_elm_lang$core$Native_List.fromArray(
+				[
+					_elm_lang$html$Html$text('Login')
+				]));
+		var formInput = F3(
+			function (inputType, labelText, id$) {
+				return A2(
+					_elm_lang$html$Html$div,
+					_elm_lang$core$Native_List.fromArray(
+						[
+							_elm_lang$html$Html_Attributes$class('form-group m-l-1')
+						]),
+					_elm_lang$core$Native_List.fromArray(
+						[
+							A2(
+							_elm_lang$html$Html$label,
+							_elm_lang$core$Native_List.fromArray(
+								[
+									_elm_lang$html$Html_Attributes$for(id$)
+								]),
+							_elm_lang$core$Native_List.fromArray(
+								[
+									_elm_lang$html$Html$text(labelText)
+								])),
+							A2(
+							_elm_lang$html$Html$input,
+							_elm_lang$core$Native_List.fromArray(
+								[
+									_elm_lang$html$Html_Attributes$type$(inputType),
+									_elm_lang$html$Html_Attributes$class('form-control m-l-1'),
+									_elm_lang$html$Html_Attributes$id(id$)
+								]),
+							_elm_lang$core$Native_List.fromArray(
+								[]))
+						]));
+			});
+		var loginForm = A2(
+			_elm_lang$html$Html$form,
+			_elm_lang$core$Native_List.fromArray(
+				[
+					_elm_lang$html$Html_Attributes$class('form-inline center-block')
+				]),
+			_elm_lang$core$Native_List.fromArray(
+				[
+					A3(formInput, 'email', 'Email', 'email'),
+					A3(formInput, 'password', 'Password', 'password'),
+					submitBtn
+				]));
+		var listItem = F2(
+			function (headingText, content) {
+				return A2(
+					_elm_lang$html$Html$li,
+					_elm_lang$core$Native_List.fromArray(
+						[
+							_elm_lang$html$Html_Attributes$class('list-group-item')
+						]),
+					_elm_lang$core$Native_List.fromArray(
+						[
+							A2(
+							_elm_lang$html$Html$h5,
+							_elm_lang$core$Native_List.fromArray(
+								[
+									_elm_lang$html$Html_Attributes$class('text-xs-center m-b-1')
+								]),
+							_elm_lang$core$Native_List.fromArray(
+								[
+									_elm_lang$html$Html$text(headingText)
+								])),
+							content
+						]));
+			});
 		return A2(
 			_elm_lang$html$Html$div,
 			_elm_lang$core$Native_List.fromArray(
 				[
-					_elm_lang$html$Html_Attributes$class('card')
+					_elm_lang$html$Html_Attributes$class('card m-t-1')
 				]),
 			_elm_lang$core$Native_List.fromArray(
 				[
@@ -11086,9 +11164,15 @@ var _user$project$Components_AuthOptionsCard$view = F2(
 							_elm_lang$html$Html$ul,
 							_elm_lang$core$Native_List.fromArray(
 								[
-									_elm_lang$html$Html_Attributes$class('ist-group list-group-flush')
+									_elm_lang$html$Html_Attributes$class('list-group list-group-flush')
 								]),
-							_user$project$Components_AuthOptionsCard$providerItems(providers))
+							A2(
+								_elm_lang$core$List$append,
+								_user$project$Components_AuthOptionsCard$providerItems(providers),
+								_elm_lang$core$Native_List.fromArray(
+									[
+										A2(listItem, 'or', loginForm)
+									])))
 						]))
 				]));
 	});
@@ -11135,20 +11219,12 @@ var _user$project$Pages_Login_View$view = function (model) {
 			{
 			ctor: '_Tuple2',
 			_0: 'Google',
-			_1: _elm_lang$html$Html_Events$onClick(
-				_user$project$App_Common$SetActivePage(_user$project$App_Common$PageNotFound))
+			_1: _elm_lang$html$Html_Attributes$href('/auth/google')
 		},
 			{
 			ctor: '_Tuple2',
 			_0: 'Github',
-			_1: _elm_lang$html$Html_Events$onClick(
-				_user$project$App_Common$SetActivePage(_user$project$App_Common$PageNotFound))
-		},
-			{
-			ctor: '_Tuple2',
-			_0: 'AuthKata',
-			_1: _elm_lang$html$Html_Events$onClick(
-				_user$project$App_Common$SetActivePage(_user$project$App_Common$PageNotFound))
+			_1: _elm_lang$html$Html_Attributes$href('/auth/github')
 		}
 		]);
 	var content = _elm_lang$core$Native_List.fromArray(

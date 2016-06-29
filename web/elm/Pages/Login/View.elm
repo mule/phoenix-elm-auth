@@ -56,9 +56,9 @@ view :  Model -> Html App.Common.Msg
 view model =
     let loginOptions =
         [
-            ("Google", onClick <| SetActivePage PageNotFound), 
-            ("Github", onClick <| SetActivePage PageNotFound), 
-            ("AuthKata", onClick <| SetActivePage PageNotFound)
+            ("Google", href "/auth/google"), 
+            ("Github", href "/auth/github")
+            
         ]
 
         marginCol =
