@@ -16,5 +16,5 @@ config :phoenixAuthKata, PhoenixAuthKata.Repo,
   password: "password",
   database: "phoenixauthkata_test",
   hostname: "192.168.99.100",
-  port: 5342,
+  port: 5432,
   pool: Ecto.Adapters.SQL.Sandbox

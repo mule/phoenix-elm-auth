@@ -19,10 +19,6 @@ defmodule PhoenixAuthKata.AuthController do
         Google.authorize_url!(scope: "email profile")
     end
 
-    defp authorize_url!("google") do
-        Google.authorize_url!(scope: "email profile")
-    end
-
     defp authorize_url!(_) do
         raise "No matching provider available"
     end
