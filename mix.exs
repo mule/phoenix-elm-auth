@@ -19,7 +19,7 @@ defmodule PhoenixAuthKata.Mixfile do
   def application do
     [mod: {PhoenixAuthKata, []},
      applications: [:phoenix, :phoenix_html, :cowboy, :logger, :gettext,
-                    :phoenix_ecto, :postgrex]]
+                    :phoenix_ecto, :postgrex, :oauth2]]
   end
 
   # Specifies which paths to compile per environment.
