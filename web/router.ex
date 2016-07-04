@@ -26,11 +26,18 @@ defmodule PhoenixAuthKata.Router do
       get "/:provider/callback", AuthController, :callback
     end
 
-    scope "/user", PhoenixAuthKata do
-      pipe_through :browser
+    ##scope "/user", PhoenixAuthKata do
+    ##  pipe_through :browser
 
-      get("/show/:id", UserController, :show)
+    ##  get("/show/:id", UserController, :show)
+    ##end
+
+    scope "api", PhoenixAuthKata do
+      pipe_through :api
+      resources "/users/", UserController, only: [:show, :create] 
     end
+
+
 
     # Other scopes may use custom stacks.
     # scope "/api", PhoenixAuthKata do

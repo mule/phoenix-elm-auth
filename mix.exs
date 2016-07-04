@@ -19,7 +19,7 @@ defmodule PhoenixAuthKata.Mixfile do
   def application do
     [mod: {PhoenixAuthKata, []},
      applications: [:phoenix, :phoenix_html, :cowboy, :logger, :gettext,
-                    :phoenix_ecto, :postgrex, :oauth2]]
+                    :phoenix_ecto, :postgrex, :oauth2, :comeonin]]
   end
 
   # Specifies which paths to compile per environment.
@@ -37,7 +37,8 @@ defmodule PhoenixAuthKata.Mixfile do
      {:phoenix_live_reload, "~> 1.0", only: :dev},
      {:gettext, "~> 0.9"},
      {:cowboy, "~> 1.0"},
-     {:oauth2, "~> 0.3"}]
+     {:oauth2, "~> 0.3"},
+     {:comeonin, "~> 2.5"}]
   end
 
   # Aliases are shortcut or tasks specific to the current project.
