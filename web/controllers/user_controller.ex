@@ -8,6 +8,7 @@ defmodule PhoenixAuthKata.UserController do
             conn ->
                 user = Repo.get(PhoenixAuthKata.User, id)
                 json(conn, user)
+        end
     end
 
     defp authenticate(conn) do
@@ -16,7 +17,7 @@ defmodule PhoenixAuthKata.UserController do
         else
             conn 
             |> put_status(401)
-            |> json %{ok: false}
+            |> json(%{ok: false})
             |> halt()
         end
     end

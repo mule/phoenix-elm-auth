@@ -26,6 +26,8 @@ defmodule PhoenixAuthKata.ConnCase do
       import Ecto.Query, only: [from: 1, from: 2]
 
       import PhoenixAuthKata.Router.Helpers
+      import PhoenixAuthKata.TestHelpers
+   
 
       # The default endpoint for testing
       @endpoint PhoenixAuthKata.Endpoint

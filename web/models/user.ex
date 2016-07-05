@@ -1,6 +1,6 @@
 defmodule PhoenixAuthKata.User do
   use PhoenixAuthKata.Web, :model
-
+@derive {Poison.Encoder, only: [:email, :display_name]}
   schema "users" do
     field :email, :string
     field :password, :string, virtual: true

@@ -38,7 +38,8 @@ defmodule PhoenixAuthKata.Mixfile do
      {:gettext, "~> 0.9"},
      {:cowboy, "~> 1.0"},
      {:oauth2, "~> 0.3"},
-     {:comeonin, "~> 2.5"}]
+     {:comeonin, "~> 2.5"},
+    {:poison, "~> 2.0"}]
   end
 
   # Aliases are shortcut or tasks specific to the current project.

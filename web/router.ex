@@ -7,7 +7,7 @@ defmodule PhoenixAuthKata.Router do
       plug :fetch_flash
       plug :protect_from_forgery
       plug :put_secure_browser_headers
-      plug :PhoenixAuthKata.Auth, repo: PhoenixAuthKata.Repo
+      plug PhoenixAuthKata.Auth, repo: PhoenixAuthKata.Repo
     end
 
     pipeline :api do
