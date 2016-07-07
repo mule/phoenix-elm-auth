@@ -1,7 +1,6 @@
 defmodule PhoenixAuthKata.UserControllerTest do
     require Logger
     use PhoenixAuthKata.ConnCase
-    alias PhoenixAuthKata.User
 
     setup do
         user = insert_user()
@@ -11,13 +10,11 @@ defmodule PhoenixAuthKata.UserControllerTest do
 
     test "GET user by id", %{conn: conn, user: user} do
 
-        
-
         conn = get( conn, user_path( conn, :show, user.id ))
         IO.inspect conn.resp_body
         assert conn.resp_body != "null"
-        result = Poison.decode!(conn.resp_body, as: %User{})
-        actual = Map.merge(user, result)
-        assert actual == user
+        actual = Poison.Parser.parse!(conn.resp_body, keys: :atoms!)
+        expected = Map.take(user, [:email, :display_name])
+        assert expected == actual
     end
 end

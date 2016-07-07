@@ -7,7 +7,21 @@ defmodule PhoenixAuthKata.UserController do
                 conn
             conn ->
                 user = Repo.get(PhoenixAuthKata.User, id)
+                response = 
                 json(conn, user)
+        end
+    end
+
+    def create(conn, %{"user" => user_params}) do
+        changeset = User.registration_changeset(%User{}, user_params)
+
+        case Repo.insert(changeset) do
+            {:ok, user} -> 
+                conn 
+                |> PhoenixAuthKata.auth.login(user)
+                |> json(%{ok: true})
+            {:error, changeset} ->
+                json(%{ok: false})
         end
     end
 
@@ -21,5 +35,6 @@ defmodule PhoenixAuthKata.UserController do
             |> halt()
         end
     end
+
 
 end
