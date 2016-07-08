@@ -3,7 +3,7 @@ defmodule PhoenixAuthKata.UserTest do
 
   alias PhoenixAuthKata.User
 
-  @valid_attrs %{password: "some content", email: "some content"}
+  @valid_attrs %{password: "some content", email: "some content", crypted_password: "tsfs", display_name: "test user" }
   @invalid_attrs %{}
 
   test "changeset with valid attributes" do

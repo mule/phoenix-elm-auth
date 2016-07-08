@@ -1,15 +1,11 @@
 defmodule PhoenixAuthKata.UserController do
     use PhoenixAuthKata.Web, :controller
-
+    plug :authenticate when action in [:show]
+    alias PhoenixAuthKata.User
     def show(conn, %{"id" => id}) do
-        case authenticate(conn) do
-            %Plug.Conn{halted: true} = conn ->
-                conn
-            conn ->
-                user = Repo.get(PhoenixAuthKata.User, id)
-                response = 
-                json(conn, user)
-        end
+            user = Repo.get(PhoenixAuthKata.User, id)
+            response = 
+            json(conn, user)
     end
 
     def create(conn, %{"user" => user_params}) do
@@ -21,11 +17,12 @@ defmodule PhoenixAuthKata.UserController do
                 |> PhoenixAuthKata.auth.login(user)
                 |> json(%{ok: true})
             {:error, changeset} ->
-                json(%{ok: false})
+                conn
+                |> json(%{ok: false})
         end
     end
 
-    defp authenticate(conn) do
+    defp authenticate(conn, _opts) do
         if conn.assigns.current_user do
             conn
         else

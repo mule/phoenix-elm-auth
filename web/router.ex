@@ -35,7 +35,8 @@ defmodule PhoenixAuthKata.Router do
 
     scope "api", PhoenixAuthKata do
       pipe_through :api
-      resources "/users/", UserController, only: [:show, :create] 
+      resources "/users/", UserController, only: [:show, :create]
+      resources "/sessions/", SessionController, only: [:create, :delete] 
     end
 
 
