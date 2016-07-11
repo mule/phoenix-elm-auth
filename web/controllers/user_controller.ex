@@ -2,6 +2,7 @@ defmodule PhoenixAuthKata.UserController do
     use PhoenixAuthKata.Web, :controller
     plug :authenticate when action in [:show]
     alias PhoenixAuthKata.User
+
     def show(conn, %{"id" => id}) do
             user = Repo.get(PhoenixAuthKata.User, id)
             response = 
@@ -14,11 +15,12 @@ defmodule PhoenixAuthKata.UserController do
         case Repo.insert(changeset) do
             {:ok, user} -> 
                 conn 
-                |> PhoenixAuthKata.auth.login(user)
+                |> PhoenixAuthKata.Auth.login(user)
                 |> json(%{ok: true})
             {:error, changeset} ->
+                errors = Enum.into(changeset.errors, %{})
                 conn
-                |> json(%{ok: false})
+                |> json(%{ok: false, errors: errors })
         end
     end
 

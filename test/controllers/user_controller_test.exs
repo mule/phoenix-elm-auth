@@ -17,4 +17,21 @@ defmodule PhoenixAuthKata.UserControllerTest do
         expected = Map.take(user, [:email, :display_name])
         assert expected == actual
     end
+    
+    test "Create user", %{conn: conn} do
+        conn = post(conn, user_path(conn, :create, %{user: %{email: "test.user@test.com", password: "secret", display_name: "test user"}}))
+        actual = Poison.Parser.parse!(conn.resp_body, keys: :atoms!)
+        expected = %{ok: true}
+
+        assert expected == actual
+    end
+
+    test "Should fail in creating user", %{conn: conn} do
+        conn = post(conn, user_path(conn, :create, %{user: %{display_name: "test user"}}))
+        actual = Poison.Parser.parse!(conn.resp_body, keys: :atoms!)
+        result = Map.take(actual, [:ok])
+        expected = %{ok: false}
+
+        assert expected == result
+    end
 end

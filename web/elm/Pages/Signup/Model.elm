@@ -4,7 +4,8 @@ type alias Model =
     { displayName : String
     , email : String
     , emailValid : Bool
-    , emailValidationPending : Bool }
+    , emailValidationPending : Bool
+    , registrationPending : Bool }
 
 -- type Msg
 --     = FetchProfileFail Http.Error

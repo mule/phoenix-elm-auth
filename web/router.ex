@@ -12,6 +12,8 @@ defmodule PhoenixAuthKata.Router do
 
     pipeline :api do
       plug :accepts, ["json"]
+      plug :fetch_session
+      plug PhoenixAuthKata.Auth, repo: PhoenixAuthKata.Repo
     end
 
     scope "/", PhoenixAuthKata do
@@ -38,9 +40,7 @@ defmodule PhoenixAuthKata.Router do
       resources "/users/", UserController, only: [:show, :create]
       resources "/sessions/", SessionController, only: [:create, :delete] 
     end
-
-
-
+    
     # Other scopes may use custom stacks.
     # scope "/api", PhoenixAuthKata do
     #   pipe_through :api

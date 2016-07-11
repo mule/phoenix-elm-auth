@@ -11295,7 +11295,7 @@ var _user$project$Pages_SignUp_View$signUpForm = function (model) {
 			[]),
 		_elm_lang$core$Native_List.fromArray(
 			[
-				_elm_lang$html$Html$text('Sign in with')
+				_elm_lang$html$Html$text('Sign up with')
 			]));
 	var registerButton = A2(
 		_elm_lang$html$Html$button,

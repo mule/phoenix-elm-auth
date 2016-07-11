@@ -59,7 +59,7 @@ signUpForm model =
             formGroup  <| authProviderButtons authProviders
 
         header = 
-            h5 [] [ text "Sign in with" ]
+            h5 [] [ text "Sign up with" ]
 
         dividerHeader = h5 [] [ text "or" ]
     in

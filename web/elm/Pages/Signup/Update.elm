@@ -1,5 +1,8 @@
 module Pages.SignUp.Update exposing (update, Msg(..))
 import Pages.SignUp.Model exposing (..)
+import Http
+import Task exposing (Task)
+import Json.Decode exposing (succeed)
 import Debug
 
 type Msg
@@ -22,3 +25,8 @@ update  msg model =
             ( {model | displayName = nameStr }, Cmd.none )
         ValidateEmail emailStr ->
             ( model, Cmd.none )
+        Register ->
+            ( { model | registrationPending = false, Cmd..none })
+
+
+
