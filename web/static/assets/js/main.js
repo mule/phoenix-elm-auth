@@ -10828,54 +10828,12 @@ var _user$project$Pages_Login_Update$update = F3(
 		}
 	});
 
-var _user$project$Pages_SignUp_Model$emptyModel = {displayName: '', email: '', emailValid: false, emailValidationPending: false, registrationPending: false};
-var _user$project$Pages_SignUp_Model$Model = F5(
-	function (a, b, c, d, e) {
-		return {displayName: a, email: b, emailValid: c, emailValidationPending: d, registrationPending: e};
+var _user$project$Pages_SignUp_Model$emptyModel = {displayName: '', email: '', emailValid: false, emailValidationPending: false};
+var _user$project$Pages_SignUp_Model$Model = F4(
+	function (a, b, c, d) {
+		return {displayName: a, email: b, emailValid: c, emailValidationPending: d};
 	});
 
-var _user$project$Pages_SignUp_Update$decodeRegisterResponse = A2(_elm_lang$core$Json_Decode_ops[':='], 'ok', _elm_lang$core$Json_Decode$bool);
-var _user$project$Pages_SignUp_Update$init = A2(
-	_elm_lang$core$Platform_Cmd_ops['!'],
-	_user$project$Pages_SignUp_Model$emptyModel,
-	_elm_lang$core$Native_List.fromArray(
-		[]));
-var _user$project$Pages_SignUp_Update$RegisterFail = function (a) {
-	return {ctor: 'RegisterFail', _0: a};
-};
-var _user$project$Pages_SignUp_Update$RegisterSucceed = function (a) {
-	return {ctor: 'RegisterSucceed', _0: a};
-};
-var _user$project$Pages_SignUp_Update$registerUser = function (model) {
-	var user = _elm_lang$core$Json_Encode$object(
-		_elm_lang$core$Native_List.fromArray(
-			[
-				{
-				ctor: '_Tuple2',
-				_0: 'user',
-				_1: _elm_lang$core$Json_Encode$object(
-					_elm_lang$core$Native_List.fromArray(
-						[
-							{
-							ctor: '_Tuple2',
-							_0: 'email',
-							_1: _elm_lang$core$Json_Encode$string(model.email)
-						}
-						]))
-			}
-			]));
-	var url = '/api/users';
-	return A3(
-		_elm_lang$core$Task$perform,
-		_user$project$Pages_SignUp_Update$RegisterFail,
-		_user$project$Pages_SignUp_Update$RegisterSucceed,
-		A3(
-			_evancz$elm_http$Http$post,
-			_user$project$Pages_SignUp_Update$decodeRegisterResponse,
-			url,
-			_evancz$elm_http$Http$string(
-				A2(_elm_lang$core$Json_Encode$encode, 4, user))));
-};
 var _user$project$Pages_SignUp_Update$update = F2(
 	function (msg, model) {
 		var _p0 = A2(_elm_lang$core$Debug$log, 'Signup action', msg);
@@ -10896,35 +10854,15 @@ var _user$project$Pages_SignUp_Update$update = F2(
 						{displayName: _p0._0}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
-			case 'ValidateEmail':
-				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
-			case 'Register':
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{registrationPending: true}),
-					_1: _user$project$Pages_SignUp_Update$registerUser(model)
-				};
-			case 'RegisterSucceed':
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{registrationPending: false}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
 			default:
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{registrationPending: false}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
+				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 		}
 	});
-var _user$project$Pages_SignUp_Update$Register = {ctor: 'Register'};
+var _user$project$Pages_SignUp_Update$init = A2(
+	_elm_lang$core$Platform_Cmd_ops['!'],
+	_user$project$Pages_SignUp_Model$emptyModel,
+	_elm_lang$core$Native_List.fromArray(
+		[]));
 var _user$project$Pages_SignUp_Update$ValidateEmail = function (a) {
 	return {ctor: 'ValidateEmail', _0: a};
 };
@@ -11316,33 +11254,26 @@ var _user$project$Pages_PageNotFound_View$view = function (model) {
 			]));
 };
 
-var _user$project$Pages_SignUp_View$authProviderButtons = F2(
-	function (disabled, providers) {
-		var classes = _elm_lang$html$Html_Attributes$classList(
+var _user$project$Pages_SignUp_View$authProviderButtons = function (providers) {
+	var authProviderBtn = function (content) {
+		return A2(
+			_elm_lang$html$Html$a,
 			_elm_lang$core$Native_List.fromArray(
 				[
-					{ctor: '_Tuple2', _0: 'btn', _1: true},
-					{ctor: '_Tuple2', _0: 'btn-primary', _1: true},
-					{ctor: '_Tuple2', _0: 'm-r-1', _1: true},
-					{ctor: '_Tuple2', _0: 'disabled', _1: disabled}
+					_elm_lang$html$Html_Attributes$class('btn btn-primary m-r-1')
+				]),
+			_elm_lang$core$Native_List.fromArray(
+				[
+					_elm_lang$html$Html$text(content)
 				]));
-		var authProviderBtn = function (content) {
-			return A2(
-				_elm_lang$html$Html$a,
-				_elm_lang$core$Native_List.fromArray(
-					[classes]),
-				_elm_lang$core$Native_List.fromArray(
-					[
-						_elm_lang$html$Html$text(content)
-					]));
-		};
-		return A2(
-			_elm_lang$core$List$map,
-			function (provider) {
-				return authProviderBtn(provider);
-			},
-			providers);
-	});
+	};
+	return A2(
+		_elm_lang$core$List$map,
+		function (provider) {
+			return authProviderBtn(provider);
+		},
+		providers);
+};
 var _user$project$Pages_SignUp_View$signUpForm = function (model) {
 	var dividerHeader = A2(
 		_elm_lang$html$Html$h5,
@@ -11358,29 +11289,19 @@ var _user$project$Pages_SignUp_View$signUpForm = function (model) {
 			[]),
 		_elm_lang$core$Native_List.fromArray(
 			[
-				_elm_lang$html$Html$text('Sign up with')
+				_elm_lang$html$Html$text('Sign in with')
 			]));
-	var registerButton = function (disabled) {
-		var classes = _elm_lang$html$Html_Attributes$classList(
-			_elm_lang$core$Native_List.fromArray(
-				[
-					{ctor: '_Tuple2', _0: 'btn', _1: true},
-					{ctor: '_Tuple2', _0: 'btn-primary', _1: true},
-					{ctor: '_Tuple2', _0: 'm-r-1', _1: true},
-					{ctor: '_Tuple2', _0: 'disabled', _1: disabled}
-				]));
-		return A2(
-			_elm_lang$html$Html$button,
-			_elm_lang$core$Native_List.fromArray(
-				[
-					classes,
-					_elm_lang$html$Html_Events$onClick(_user$project$Pages_SignUp_Update$Register)
-				]),
-			_elm_lang$core$Native_List.fromArray(
-				[
-					_elm_lang$html$Html$text('Register')
-				]));
-	};
+	var registerButton = A2(
+		_elm_lang$html$Html$button,
+		_elm_lang$core$Native_List.fromArray(
+			[
+				_elm_lang$html$Html_Attributes$type$('submit'),
+				_elm_lang$html$Html_Attributes$class('btn btn-primary')
+			]),
+		_elm_lang$core$Native_List.fromArray(
+			[
+				_elm_lang$html$Html$text('Register')
+			]));
 	var formGroup = function (content) {
 		return A2(
 			_elm_lang$html$Html$fieldset,
@@ -11496,10 +11417,8 @@ var _user$project$Pages_SignUp_View$signUpForm = function (model) {
 			]));
 	var authProviders = _elm_lang$core$Native_List.fromArray(
 		['Google', 'Github']);
-	var providerButtonRow = function (model) {
-		return formGroup(
-			A2(_user$project$Pages_SignUp_View$authProviderButtons, model.registrationPending, authProviders));
-	};
+	var providerButtonRow = formGroup(
+		_user$project$Pages_SignUp_View$authProviderButtons(authProviders));
 	return A2(
 		_elm_lang$html$Html$form,
 		_elm_lang$core$Native_List.fromArray(
@@ -11507,16 +11426,7 @@ var _user$project$Pages_SignUp_View$signUpForm = function (model) {
 				_elm_lang$html$Html_Attributes$class('m-t-1')
 			]),
 		_elm_lang$core$Native_List.fromArray(
-			[
-				header,
-				providerButtonRow(model),
-				dividerHeader,
-				displayNameField,
-				emailField,
-				passwordField,
-				confirmPasswordField,
-				registerButton(model.registrationPending)
-			]));
+			[header, providerButtonRow, dividerHeader, displayNameField, emailField, passwordField, confirmPasswordField, registerButton]));
 };
 var _user$project$Pages_SignUp_View$view = function (model) {
 	return A3(

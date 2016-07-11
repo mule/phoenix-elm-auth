@@ -19,4 +19,5 @@ emptyModel =
     { displayName = ""
     , email = ""
     , emailValid = False
-    , emailValidationPending = False }
+    , emailValidationPending = False
+    , registrationPending = False }

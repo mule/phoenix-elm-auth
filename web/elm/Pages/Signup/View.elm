@@ -52,25 +52,39 @@ signUpForm model =
                     input [type' "password", id "passwordConfirm", class "form-control", placeholder "Confirm password" ] []
                 ]
 
-        registerButton = 
-            button [ type' "submit", class "btn btn-primary" ] [ text "Register" ]
+        registerButton disabled =
+            let classes = 
+                classList [ ("btn", True),
+                    ("btn-primary", True),
+                    ("m-r-1", True),
+                    ("disabled", disabled)
+                ]
+            in
+                button [ classes, onClick Register ] [ text "Register" ]
 
-        providerButtonRow = 
-            formGroup  <| authProviderButtons authProviders
+        providerButtonRow model = 
+            formGroup  <| authProviderButtons model.registrationPending authProviders
 
         header = 
             h5 [] [ text "Sign up with" ]
 
         dividerHeader = h5 [] [ text "or" ]
     in
-        Html.form [ class "m-t-1" ] [ header, providerButtonRow, dividerHeader, displayNameField, emailField, passwordField, confirmPasswordField, registerButton ]
+        Html.form [ class "m-t-1" ] [ header, providerButtonRow model, dividerHeader, displayNameField, emailField, passwordField, confirmPasswordField, registerButton model.registrationPending ]
 
-authProviderButtons : List String ->  List (Html Msg)
+authProviderButtons : Bool ->  List String ->  List (Html Msg)
 
-authProviderButtons providers =
+authProviderButtons disabled providers =
 
-    let authProviderBtn content =
-        a [ class "btn btn-primary m-r-1" ] [ text content ]
+    let classes =
+        classList [ ("btn", True),
+                    ("btn-primary", True),
+                    ("m-r-1", True),
+                    ("disabled", disabled)
+        ] 
+
+        authProviderBtn content =
+        a [ classes ] [ text content ]
     in
         List.map (\provider -> ( authProviderBtn provider )) providers 
     
