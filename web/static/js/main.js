@@ -11720,6 +11720,11 @@ var _user$project$Pages_SignUp_Update$registerUser = function (model) {
 							ctor: '_Tuple2',
 							_0: 'display_name',
 							_1: _elm_lang$core$Json_Encode$string(model.displayName)
+						},
+							{
+							ctor: '_Tuple2',
+							_0: 'email',
+							_1: _elm_lang$core$Json_Encode$string(model.email)
 						}
 						]))
 			}
@@ -11778,13 +11783,35 @@ var _user$project$Pages_SignUp_Update$update = F2(
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			default:
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{registrationPending: false}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
+				var _p1 = _p0._0;
+				if (_p1.ctor === 'BadResponse') {
+					var _p2 = A2(_elm_lang$core$Debug$log, 'Register response status', _p1._0.status);
+					if (_p2 === 422) {
+						return {
+							ctor: '_Tuple2',
+							_0: _elm_lang$core$Native_Utils.update(
+								model,
+								{registrationPending: false}),
+							_1: _elm_lang$core$Platform_Cmd$none
+						};
+					} else {
+						return {
+							ctor: '_Tuple2',
+							_0: _elm_lang$core$Native_Utils.update(
+								model,
+								{registrationPending: false}),
+							_1: _elm_lang$core$Platform_Cmd$none
+						};
+					}
+				} else {
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{registrationPending: false}),
+						_1: _elm_lang$core$Platform_Cmd$none
+					};
+				}
 		}
 	});
 var _user$project$Pages_SignUp_Update$Register = {ctor: 'Register'};

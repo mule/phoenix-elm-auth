@@ -34,8 +34,17 @@ update  msg model =
             ( { model | registrationPending = True }, registerUser model )
         RegisterSucceed _ -> 
             ( { model | registrationPending = False }, Cmd.none )
-        RegisterFail _ ->
-            ( { model | registrationPending = False }, Cmd.none )
+        RegisterFail  error ->
+            case  error of
+                HttpBuilder.BadResponse response ->
+                    case Debug.log "Register response status" response.status of
+                        422 -> 
+                            ( { model | registrationPending = False }, Cmd.none )
+                        _ ->
+                            ( { model | registrationPending = False }, Cmd.none )
+                _ ->
+                    ( { model | registrationPending = False }, Cmd.none )
+
 
 registerUser : Model -> Cmd Msg
 registerUser model =
