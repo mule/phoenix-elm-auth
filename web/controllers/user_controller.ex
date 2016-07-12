@@ -20,7 +20,9 @@ defmodule PhoenixAuthKata.UserController do
             {:error, changeset} ->
                 errors = Enum.into(changeset.errors, %{})
                 conn
+                |> put_status(422)
                 |> json(%{ok: false, errors: errors })
+                |> halt()
         end
     end
 

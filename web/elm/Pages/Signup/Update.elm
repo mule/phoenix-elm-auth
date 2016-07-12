@@ -1,7 +1,7 @@
 module Pages.SignUp.Update exposing (update, Msg(..))
 import Pages.SignUp.Model exposing (..)
 import Http
-import HttpBuilder
+import HttpBuilder exposing (withHeader, withJsonBody, stringReader, jsonReader, send)
 import Task exposing (Task)
 import Json.Decode exposing (Decoder, bool, (:=))
 import Json.Encode exposing (encode, object, string)
@@ -12,9 +12,9 @@ type Msg
  | SetDisplayName String
  | ValidateEmail String
  | Register
- | RegisterSucceed Bool
- | RegisterFail Http.Error
-     
+ | RegisterSucceed (HttpBuilder.Response Bool)
+ | RegisterFail (HttpBuilder.Error String)
+
 
 init : ( Model, Cmd Msg )
 init =
@@ -46,8 +46,9 @@ registerUser model =
             object [
                 ("user",
                     object
-                    [ 
-                        ("display_name", (string model.displayName))
+                    [
+                        ("display_name", (string model.displayName)),
+                        ("email", (string model.email))
                     ]
                 )
             ]
@@ -56,11 +57,10 @@ registerUser model =
             HttpBuilder.post url
             |> withHeader "Content-type" "application/json"
             |> withJsonBody user
-            |> 
-
+            |> send (jsonReader decodeRegisterResponse) stringReader
     in
         --Task.perform RegisterFail RegisterSucceed (Http.post decodeRegisterResponse url  <| Http.string  <| encode 0 user)
-        Task.perform RegisterFail RegisterSucceed (Http.post decodeRegisterResponse url body)
+        Task.perform RegisterFail RegisterSucceed postRequest 
 
 
 decodeRegisterResponse : Decoder Bool
