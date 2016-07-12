@@ -1,6 +1,7 @@
 module Pages.SignUp.Update exposing (update, Msg(..))
 import Pages.SignUp.Model exposing (..)
 import Http
+import HttpBuilder
 import Task exposing (Task)
 import Json.Decode exposing (Decoder, bool, (:=))
 import Json.Encode exposing (encode, object, string)
@@ -40,15 +41,26 @@ registerUser : Model -> Cmd Msg
 registerUser model =
     let url = 
             "/api/users"
-        user =
-            object
-            [ ("user",  object [
-                ("email", string model.email)
-            ])]
 
+        user =
+            object [
+                ("user",
+                    object
+                    [ 
+                        ("display_name", (string model.displayName))
+                    ]
+                )
+            ]
+
+        postRequest =
+            HttpBuilder.post url
+            |> withHeader "Content-type" "application/json"
+            |> withJsonBody user
+            |> 
 
     in
-        Task.perform RegisterFail RegisterSucceed (Http.post decodeRegisterResponse url  <| Http.string  <| encode 4 user)
+        --Task.perform RegisterFail RegisterSucceed (Http.post decodeRegisterResponse url  <| Http.string  <| encode 0 user)
+        Task.perform RegisterFail RegisterSucceed (Http.post decodeRegisterResponse url body)
 
 
 decodeRegisterResponse : Decoder Bool
