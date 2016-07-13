@@ -70,7 +70,7 @@ signUpForm model =
 
         dividerHeader = h5 [] [ text "or" ]
     in
-        Html.form [ class "m-t-1" ] [ header, providerButtonRow model, dividerHeader, displayNameField, emailField, passwordField, confirmPasswordField, registerButton model.registrationPending ]
+        Html.form [ class "m-t-1" ] [ header, providerButtonRow model, dividerHeader, displayNameField, emailField, passwordField, confirmPasswordField, registerButton (model.registrationPending && not model.formValid ) ]
 
 authProviderButtons : Bool ->  List String ->  List (Html Msg)
 

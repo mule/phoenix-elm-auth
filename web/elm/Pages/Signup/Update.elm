@@ -72,8 +72,10 @@ registerUser model =
         Task.perform RegisterFail RegisterSucceed postRequest 
 
 
-decodeRegisterResponse : Decoder Bool
 
+
+
+decodeRegisterResponse : Decoder Bool
 decodeRegisterResponse = 
         "ok" := bool
 
