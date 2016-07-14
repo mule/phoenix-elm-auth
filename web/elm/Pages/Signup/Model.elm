@@ -2,15 +2,15 @@ module Pages.SignUp.Model exposing (..)
 
 type alias Model =
     { displayName : String
-    , displayNameValid : String
-    , displayNameError : String
+    , displayNameValid : Bool
+    , displayNameErrors : List String
     , email : String
     , emailValid : Bool
-    , emailError : String
+    , emailErrors : List String
     , password : String
     , passwordConfirmation : String
-    , passwordValid : bool
-    , passwordError : String
+    , passwordValid : Bool
+    , passwordErrors : List String
     , emailValidationPending : Bool
     , registrationPending : Bool }
 

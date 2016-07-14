@@ -10,10 +10,10 @@ import Debug
 type Msg
  = SetEmail String
  | SetDisplayName String
- | ValidateEmail String
  | Register
  | RegisterSucceed (HttpBuilder.Response Bool)
  | RegisterFail (HttpBuilder.Error String)
+ | ValidateForm
 
 
 init : ( Model, Cmd Msg )
@@ -25,11 +25,19 @@ update : Msg -> Model -> (Model, Cmd Msg)
 update  msg model =
     case Debug.log "Signup action" msg of
         SetEmail emailStr ->
-            ( {model | email = emailStr }, Cmd.none )
+            ( {model | email = emailStr }, Cmd.ValidateForm )
         SetDisplayName nameStr ->
-            ( {model | displayName = nameStr }, Cmd.none )
-        ValidateEmail emailStr ->
-            ( model, Cmd.none )
+            ( {model | displayName = nameStr }, Cmd.ValidateForm )
+        SetPassword passwordStr ->
+            ( {model | password = passwordStr }, Cmd.ValidateForm )
+        SetPasswordConfirm passwordrConfirmStr ->
+            ( {model | passwordConfirmation = passwordConfirmStr }, Cmd.ValidateForm )
+        ValidateForm ->
+            let validatedModel =
+                 validateForm model
+            in
+                ( validatedModel, Cmd.none )
+
         Register ->
             ( { model | registrationPending = True }, registerUser model )
         RegisterSucceed _ -> 
@@ -71,12 +79,19 @@ registerUser model =
         --Task.perform RegisterFail RegisterSucceed (Http.post decodeRegisterResponse url  <| Http.string  <| encode 0 user)
         Task.perform RegisterFail RegisterSucceed postRequest 
 
-
-
-
-
 decodeRegisterResponse : Decoder Bool
 decodeRegisterResponse = 
         "ok" := bool
+
+
+validateEmail : String -> (Bool, List String)
+
+validateForm : Model -> Model
+validateForm model =
+    let emailResult =
+        validateEmail model.email
+    in
+        { model | emailValid = (fst emailResult) }
+
 
 

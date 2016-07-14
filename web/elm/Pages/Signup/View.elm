@@ -43,13 +43,13 @@ signUpForm model =
             formGroup 
                 [ 
                     label [ for "password" ] [ text "Password" ],
-                    input [type' "password", id "password", class "form-control", placeholder "Enter password" ] []
+                    input [type' "password", id "password", class "form-control", placeholder "Enter password", value model.password, onInput SetPassword ] []
                 ]
 
         confirmPasswordField =
             formGroup 
                 [ 
-                    input [type' "password", id "passwordConfirm", class "form-control", placeholder "Confirm password" ] []
+                    input [type' "password", id "passwordConfirm", class "form-control", placeholder "Confirm password", value model.passwordConfirmation, onInput SetPasswordConfirm ] []
                 ]
 
         registerButton disabled =
@@ -70,7 +70,16 @@ signUpForm model =
 
         dividerHeader = h5 [] [ text "or" ]
     in
-        Html.form [ class "m-t-1" ] [ header, providerButtonRow model, dividerHeader, displayNameField, emailField, passwordField, confirmPasswordField, registerButton (model.registrationPending && not model.formValid ) ]
+        Html.form [ class "m-t-1" ] [   
+                                        header, 
+                                        providerButtonRow model,
+                                        dividerHeader,
+                                        displayNameField,
+                                        emailField, 
+                                        passwordField, 
+                                        confirmPasswordField, 
+                                        registerButton (model.registrationPending && not model.formValid )
+                                    ]
 
 authProviderButtons : Bool ->  List String ->  List (Html Msg)
 
