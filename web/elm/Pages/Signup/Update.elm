@@ -5,11 +5,14 @@ import HttpBuilder exposing (withHeader, withJsonBody, stringReader, jsonReader,
 import Task exposing (Task)
 import Json.Decode exposing (Decoder, bool, (:=))
 import Json.Encode exposing (encode, object, string)
+import String
 import Debug
 
 type Msg
  = SetEmail String
  | SetDisplayName String
+ | SetPassword String
+ | SetPasswordConfirm String
  | Register
  | RegisterSucceed (HttpBuilder.Response Bool)
  | RegisterFail (HttpBuilder.Error String)
@@ -25,13 +28,18 @@ update : Msg -> Model -> (Model, Cmd Msg)
 update  msg model =
     case Debug.log "Signup action" msg of
         SetEmail emailStr ->
-            ( {model | email = emailStr }, Cmd.ValidateForm )
+            ( {model | email = emailStr }, Cmd ValidateForm )
         SetDisplayName nameStr ->
-            ( {model | displayName = nameStr }, Cmd.ValidateForm )
+            ( {model | displayName = nameStr }, Cmd ValidateForm )
         SetPassword passwordStr ->
-            ( {model | password = passwordStr }, Cmd.ValidateForm )
-        SetPasswordConfirm passwordrConfirmStr ->
-            ( {model | passwordConfirmation = passwordConfirmStr }, Cmd.ValidateForm )
+            let updatedModel =
+                {model | password = passwordStr }
+                validatedModel =
+                    validatedModel updatedModel
+            in
+                ( validatedModel, Cmd.none )
+        SetPasswordConfirm passwordConfirmStr ->
+            ( {model | passwordConfirmation = passwordConfirmStr }, ValidateForm )
         ValidateForm ->
             let validatedModel =
                  validateForm model
@@ -84,14 +92,36 @@ decodeRegisterResponse =
         "ok" := bool
 
 
-validateEmail : String -> (Bool, List String)
+
+
+validateRequired : String -> String -> String
+
+validateRequired fieldContent fieldName =
+            case String.isEmpty fieldContent of 
+                True -> String.join " " [ fieldName, "required" ]
+                False ->  ""
+
+validateEmail : String -> ( Bool, List String )
+
+validateEmail email =
+    let requiredResult = 
+            validateRequired email "Email"
+        validationResults =
+            [requiredResult]
+    in
+        case List.all String.isEmpty validationResults of 
+            True -> ( True, [] )
+            False -> ( False, (List.filter (\error -> String.length error > 0) validationResults) )
 
 validateForm : Model -> Model
 validateForm model =
     let emailResult =
         validateEmail model.email
     in
-        { model | emailValid = (fst emailResult) }
+        { model | 
+            emailValid = (fst emailResult),
+            emailErrors = (snd emailResult)
+        }
 
 
 
