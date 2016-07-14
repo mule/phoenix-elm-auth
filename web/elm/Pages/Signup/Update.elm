@@ -30,22 +30,27 @@ update  msg model =
         SetEmail emailStr ->
             ( {model | email = emailStr }, Cmd ValidateForm )
         SetDisplayName nameStr ->
-            ( {model | displayName = nameStr }, Cmd ValidateForm )
+            let updatedModel =
+                    { model | displayName = nameStr }
+                validatedModel =
+                    validatedModel updatedModel
+            in
+                ( validatedModel, Cmd.none )
+
         SetPassword passwordStr ->
             let updatedModel =
-                {model | password = passwordStr }
+                { model | password = passwordStr }
                 validatedModel =
                     validatedModel updatedModel
             in
                 ( validatedModel, Cmd.none )
         SetPasswordConfirm passwordConfirmStr ->
-            ( {model | passwordConfirmation = passwordConfirmStr }, ValidateForm )
-        ValidateForm ->
-            let validatedModel =
-                 validateForm model
+            let updatedModel =
+                { model | passwordConfirmation = passwordConfirmStr }
+                validatedModel =
+                    validatedModel updatedModel
             in
                 ( validatedModel, Cmd.none )
-
         Register ->
             ( { model | registrationPending = True }, registerUser model )
         RegisterSucceed _ -> 
@@ -113,7 +118,7 @@ validateEmail email =
             True -> ( True, [] )
             False -> ( False, (List.filter (\error -> String.length error > 0) validationResults) )
 
-validateForm : Model -> Model
+validateModel : Model -> Model
 validateForm model =
     let emailResult =
         validateEmail model.email
