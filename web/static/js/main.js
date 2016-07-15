@@ -391,7 +391,7 @@ function eqHelp(x, y, depth, stack)
 		return true;
 	}
 
-	if (x.ctor !== y.ctor)
+	if (!eqHelp(x.ctor, y.ctor, depth + 1, stack))
 	{
 		return false;
 	}
@@ -673,20 +673,14 @@ function toString(v)
 			return '[]';
 		}
 
-		if (v.ctor === 'RBNode_elm_builtin' || v.ctor === 'RBEmpty_elm_builtin' || v.ctor === 'Set_elm_builtin')
+		if (v.ctor === 'Set_elm_builtin')
 		{
-			var name, list;
-			if (v.ctor === 'Set_elm_builtin')
-			{
-				name = 'Set';
-				list = _elm_lang$core$Set$toList(v._0);
-			}
-			else
-			{
-				name = 'Dict';
-				list = _elm_lang$core$Dict$toList(v);
-			}
-			return name + '.fromList ' + toString(list);
+			return 'Set.fromList ' + toString(_elm_lang$core$Set$toList(v));
+		}
+
+		if (v.ctor === 'RBNode_elm_builtin' || v.ctor === 'RBEmpty_elm_builtin')
+		{
+			return 'Dict.fromList ' + toString(_elm_lang$core$Dict$toList(v));
 		}
 
 		var output = '';
@@ -2595,6 +2589,48 @@ var _elm_lang$core$Platform_Sub$none = _elm_lang$core$Platform_Sub$batch(
 		[]));
 var _elm_lang$core$Platform_Sub$map = _elm_lang$core$Native_Platform.map;
 var _elm_lang$core$Platform_Sub$Sub = {ctor: 'Sub'};
+
+var _ccapndave$elm_update_extra$Update_Extra$identity = function (model) {
+	return A2(
+		_elm_lang$core$Platform_Cmd_ops['!'],
+		model,
+		_elm_lang$core$Native_List.fromArray(
+			[]));
+};
+var _ccapndave$elm_update_extra$Update_Extra$addCmd = F2(
+	function (cmd$, _p0) {
+		var _p1 = _p0;
+		return {
+			ctor: '_Tuple2',
+			_0: _p1._0,
+			_1: _elm_lang$core$Platform_Cmd$batch(
+				_elm_lang$core$Native_List.fromArray(
+					[_p1._1, cmd$]))
+		};
+	});
+var _ccapndave$elm_update_extra$Update_Extra$filter = F2(
+	function (pred, f) {
+		return pred ? f : _elm_lang$core$Basics$identity;
+	});
+var _ccapndave$elm_update_extra$Update_Extra$andThen = F3(
+	function (update, msg, _p2) {
+		var _p3 = _p2;
+		var _p4 = A2(update, msg, _p3._0);
+		var model$ = _p4._0;
+		var cmd$ = _p4._1;
+		return {
+			ctor: '_Tuple2',
+			_0: model$,
+			_1: _elm_lang$core$Platform_Cmd$batch(
+				_elm_lang$core$Native_List.fromArray(
+					[_p3._1, cmd$]))
+		};
+	});
+var _ccapndave$elm_update_extra$Update_Extra$sequence = F3(
+	function (update, msgs, init) {
+		var foldUpdate = _ccapndave$elm_update_extra$Update_Extra$andThen(update);
+		return A3(_elm_lang$core$List$foldl, foldUpdate, init, msgs);
+	});
 
 //import Native.List //
 
@@ -11688,18 +11724,91 @@ var _user$project$Pages_Login_Update$update = F3(
 		}
 	});
 
-var _user$project$Pages_SignUp_Model$emptyModel = {displayName: '', email: '', emailValid: false, emailValidationPending: false, registrationPending: false};
-var _user$project$Pages_SignUp_Model$Model = F5(
-	function (a, b, c, d, e) {
-		return {displayName: a, email: b, emailValid: c, emailValidationPending: d, registrationPending: e};
-	});
+var _user$project$Pages_SignUp_Model$emptyModel = {
+	displayName: '',
+	displayNameErrors: _elm_lang$core$Native_List.fromArray(
+		[]),
+	email: '',
+	emailErrors: _elm_lang$core$Native_List.fromArray(
+		[]),
+	password: '',
+	passwordConfirmation: '',
+	passwordErrors: _elm_lang$core$Native_List.fromArray(
+		[]),
+	modelValid: false,
+	emailValidationPending: false,
+	registrationPending: false
+};
+var _user$project$Pages_SignUp_Model$Model = function (a) {
+	return function (b) {
+		return function (c) {
+			return function (d) {
+				return function (e) {
+					return function (f) {
+						return function (g) {
+							return function (h) {
+								return function (i) {
+									return function (j) {
+										return {displayName: a, displayNameErrors: b, email: c, emailErrors: d, password: e, passwordConfirmation: f, passwordErrors: g, modelValid: h, emailValidationPending: i, registrationPending: j};
+									};
+								};
+							};
+						};
+					};
+				};
+			};
+		};
+	};
+};
 
+var _user$project$Pages_SignUp_Update$validateRequired = F2(
+	function (fieldContent, fieldName) {
+		var _p0 = _elm_lang$core$String$isEmpty(fieldContent);
+		if (_p0 === true) {
+			return A2(
+				_elm_lang$core$String$join,
+				' ',
+				_elm_lang$core$Native_List.fromArray(
+					[fieldName, 'required']));
+		} else {
+			return '';
+		}
+	});
+var _user$project$Pages_SignUp_Update$validateEmail = function (email) {
+	var requiredResult = A2(_user$project$Pages_SignUp_Update$validateRequired, email, 'Email');
+	var validationResults = _elm_lang$core$Native_List.fromArray(
+		[requiredResult]);
+	var _p1 = A2(_elm_lang$core$List$all, _elm_lang$core$String$isEmpty, validationResults);
+	if (_p1 === true) {
+		return _elm_lang$core$Native_List.fromArray(
+			[]);
+	} else {
+		return A2(
+			_elm_lang$core$List$filter,
+			function (error) {
+				return _elm_lang$core$Native_Utils.cmp(
+					_elm_lang$core$String$length(error),
+					0) > 0;
+			},
+			validationResults);
+	}
+};
+var _user$project$Pages_SignUp_Update$validateModel = function (model) {
+	var emailResult = _user$project$Pages_SignUp_Update$validateEmail(model.email);
+	var errors = _elm_lang$core$Native_List.fromArray(
+		[emailResult]);
+	var modelValid = A2(_elm_lang$core$List$all, _elm_lang$core$List$isEmpty, errors);
+	return _elm_lang$core$Native_Utils.update(
+		model,
+		{emailErrors: emailResult, modelValid: modelValid});
+};
 var _user$project$Pages_SignUp_Update$decodeRegisterResponse = A2(_elm_lang$core$Json_Decode_ops[':='], 'ok', _elm_lang$core$Json_Decode$bool);
 var _user$project$Pages_SignUp_Update$init = A2(
 	_elm_lang$core$Platform_Cmd_ops['!'],
 	_user$project$Pages_SignUp_Model$emptyModel,
 	_elm_lang$core$Native_List.fromArray(
 		[]));
+var _user$project$Pages_SignUp_Update$ValidateModel = {ctor: 'ValidateModel'};
 var _user$project$Pages_SignUp_Update$RegisterFail = function (a) {
 	return {ctor: 'RegisterFail', _0: a};
 };
@@ -11746,26 +11855,59 @@ var _user$project$Pages_SignUp_Update$registerUser = function (model) {
 };
 var _user$project$Pages_SignUp_Update$update = F2(
 	function (msg, model) {
-		var _p0 = A2(_elm_lang$core$Debug$log, 'Signup action', msg);
-		switch (_p0.ctor) {
+		var _p2 = A2(_elm_lang$core$Debug$log, 'Signup action', msg);
+		switch (_p2.ctor) {
 			case 'SetEmail':
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{email: _p0._0}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
+				return A3(
+					_ccapndave$elm_update_extra$Update_Extra$andThen,
+					_user$project$Pages_SignUp_Update$update,
+					_user$project$Pages_SignUp_Update$ValidateModel,
+					{
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{email: _p2._0}),
+						_1: _elm_lang$core$Platform_Cmd$none
+					});
 			case 'SetDisplayName':
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{displayName: _p0._0}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
-			case 'ValidateEmail':
-				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+				return A3(
+					_ccapndave$elm_update_extra$Update_Extra$andThen,
+					_user$project$Pages_SignUp_Update$update,
+					_user$project$Pages_SignUp_Update$ValidateModel,
+					{
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{displayName: _p2._0}),
+						_1: _elm_lang$core$Platform_Cmd$none
+					});
+			case 'SetPassword':
+				return A3(
+					_ccapndave$elm_update_extra$Update_Extra$andThen,
+					_user$project$Pages_SignUp_Update$update,
+					_user$project$Pages_SignUp_Update$ValidateModel,
+					{
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{password: _p2._0}),
+						_1: _elm_lang$core$Platform_Cmd$none
+					});
+			case 'SetPasswordConfirm':
+				return A3(
+					_ccapndave$elm_update_extra$Update_Extra$andThen,
+					_user$project$Pages_SignUp_Update$update,
+					_user$project$Pages_SignUp_Update$ValidateModel,
+					{
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{passwordConfirmation: _p2._0}),
+						_1: _elm_lang$core$Platform_Cmd$none
+					});
+			case 'ValidateModel':
+				var validatedModel = _user$project$Pages_SignUp_Update$validateModel(model);
+				return {ctor: '_Tuple2', _0: validatedModel, _1: _elm_lang$core$Platform_Cmd$none};
 			case 'Register':
 				return {
 					ctor: '_Tuple2',
@@ -11783,10 +11925,10 @@ var _user$project$Pages_SignUp_Update$update = F2(
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			default:
-				var _p1 = _p0._0;
-				if (_p1.ctor === 'BadResponse') {
-					var _p2 = A2(_elm_lang$core$Debug$log, 'Register response status', _p1._0.status);
-					if (_p2 === 422) {
+				var _p3 = _p2._0;
+				if (_p3.ctor === 'BadResponse') {
+					var _p4 = A2(_elm_lang$core$Debug$log, 'Register response status', _p3._0.status);
+					if (_p4 === 422) {
 						return {
 							ctor: '_Tuple2',
 							_0: _elm_lang$core$Native_Utils.update(
@@ -11815,8 +11957,11 @@ var _user$project$Pages_SignUp_Update$update = F2(
 		}
 	});
 var _user$project$Pages_SignUp_Update$Register = {ctor: 'Register'};
-var _user$project$Pages_SignUp_Update$ValidateEmail = function (a) {
-	return {ctor: 'ValidateEmail', _0: a};
+var _user$project$Pages_SignUp_Update$SetPasswordConfirm = function (a) {
+	return {ctor: 'SetPasswordConfirm', _0: a};
+};
+var _user$project$Pages_SignUp_Update$SetPassword = function (a) {
+	return {ctor: 'SetPassword', _0: a};
 };
 var _user$project$Pages_SignUp_Update$SetDisplayName = function (a) {
 	return {ctor: 'SetDisplayName', _0: a};
@@ -12364,7 +12509,9 @@ var _user$project$Pages_SignUp_View$signUpForm = function (model) {
 						_elm_lang$html$Html_Attributes$type$('password'),
 						_elm_lang$html$Html_Attributes$id('password'),
 						_elm_lang$html$Html_Attributes$class('form-control'),
-						_elm_lang$html$Html_Attributes$placeholder('Enter password')
+						_elm_lang$html$Html_Attributes$placeholder('Enter password'),
+						_elm_lang$html$Html_Attributes$value(model.password),
+						_elm_lang$html$Html_Events$onInput(_user$project$Pages_SignUp_Update$SetPassword)
 					]),
 				_elm_lang$core$Native_List.fromArray(
 					[]))
@@ -12379,7 +12526,9 @@ var _user$project$Pages_SignUp_View$signUpForm = function (model) {
 						_elm_lang$html$Html_Attributes$type$('password'),
 						_elm_lang$html$Html_Attributes$id('passwordConfirm'),
 						_elm_lang$html$Html_Attributes$class('form-control'),
-						_elm_lang$html$Html_Attributes$placeholder('Confirm password')
+						_elm_lang$html$Html_Attributes$placeholder('Confirm password'),
+						_elm_lang$html$Html_Attributes$value(model.passwordConfirmation),
+						_elm_lang$html$Html_Events$onInput(_user$project$Pages_SignUp_Update$SetPasswordConfirm)
 					]),
 				_elm_lang$core$Native_List.fromArray(
 					[]))
@@ -12405,7 +12554,8 @@ var _user$project$Pages_SignUp_View$signUpForm = function (model) {
 				emailField,
 				passwordField,
 				confirmPasswordField,
-				registerButton(model.registrationPending)
+				registerButton(
+				model.registrationPending || _elm_lang$core$Basics$not(model.modelValid))
 			]));
 };
 var _user$project$Pages_SignUp_View$view = function (model) {

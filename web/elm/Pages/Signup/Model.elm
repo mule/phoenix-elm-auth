@@ -2,15 +2,13 @@ module Pages.SignUp.Model exposing (..)
 
 type alias Model =
     { displayName : String
-    , displayNameValid : Bool
     , displayNameErrors : List String
     , email : String
-    , emailValid : Bool
     , emailErrors : List String
     , password : String
     , passwordConfirmation : String
-    , passwordValid : Bool
     , passwordErrors : List String
+    , modelValid : Bool
     , emailValidationPending : Bool
     , registrationPending : Bool }
 
@@ -24,14 +22,12 @@ type alias Model =
 emptyModel :  Model
 emptyModel =
     { displayName = ""
-    , displayNameValid = False
     , displayNameErrors = []
     , email = ""
-    , emailValid = False
     , emailErrors = []
     , password = ""
     , passwordConfirmation = ""
-    , passwordValid = False
     , passwordErrors = []
+    , modelValid = False
     , emailValidationPending = False
     , registrationPending = False }

@@ -6,6 +6,7 @@ import Task exposing (Task)
 import Json.Decode exposing (Decoder, bool, (:=))
 import Json.Encode exposing (encode, object, string)
 import String
+import Update.Extra exposing (andThen)
 import Debug
 
 type Msg
@@ -16,7 +17,7 @@ type Msg
  | Register
  | RegisterSucceed (HttpBuilder.Response Bool)
  | RegisterFail (HttpBuilder.Error String)
- | ValidateForm
+ | ValidateModel
 
 
 init : ( Model, Cmd Msg )
@@ -28,33 +29,32 @@ update : Msg -> Model -> (Model, Cmd Msg)
 update  msg model =
     case Debug.log "Signup action" msg of
         SetEmail emailStr ->
-            ( {model | email = emailStr }, Cmd ValidateForm )
+            ( {model | email = emailStr }, Cmd.none )
+            |> andThen update ValidateModel
+
         SetDisplayName nameStr ->
-            let updatedModel =
-                    { model | displayName = nameStr }
-                validatedModel =
-                    validatedModel updatedModel
+            ( { model | displayName = nameStr }, Cmd.none )
+            |> andThen update ValidateModel
+    
+        SetPassword passwordStr ->
+            ( { model | password = passwordStr }, Cmd.none ) 
+            |> andThen update ValidateModel
+            
+        SetPasswordConfirm passwordConfirmStr ->
+            ( { model | passwordConfirmation = passwordConfirmStr }, Cmd.none )
+            |> andThen update ValidateModel
+
+        ValidateModel ->
+            let validatedModel =
+                validateModel model
             in
                 ( validatedModel, Cmd.none )
 
-        SetPassword passwordStr ->
-            let updatedModel =
-                { model | password = passwordStr }
-                validatedModel =
-                    validatedModel updatedModel
-            in
-                ( validatedModel, Cmd.none )
-        SetPasswordConfirm passwordConfirmStr ->
-            let updatedModel =
-                { model | passwordConfirmation = passwordConfirmStr }
-                validatedModel =
-                    validatedModel updatedModel
-            in
-                ( validatedModel, Cmd.none )
         Register ->
             ( { model | registrationPending = True }, registerUser model )
         RegisterSucceed _ -> 
             ( { model | registrationPending = False }, Cmd.none )
+            
         RegisterFail  error ->
             case  error of
                 HttpBuilder.BadResponse response ->
@@ -96,9 +96,6 @@ decodeRegisterResponse : Decoder Bool
 decodeRegisterResponse = 
         "ok" := bool
 
-
-
-
 validateRequired : String -> String -> String
 
 validateRequired fieldContent fieldName =
@@ -106,7 +103,7 @@ validateRequired fieldContent fieldName =
                 True -> String.join " " [ fieldName, "required" ]
                 False ->  ""
 
-validateEmail : String -> ( Bool, List String )
+validateEmail : String -> List String
 
 validateEmail email =
     let requiredResult = 
@@ -115,17 +112,20 @@ validateEmail email =
             [requiredResult]
     in
         case List.all String.isEmpty validationResults of 
-            True -> ( True, [] )
-            False -> ( False, (List.filter (\error -> String.length error > 0) validationResults) )
+            True -> [] 
+            False -> List.filter (\error -> String.length error > 0) validationResults
 
 validateModel : Model -> Model
-validateForm model =
+validateModel model =
     let emailResult =
-        validateEmail model.email
+            validateEmail model.email
+        errors =
+            [emailResult]
+        modelValid = List.all List.isEmpty errors
     in
         { model | 
-            emailValid = (fst emailResult),
-            emailErrors = (snd emailResult)
+            emailErrors = emailResult,
+            modelValid = modelValid
         }
 
 

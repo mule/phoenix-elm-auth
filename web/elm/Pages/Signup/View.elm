@@ -78,7 +78,7 @@ signUpForm model =
                                         emailField, 
                                         passwordField, 
                                         confirmPasswordField, 
-                                        registerButton (model.registrationPending && not model.formValid )
+                                        registerButton ( model.registrationPending || not model.modelValid )
                                     ]
 
 authProviderButtons : Bool ->  List String ->  List (Html Msg)
@@ -96,4 +96,6 @@ authProviderButtons disabled providers =
         a [ classes ] [ text content ]
     in
         List.map (\provider -> ( authProviderBtn provider )) providers 
-    
+
+
+
