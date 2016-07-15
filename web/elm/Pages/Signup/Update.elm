@@ -115,18 +115,33 @@ validateEmail email =
             True -> [] 
             False -> List.filter (\error -> String.length error > 0) validationResults
 
+
+validatePassword : String -> String -> List String
+validatePassword password passwordConf =
+    let requiredResult =
+            validateRequired password "Password"
+        confirmResult =
+            case password == passwordConf of
+                True -> Nothing
+                False -> "Password confirmation does not match"
+    in
+        requiredResult :: confirmResult :: []
+
 validateModel : Model -> Model
 validateModel model =
     let emailResult =
             validateEmail model.email
+        displayNameResult =
+            validateRequired model.displayName "Displayname"
+        passwordResult =
+            validatePassword
         errors =
-            [emailResult]
+            emailResult :: displayNameResult :: passwordResult :: []
         modelValid = List.all List.isEmpty errors
     in
         { model | 
             emailErrors = emailResult,
+            displayNameErrors = displayNameResult,
+            passwordErrors = passwordResult
             modelValid = modelValid
         }
-
-
-
