@@ -11765,42 +11765,53 @@ var _user$project$Pages_SignUp_Update$validateRequired = F2(
 	function (fieldContent, fieldName) {
 		var _p0 = _elm_lang$core$String$isEmpty(fieldContent);
 		if (_p0 === true) {
-			return A2(
-				_elm_lang$core$String$join,
-				' ',
-				_elm_lang$core$Native_List.fromArray(
-					[fieldName, 'required']));
+			return _elm_lang$core$Maybe$Just(
+				A2(
+					_elm_lang$core$String$join,
+					' ',
+					_elm_lang$core$Native_List.fromArray(
+						[fieldName, 'required'])));
 		} else {
-			return '';
+			return _elm_lang$core$Maybe$Nothing;
 		}
 	});
 var _user$project$Pages_SignUp_Update$validateEmail = function (email) {
 	var requiredResult = A2(_user$project$Pages_SignUp_Update$validateRequired, email, 'Email');
-	var validationResults = _elm_lang$core$Native_List.fromArray(
+	return _elm_lang$core$Native_List.fromArray(
 		[requiredResult]);
-	var _p1 = A2(_elm_lang$core$List$all, _elm_lang$core$String$isEmpty, validationResults);
-	if (_p1 === true) {
-		return _elm_lang$core$Native_List.fromArray(
-			[]);
-	} else {
-		return A2(
-			_elm_lang$core$List$filter,
-			function (error) {
-				return _elm_lang$core$Native_Utils.cmp(
-					_elm_lang$core$String$length(error),
-					0) > 0;
-			},
-			validationResults);
-	}
 };
+var _user$project$Pages_SignUp_Update$validatePassword = F2(
+	function (password, passwordConf) {
+		var confirmResult = function () {
+			var _p1 = _elm_lang$core$Native_Utils.eq(password, passwordConf);
+			if (_p1 === true) {
+				return _elm_lang$core$Maybe$Nothing;
+			} else {
+				return _elm_lang$core$Maybe$Just('Password confirmation does not match');
+			}
+		}();
+		var requiredResult = A2(_user$project$Pages_SignUp_Update$validateRequired, password, 'Password');
+		return _elm_lang$core$Native_List.fromArray(
+			[requiredResult, confirmResult]);
+	});
 var _user$project$Pages_SignUp_Update$validateModel = function (model) {
+	var passwordResult = A2(_user$project$Pages_SignUp_Update$validatePassword, model.password, model.passwordConfirmation);
+	var displayNameResult = A2(
+		_elm_lang$core$List_ops['::'],
+		A2(_user$project$Pages_SignUp_Update$validateRequired, model.displayName, 'Displayname'),
+		_elm_lang$core$Native_List.fromArray(
+			[]));
 	var emailResult = _user$project$Pages_SignUp_Update$validateEmail(model.email);
-	var errors = _elm_lang$core$Native_List.fromArray(
-		[emailResult]);
-	var modelValid = A2(_elm_lang$core$List$all, _elm_lang$core$List$isEmpty, errors);
+	var errors = A2(
+		_elm_lang$core$List$filterMap,
+		_elm_lang$core$Basics$identity,
+		_elm_lang$core$List$concat(
+			_elm_lang$core$Native_List.fromArray(
+				[emailResult, displayNameResult, passwordResult])));
+	var modelValid = _elm_lang$core$List$isEmpty(errors);
 	return _elm_lang$core$Native_Utils.update(
 		model,
-		{emailErrors: emailResult, modelValid: modelValid});
+		{emailErrors: emailResult, displayNameErrors: displayNameResult, passwordErrors: passwordResult, modelValid: modelValid});
 };
 var _user$project$Pages_SignUp_Update$decodeRegisterResponse = A2(_elm_lang$core$Json_Decode_ops[':='], 'ok', _elm_lang$core$Json_Decode$bool);
 var _user$project$Pages_SignUp_Update$init = A2(
@@ -11907,6 +11918,7 @@ var _user$project$Pages_SignUp_Update$update = F2(
 					});
 			case 'ValidateModel':
 				var validatedModel = _user$project$Pages_SignUp_Update$validateModel(model);
+				var test = A2(_elm_lang$core$Debug$log, 'validated model', validatedModel);
 				return {ctor: '_Tuple2', _0: validatedModel, _1: _elm_lang$core$Platform_Cmd$none};
 			case 'Register':
 				return {

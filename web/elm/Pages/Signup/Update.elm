@@ -46,7 +46,8 @@ update  msg model =
 
         ValidateModel ->
             let validatedModel =
-                validateModel model
+                    validateModel model
+                test = Debug.log "validated model" validatedModel
             in
                 ( validatedModel, Cmd.none )
 
@@ -96,52 +97,47 @@ decodeRegisterResponse : Decoder Bool
 decodeRegisterResponse = 
         "ok" := bool
 
-validateRequired : String -> String -> String
+validateRequired : String -> String -> Maybe String
 
 validateRequired fieldContent fieldName =
             case String.isEmpty fieldContent of 
-                True -> String.join " " [ fieldName, "required" ]
-                False ->  ""
+                True -> Just <| String.join " " [ fieldName, "required" ]
+                False ->  Nothing
 
-validateEmail : String -> List String
+validateEmail : String -> List (Maybe String)
 
 validateEmail email =
     let requiredResult = 
             validateRequired email "Email"
-        validationResults =
-            [requiredResult]
     in
-        case List.all String.isEmpty validationResults of 
-            True -> [] 
-            False -> List.filter (\error -> String.length error > 0) validationResults
+        [requiredResult]
 
-
-validatePassword : String -> String -> List String
+validatePassword : String -> String -> List (Maybe String) 
 validatePassword password passwordConf =
     let requiredResult =
-            validateRequired password "Password"
+             validateRequired password "Password"
         confirmResult =
             case password == passwordConf of
                 True -> Nothing
-                False -> "Password confirmation does not match"
+                False ->  Just "Password confirmation does not match"
     in
-        requiredResult :: confirmResult :: []
+        [ requiredResult, confirmResult ] 
 
 validateModel : Model -> Model
 validateModel model =
     let emailResult =
             validateEmail model.email
         displayNameResult =
-            validateRequired model.displayName "Displayname"
+            validateRequired model.displayName "Displayname" :: []
         passwordResult =
-            validatePassword
+            validatePassword model.password model.passwordConfirmation
         errors =
-            emailResult :: displayNameResult :: passwordResult :: []
-        modelValid = List.all List.isEmpty errors
+            List.concat [emailResult,  displayNameResult, passwordResult ] |> List.filterMap identity
+        modelValid = List.isEmpty errors
     in
         { model | 
             emailErrors = emailResult,
             displayNameErrors = displayNameResult,
-            passwordErrors = passwordResult
+            passwordErrors = passwordResult,
             modelValid = modelValid
         }
