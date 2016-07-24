@@ -5,15 +5,17 @@ import Html exposing (..)
 import Html.Attributes exposing (id, class, classList, href, src, style, target)
 import Html.App as Html
 import Html.Events exposing (onClick)
-import App.Update exposing (Model)
+import App.Update exposing(Model)
 import User.Model exposing (..)
 import Pages.Login.View exposing (..)
 import Pages.PageNotFound.View exposing (..)
 import Pages.SignUp.View exposing (..)
 import Pages.SignUpForm.View exposing (..)
+import Components.Notificationbar exposing (..)
 import App.Common exposing (Msg(..), Page(..))
 import Pages.MyAccount.View exposing (..)
 import Components.Navbar as Navbar
+import Components.Notificationbar as Notificationbar
 import Debug
 
 view : App.Update.Model -> Html Msg
@@ -24,7 +26,8 @@ view model =
                 (Navbar.view model),
                 div [class "container"]
                 [
-                   viewMainContent model
+                    Notificationbar.view model.notifications, 
+                    viewMainContent model
                 ]
             ]
 
@@ -54,6 +57,7 @@ viewPageNotFoundItem activePage =
         [ text "404 page" ]
 
 viewMainContent : Model -> Html Msg
+
 viewMainContent model =
     case Debug.log "view" model.activePage of
 

@@ -5,6 +5,7 @@ import HttpBuilder exposing (withHeader, withJsonBody, stringReader, jsonReader,
 import Task exposing (Task)
 import Json.Decode exposing (Decoder, bool, (:=))
 import Json.Encode exposing (encode, object, string)
+import App.Notifications exposing (Notification, NotificationLevel(..))
 import String
 import Update.Extra exposing (andThen)
 import Debug
@@ -18,54 +19,65 @@ type Msg
  | RegisterSucceed (HttpBuilder.Response Bool)
  | RegisterFail (HttpBuilder.Error String)
  | ValidateModel
+ | Noop
 
 
-init : ( Model, Cmd Msg )
+init : ( Model, List Notification )
 init =
-    emptyModel ! []
+    ( emptyModel, [] )
 
-update : Msg -> Model -> (Model, Cmd Msg)
+update : Msg -> Model -> (Model, Cmd Msg, List Notification)
 
 update  msg model =
     case Debug.log "Signup action" msg of
         SetEmail emailStr ->
-            ( {model | email = emailStr }, Cmd.none )
-            |> andThen update ValidateModel
+            let model' =
+                {model | email = emailStr }
+            in
+                 update ValidateModel model'
 
         SetDisplayName nameStr ->
-            ( { model | displayName = nameStr }, Cmd.none )
-            |> andThen update ValidateModel
+            let model' = 
+                { model | displayName = nameStr }
+            in
+                update ValidateModel model'
     
         SetPassword passwordStr ->
-            ( { model | password = passwordStr }, Cmd.none ) 
-            |> andThen update ValidateModel
+            let model' =
+                { model | password = passwordStr }
+            in
+                update ValidateModel model'
             
         SetPasswordConfirm passwordConfirmStr ->
-            ( { model | passwordConfirmation = passwordConfirmStr }, Cmd.none )
-            |> andThen update ValidateModel
+        let model' = 
+            { model | passwordConfirmation = passwordConfirmStr }
+        in 
+            update ValidateModel model'
 
         ValidateModel ->
             let validatedModel =
                     validateModel model
                 test = Debug.log "validated model" validatedModel
             in
-                ( validatedModel, Cmd.none )
+                ( validatedModel, Cmd.none, [] )
 
         Register ->
-            ( { model | registrationPending = True }, registerUser model )
+            ( { model | registrationPending = True }, registerUser model, [] )
         RegisterSucceed _ -> 
-            ( { model | registrationPending = False }, Cmd.none )
+            ( { model | registrationPending = False }, Cmd.none, [] )
             
         RegisterFail  error ->
             case  error of
                 HttpBuilder.BadResponse response ->
                     case Debug.log "Register response status" response.status of
                         422 -> 
-                            ( { model | registrationPending = False }, Cmd.none )
+                            ( { model | registrationPending = False }, Cmd.none, [ { level = Error, content = response.statusText, dismissed = False } ] )
                         _ ->
-                            ( { model | registrationPending = False }, Cmd.none )
+                            ( { model | registrationPending = False }, Cmd.none, [ { level = Error, content = response.statusText, dismissed = False } ] )
                 _ ->
-                    ( { model | registrationPending = False }, Cmd.none )
+                    ( { model | registrationPending = False }, Cmd.none, [] )
+        Noop ->
+            (model, Cmd.none, [])
 
 
 registerUser : Model -> Cmd Msg
@@ -79,7 +91,9 @@ registerUser model =
                     object
                     [
                         ("display_name", (string model.displayName)),
-                        ("email", (string model.email))
+                        ("email", (string model.email)),
+                        ("password", (string model.password)),
+                        ("passwordConfirmation", (string model.passwordConfirmation))
                     ]
                 )
             ]
@@ -141,3 +155,7 @@ validateModel model =
             passwordErrors = passwordResult,
             modelValid = modelValid
         }
+
+
+
+

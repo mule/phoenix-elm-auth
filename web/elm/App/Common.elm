@@ -8,8 +8,6 @@ import Json.Encode as JE
 import Json.Decode as JD exposing ((:=))
 import Dict
 
-
-
 type Page
     = Login
     | SignUp
@@ -24,4 +22,5 @@ type Msg
     | SetActivePage Page
     | PhoenixMsg (Phoenix.Socket.Msg Msg)
     | ReceiveCommandMessage JE.Value
+    | DismissNotification Int
     | Noop

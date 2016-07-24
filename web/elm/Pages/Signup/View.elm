@@ -8,6 +8,7 @@ import Html.Events exposing (onClick, onInput, onSubmit)
 --import App.Common exposing (Msg(..), Page(..))
 import Pages.SignUp.Update exposing (Msg(..)) 
 import LayoutTemplates.Master as Layout
+import String
 
 view : Model -> Html Msg
 
@@ -21,33 +22,78 @@ signUpForm model =
     let authProviders =
             [ "Google", "Github" ]
 
-        formGroup content = 
-            fieldset [ class "form-group" ] content
+        formGroup additionalClasses content = 
+            let defaultClasses = 
+                    [ ("form-group", True)]
+                classes = 
+                    List.append defaultClasses additionalClasses
+            in
+                fieldset [ classList classes ] content
 
         displayNameField =
-            formGroup
-                [ 
-                    label [ for "display-name" ] [ text "Display Name" ],
-                    input [type' "text", id "display-name", class "form-control", placeholder "JL. Picard", value model.displayName, onInput SetDisplayName ] []
-                ]
+            let errors =
+                List.filterMap identity model.displayNameErrors
+                isValid =
+                    List.isEmpty errors
+
+                groupClasses = 
+                    [
+                        ("has-success", String.length model.displayName > 0 && isValid),
+                        ("has-warning", not isValid)
+                    ]
+            in
+                formGroup groupClasses
+                    [ 
+                        label [ for "display-name" ] [ text "Display Name" ],
+                        small [ class "text-help m-l-1" ] [  String.join ", " errors |> text ],
+                        input [type' "text", id "display-name", class "form-control", placeholder "JL. Picard", value model.displayName, onInput SetDisplayName ] []
+                    ]
     
         emailField =
-            formGroup
-                [ 
-                    label [ for "email" ] [ text "Email" ],
-                    input [type' "email", id "email", class "form-control", placeholder "Enter email", value model.email, onInput SetEmail ] [],
-                    small [ class "text-muted" ] [ text "We shall never share your email with anyone else" ]
-                ]
+            let errors = 
+                    List.filterMap identity model.emailErrors
+                isValid = 
+                    List.isEmpty errors
+
+                groupClasses = 
+                    [
+                        ("has-success", String.length model.email > 0 && isValid),
+                        ("has-warning", not isValid)
+                    ]
+                inputClasses = 
+                    classList [
+                        ("form-control", True)
+                    ]
+            in
+                formGroup groupClasses
+                    [ 
+                        label [ for "email" ] [ text "Email" ],
+                        small [ class "text-help m-l-1" ] [  String.join ", " errors |> text ],
+                        input [type' "email", id "email", inputClasses, placeholder "Enter email", value model.email, onInput SetEmail ] [],
+                        small [ class "text-muted" ] [ text "We shall never share your email with anyone else" ]
+                    ]
 
         passwordField =
-            formGroup 
-                [ 
-                    label [ for "password" ] [ text "Password" ],
-                    input [type' "password", id "password", class "form-control", placeholder "Enter password", value model.password, onInput SetPassword ] []
-                ]
+            let errors =
+                List.filterMap identity model.passwordErrors
+                isValid =
+                    List.isEmpty errors
+
+                groupClasses = 
+                    [
+                        ("has-success", String.length model.password > 0 && isValid),
+                        ("has-warning", not isValid)
+                    ]
+            in
+                formGroup groupClasses
+                    [ 
+                        label [ for "password" ] [ text "Password" ],
+                        small [ class "text-help m-l-1" ] [  String.join ", " errors |> text ],
+                        input [type' "password", id "password", class "form-control", placeholder "Enter password", value model.password, onInput SetPassword ] []
+                    ]
 
         confirmPasswordField =
-            formGroup 
+            formGroup []
                 [ 
                     input [type' "password", id "passwordConfirm", class "form-control", placeholder "Confirm password", value model.passwordConfirmation, onInput SetPasswordConfirm ] []
                 ]
@@ -63,7 +109,7 @@ signUpForm model =
                 button [ classes, onClick Register ] [ text "Register" ]
 
         providerButtonRow model = 
-            formGroup  <| authProviderButtons model.registrationPending authProviders
+            formGroup [] <| authProviderButtons model.registrationPending authProviders
 
         header = 
             h5 [] [ text "Sign up with" ]

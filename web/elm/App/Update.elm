@@ -1,7 +1,9 @@
 module App.Update exposing (init, update, Model)
 import App.Common exposing (..)
+import App.Notifications exposing (Notification, NotificationLevel(..))
 import Exts.RemoteData exposing (RemoteData(..), WebData)
 import User.Model exposing (..)
+import Array exposing (..)
 import Pages.Login.Update exposing (Msg)
 import Pages.Login.Model
 import Pages.SignUp.Model
@@ -14,6 +16,7 @@ import Debug
 type alias Model =
     { activePage : Page
     , user : WebData User
+    , notifications : Array Notification
     , pageSignUp : Pages.SignUp.Model.Model 
     , pageLogin : Pages.Login.Model.Model
     , phxSocket : Phoenix.Socket.Socket App.Common.Msg
@@ -26,6 +29,7 @@ emptyModel =
     , pageLogin = Pages.Login.Model.emptyModel
     , pageSignUp = Pages.SignUp.Model.emptyModel
     , user = NotAsked
+    , notifications = Array.empty
     , phxSocket = Phoenix.Socket.init "ws://localhost:4000/socket/websocket"
         |> Phoenix.Socket.withDebug 
         |> Phoenix.Socket.on "new:msg" "commands:lobby" ReceiveCommandMessage
@@ -42,7 +46,7 @@ update appMsg model =
             init
 
         PageLogin msg ->
-        model ! []
+            model ! []
 
         PhoenixMsg msg ->
             let
@@ -54,10 +58,11 @@ update appMsg model =
 
         PageSignUp msg ->
             let 
-                ( signUpModel, cmd ) = Pages.SignUp.Update.update msg model.pageSignUp
+                ( signUpModel, signUpPageCmd, pageNotifications ) = Pages.SignUp.Update.update msg model.pageSignUp
+                appendedNotifications = pageNotifications |> fromList |> Array.append model.notifications
             in
-                ( { model | pageSignUp = signUpModel }
-                , Cmd.map PageSignUp cmd
+                ( { model | pageSignUp = signUpModel, notifications = appendedNotifications  }
+                , Cmd.map PageSignUp signUpPageCmd
                 )
 
         SetActivePage page ->
@@ -65,7 +70,15 @@ update appMsg model =
         
         ReceiveCommandMessage raw ->
              model ! [] 
-
+        DismissNotification index ->
+            let updatedNotifications = 
+                case Array.get index model.notifications of 
+                    Just value ->
+                        Array.set index { value | dismissed = True } model.notifications
+                    Nothing ->
+                        model.notifications
+            in
+                {model | notifications = updatedNotifications } ! []
         Noop -> 
             model ! []  
 
