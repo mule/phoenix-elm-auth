@@ -31,13 +31,13 @@ config :logger, :console, format: "[$level] $message\n"
 # Do not configure such in production as keeping
 # and calculating stacktraces is usually expensive.
 config :phoenix, :stacktrace_depth, 20
-
+%URI{host: host} =  System.get_env("DOCKER_HOST") |> URI.parse()
 # Configure your database
 config :phoenixAuthKata, PhoenixAuthKata.Repo,
   adapter: Ecto.Adapters.Postgres,
   username: "postgres",
   password: "password",
   database: "phoenixauthkata_dev",
-  hostname: "192.168.99.100",
+  hostname: host,
   port: 5432,
   pool_size: 10

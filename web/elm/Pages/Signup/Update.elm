@@ -64,7 +64,7 @@ update  msg model =
         Register ->
             ( { model | registrationPending = True }, registerUser model, [] )
         RegisterSucceed _ -> 
-            ( { model | registrationPending = False }, Cmd.none, [] )
+            ( { model | registrationPending = False }, Cmd.none, [ { level = Success, content = "User registered", dismissed = False } ] )
             
         RegisterFail  error ->
             case  error of

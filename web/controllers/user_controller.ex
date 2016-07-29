@@ -16,7 +16,7 @@ defmodule PhoenixAuthKata.UserController do
             {:ok, user} -> 
                 conn 
                 |> PhoenixAuthKata.Auth.login(user)
-                |> json(%{ok: true})
+                |> json(%{ok: true, data: user})
             {:error, changeset} ->
                 errors = Enum.into(changeset.errors, %{})
                 conn

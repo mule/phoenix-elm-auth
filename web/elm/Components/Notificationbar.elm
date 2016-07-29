@@ -22,6 +22,8 @@ notificationItem index notification =
                 class "alert alert-warning alert-dismissible"
             Info ->
                 class "alert alert-info alert-dismissible"
+            Success ->
+                class "alert alert-info alert-success"
         clickAction =
             DismissNotification index |> onClick
 

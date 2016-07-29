@@ -11655,9 +11655,10 @@ var _rgrempel$elm_route_url$RouteUrl$NavigationApp = F6(
 var _rgrempel$elm_route_url$RouteUrl$ModifyEntry = {ctor: 'ModifyEntry'};
 var _rgrempel$elm_route_url$RouteUrl$NewEntry = {ctor: 'NewEntry'};
 
-var _user$project$User_Model$User = F2(
-	function (a, b) {
-		return {avatarUrl: a, name: b};
+var _user$project$User_Model$emptyModel = {avatarUrl: '', name: '', id: '', authenticated: false};
+var _user$project$User_Model$User = F4(
+	function (a, b, c, d) {
+		return {avatarUrl: a, name: b, id: c, authenticated: d};
 	});
 
 var _user$project$User_Decoder$decodeFromGithub = A2(
@@ -11798,6 +11799,7 @@ var _user$project$App_Notifications$Notification = F3(
 	function (a, b, c) {
 		return {level: a, content: b, dismissed: c};
 	});
+var _user$project$App_Notifications$Success = {ctor: 'Success'};
 var _user$project$App_Notifications$Info = {ctor: 'Info'};
 var _user$project$App_Notifications$Warning = {ctor: 'Warning'};
 var _user$project$App_Notifications$Error = {ctor: 'Error'};
@@ -11987,7 +11989,9 @@ var _user$project$Pages_SignUp_Update$update = F2(
 							{registrationPending: false}),
 						_1: _elm_lang$core$Platform_Cmd$none,
 						_2: _elm_lang$core$Native_List.fromArray(
-							[])
+							[
+								{level: _user$project$App_Notifications$Success, content: 'User registered', dismissed: false}
+							])
 					};
 				case 'RegisterFail':
 					var _p3 = _p2._0;
@@ -12060,6 +12064,12 @@ var _user$project$App_Common$MyAccount = {ctor: 'MyAccount'};
 var _user$project$App_Common$SignUp = {ctor: 'SignUp'};
 var _user$project$App_Common$Login = {ctor: 'Login'};
 var _user$project$App_Common$Noop = {ctor: 'Noop'};
+var _user$project$App_Common$LogoutFailed = function (a) {
+	return {ctor: 'LogoutFailed', _0: a};
+};
+var _user$project$App_Common$LogoutSucceed = function (a) {
+	return {ctor: 'LogoutSucceed', _0: a};
+};
 var _user$project$App_Common$DismissNotification = function (a) {
 	return {ctor: 'DismissNotification', _0: a};
 };
@@ -12080,11 +12090,21 @@ var _user$project$App_Common$PageLogin = function (a) {
 };
 var _user$project$App_Common$Logout = {ctor: 'Logout'};
 
+var _user$project$App_Update$decodeLogoutResponse = A2(_elm_lang$core$Json_Decode_ops[':='], 'ok', _elm_lang$core$Json_Decode$bool);
+var _user$project$App_Update$logoutUser = function () {
+	var url = '/api/sessions/1';
+	var logoutRequest = A3(
+		_lukewestby$elm_http_builder$HttpBuilder$send,
+		_lukewestby$elm_http_builder$HttpBuilder$jsonReader(_user$project$App_Update$decodeLogoutResponse),
+		_lukewestby$elm_http_builder$HttpBuilder$stringReader,
+		_lukewestby$elm_http_builder$HttpBuilder$delete(url));
+	return A3(_elm_lang$core$Task$perform, _user$project$App_Common$LogoutFailed, _user$project$App_Common$LogoutSucceed, logoutRequest);
+}();
 var _user$project$App_Update$emptyModel = {
 	activePage: _user$project$App_Common$Login,
 	pageLogin: _user$project$Pages_Login_Model$emptyModel,
 	pageSignUp: _user$project$Pages_SignUp_Model$emptyModel,
-	user: _krisajenkins$elm_exts$Exts_RemoteData$NotAsked,
+	user: _user$project$User_Model$emptyModel,
 	notifications: _elm_lang$core$Array$empty,
 	phxSocket: A4(
 		_fbonetti$elm_phoenix_socket$Phoenix_Socket$on,
@@ -12094,17 +12114,25 @@ var _user$project$App_Update$emptyModel = {
 		_fbonetti$elm_phoenix_socket$Phoenix_Socket$withDebug(
 			_fbonetti$elm_phoenix_socket$Phoenix_Socket$init('ws://localhost:4000/socket/websocket')))
 };
-var _user$project$App_Update$init = A2(
-	_elm_lang$core$Platform_Cmd_ops['!'],
-	_user$project$App_Update$emptyModel,
-	_elm_lang$core$Native_List.fromArray(
-		[]));
+var _user$project$App_Update$init = function (flags) {
+	var model = _user$project$App_Update$emptyModel;
+	var modelWithFlags = _elm_lang$core$Native_Utils.update(
+		model,
+		{
+			user: {authenticated: flags.authenticated, id: flags.userId, name: flags.userName, avatarUrl: ''}
+		});
+	return A2(
+		_elm_lang$core$Platform_Cmd_ops['!'],
+		modelWithFlags,
+		_elm_lang$core$Native_List.fromArray(
+			[]));
+};
 var _user$project$App_Update$update = F2(
 	function (appMsg, model) {
 		var _p0 = A2(_elm_lang$core$Debug$log, 'App action', appMsg);
 		switch (_p0.ctor) {
 			case 'Logout':
-				return _user$project$App_Update$init;
+				return {ctor: '_Tuple2', _0: _user$project$App_Update$emptyModel, _1: _user$project$App_Update$logoutUser};
 			case 'PageLogin':
 				return A2(
 					_elm_lang$core$Platform_Cmd_ops['!'],
@@ -12175,6 +12203,18 @@ var _user$project$App_Update$update = F2(
 						{notifications: updatedNotifications}),
 					_elm_lang$core$Native_List.fromArray(
 						[]));
+			case 'LogoutSucceed':
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					model,
+					_elm_lang$core$Native_List.fromArray(
+						[]));
+			case 'LogoutFailed':
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					model,
+					_elm_lang$core$Native_List.fromArray(
+						[]));
 			default:
 				return A2(
 					_elm_lang$core$Platform_Cmd_ops['!'],
@@ -12186,6 +12226,10 @@ var _user$project$App_Update$update = F2(
 var _user$project$App_Update$Model = F6(
 	function (a, b, c, d, e, f) {
 		return {activePage: a, user: b, notifications: c, pageSignUp: d, pageLogin: e, phxSocket: f};
+	});
+var _user$project$App_Update$Flags = F3(
+	function (a, b, c) {
+		return {authenticated: a, userId: b, userName: c};
 	});
 
 var _user$project$App_Router$location2messages = function (location) {
@@ -12876,8 +12920,10 @@ var _user$project$Components_Notificationbar$notificationItem = F2(
 					return _elm_lang$html$Html_Attributes$class('alert alert-danger alert-dismissible');
 				case 'Warning':
 					return _elm_lang$html$Html_Attributes$class('alert alert-warning alert-dismissible');
-				default:
+				case 'Info':
 					return _elm_lang$html$Html_Attributes$class('alert alert-info alert-dismissible');
+				default:
+					return _elm_lang$html$Html_Attributes$class('alert alert-info alert-success');
 			}
 		}();
 		return A2(
@@ -12963,6 +13009,88 @@ var _user$project$Pages_MyAccount_View$view = function (model) {
 			]));
 };
 
+var _user$project$Components_Navbar$userData = function (user) {
+	var _p0 = user.authenticated;
+	if (_p0 === true) {
+		return A2(
+			_elm_lang$html$Html$span,
+			_elm_lang$core$Native_List.fromArray(
+				[
+					_elm_lang$html$Html_Attributes$class('navbar-text pull-xs-right m-l-1')
+				]),
+			_elm_lang$core$Native_List.fromArray(
+				[
+					_elm_lang$html$Html$text(
+					A2(
+						_elm_lang$core$String$join,
+						' ',
+						_elm_lang$core$Native_List.fromArray(
+							['Signed in as', user.name])))
+				]));
+	} else {
+		return A2(
+			_elm_lang$html$Html$span,
+			_elm_lang$core$Native_List.fromArray(
+				[]),
+			_elm_lang$core$Native_List.fromArray(
+				[]));
+	}
+};
+var _user$project$Components_Navbar$navbarButtons = function (model) {
+	var btnClasses = 'btn btn-primary active m-l-1';
+	var buttonFormContent = function () {
+		var _p1 = model.user.authenticated;
+		if (_p1 === false) {
+			return _elm_lang$core$Native_List.fromArray(
+				[
+					A2(
+					_elm_lang$html$Html$a,
+					_elm_lang$core$Native_List.fromArray(
+						[
+							_elm_lang$html$Html_Attributes$href('#signup'),
+							_elm_lang$html$Html_Attributes$class(btnClasses)
+						]),
+					_elm_lang$core$Native_List.fromArray(
+						[
+							_elm_lang$html$Html$text('Signup')
+						])),
+					A2(
+					_elm_lang$html$Html$a,
+					_elm_lang$core$Native_List.fromArray(
+						[
+							_elm_lang$html$Html_Attributes$href('#login'),
+							_elm_lang$html$Html_Attributes$class(btnClasses)
+						]),
+					_elm_lang$core$Native_List.fromArray(
+						[
+							_elm_lang$html$Html$text('Login')
+						]))
+				]);
+		} else {
+			return _elm_lang$core$Native_List.fromArray(
+				[
+					A2(
+					_elm_lang$html$Html$button,
+					_elm_lang$core$Native_List.fromArray(
+						[
+							_elm_lang$html$Html_Attributes$class(btnClasses),
+							_elm_lang$html$Html_Events$onClick(_user$project$App_Common$Logout)
+						]),
+					_elm_lang$core$Native_List.fromArray(
+						[
+							_elm_lang$html$Html$text('Logout')
+						]))
+				]);
+		}
+	}();
+	return A2(
+		_elm_lang$html$Html$form,
+		_elm_lang$core$Native_List.fromArray(
+			[
+				_elm_lang$html$Html_Attributes$class('form-inline pull-xs-right')
+			]),
+		buttonFormContent);
+};
 var _user$project$Components_Navbar$view = function (model) {
 	var brand = A2(
 		_elm_lang$html$Html$a,
@@ -12975,37 +13103,6 @@ var _user$project$Components_Navbar$view = function (model) {
 				_elm_lang$html$Html$text('AuthKata')
 			]));
 	var btnClasses = 'btn btn-primary active m-l-1';
-	var navbarButtons = A2(
-		_elm_lang$html$Html$form,
-		_elm_lang$core$Native_List.fromArray(
-			[
-				_elm_lang$html$Html_Attributes$class('form-inline pull-xs-right')
-			]),
-		_elm_lang$core$Native_List.fromArray(
-			[
-				A2(
-				_elm_lang$html$Html$a,
-				_elm_lang$core$Native_List.fromArray(
-					[
-						_elm_lang$html$Html_Attributes$href('#signup'),
-						_elm_lang$html$Html_Attributes$class(btnClasses)
-					]),
-				_elm_lang$core$Native_List.fromArray(
-					[
-						_elm_lang$html$Html$text('Signup')
-					])),
-				A2(
-				_elm_lang$html$Html$a,
-				_elm_lang$core$Native_List.fromArray(
-					[
-						_elm_lang$html$Html_Attributes$href('#login'),
-						_elm_lang$html$Html_Attributes$class(btnClasses)
-					]),
-				_elm_lang$core$Native_List.fromArray(
-					[
-						_elm_lang$html$Html$text('Login')
-					]))
-			]));
 	return A2(
 		_elm_lang$html$Html$nav,
 		_elm_lang$core$Native_List.fromArray(
@@ -13013,7 +13110,11 @@ var _user$project$Components_Navbar$view = function (model) {
 				_elm_lang$html$Html_Attributes$class('navbar navbar-light bg-faded')
 			]),
 		_elm_lang$core$Native_List.fromArray(
-			[brand, navbarButtons]));
+			[
+				brand,
+				_user$project$Components_Navbar$navbarButtons(model),
+				_user$project$Components_Navbar$userData(model.user)
+			]));
 };
 
 var _user$project$App_View$classByPage = F2(
@@ -13151,9 +13252,26 @@ var _user$project$Main$subscriptions = function (model) {
 var _user$project$Main$main = {
 	main: function () {
 		var test = _elm_lang$core$Debug$log('Starting authkata');
-		return _rgrempel$elm_route_url$RouteUrl$program(
+		return _rgrempel$elm_route_url$RouteUrl$programWithFlags(
 			{delta2url: _user$project$App_Router$delta2url, location2messages: _user$project$App_Router$location2messages, init: _user$project$App_Update$init, update: _user$project$App_Update$update, view: _user$project$App_View$view, subscriptions: _user$project$Main$subscriptions});
-	}()
+	}(),
+	flags: A2(
+		_elm_lang$core$Json_Decode$andThen,
+		A2(_elm_lang$core$Json_Decode_ops[':='], 'authenticated', _elm_lang$core$Json_Decode$bool),
+		function (authenticated) {
+			return A2(
+				_elm_lang$core$Json_Decode$andThen,
+				A2(_elm_lang$core$Json_Decode_ops[':='], 'userId', _elm_lang$core$Json_Decode$string),
+				function (userId) {
+					return A2(
+						_elm_lang$core$Json_Decode$andThen,
+						A2(_elm_lang$core$Json_Decode_ops[':='], 'userName', _elm_lang$core$Json_Decode$string),
+						function (userName) {
+							return _elm_lang$core$Json_Decode$succeed(
+								{authenticated: authenticated, userId: userId, userName: userName});
+						});
+				});
+		})
 };
 
 var Elm = {};

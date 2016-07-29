@@ -1,4 +1,4 @@
-module App.Update exposing (init, update, Model)
+module App.Update exposing (init, update, Model, Flags)
 import App.Common exposing (..)
 import App.Notifications exposing (Notification, NotificationLevel(..))
 import Exts.RemoteData exposing (RemoteData(..), WebData)
@@ -11,15 +11,26 @@ import Pages.SignUp.Update exposing (Msg)
 import Phoenix.Socket
 import Phoenix.Channel
 import Phoenix.Push
+import Http
+import HttpBuilder exposing (withHeader, withJsonBody, stringReader, jsonReader, send)
+import Json.Decode exposing (Decoder, bool, (:=))
+import Task exposing (Task)
 import Debug
 
 type alias Model =
     { activePage : Page
-    , user : WebData User
+    , user :  User
     , notifications : Array Notification
     , pageSignUp : Pages.SignUp.Model.Model 
     , pageLogin : Pages.Login.Model.Model
     , phxSocket : Phoenix.Socket.Socket App.Common.Msg
+    }
+
+
+type alias Flags =
+    { authenticated : Bool
+    , userId : String
+    , userName : String
     }
 
 
@@ -28,26 +39,29 @@ emptyModel =
     { activePage = Login
     , pageLogin = Pages.Login.Model.emptyModel
     , pageSignUp = Pages.SignUp.Model.emptyModel
-    , user = NotAsked
-    , notifications = Array.empty
+    , user = User.Model.emptyModel
+    , notifications = Array.empty 
     , phxSocket = Phoenix.Socket.init "ws://localhost:4000/socket/websocket"
         |> Phoenix.Socket.withDebug 
         |> Phoenix.Socket.on "new:msg" "commands:lobby" ReceiveCommandMessage
     }
 
-init : ( Model, Cmd App.Common.Msg )
-init =
-    emptyModel ! []
-
+init : Flags -> ( Model, Cmd App.Common.Msg )
+init flags =   
+    let model =
+         emptyModel
+        modelWithFlags =
+            {model | user = { authenticated = flags.authenticated , id = flags.userId, name = flags.userName, avatarUrl = "" }}
+    in
+         modelWithFlags ! []
+ 
 update : App.Common.Msg -> Model -> ( Model, Cmd App.Common.Msg )
 update appMsg model =
     case Debug.log "App action" appMsg of
         Logout ->
-            init
-
+            (emptyModel, logoutUser)
         PageLogin msg ->
             model ! []
-
         PhoenixMsg msg ->
             let
                 ( phxSocket, phxCmd ) = Phoenix.Socket.update msg model.phxSocket
@@ -79,8 +93,29 @@ update appMsg model =
                         model.notifications
             in
                 {model | notifications = updatedNotifications } ! []
+        LogoutSucceed _ ->
+            model ! []
+        LogoutFailed _ ->
+            model ! []
         Noop -> 
             model ! []  
+
+
+logoutUser : Cmd App.Common.Msg
+logoutUser = 
+    let url =
+        "/api/sessions/1" 
+        logoutRequest = 
+            HttpBuilder.delete url
+            |> send (jsonReader decodeLogoutResponse) stringReader
+    in
+        Task.perform LogoutFailed LogoutSucceed logoutRequest
+            
+
+decodeLogoutResponse : Decoder Bool
+decodeLogoutResponse = 
+        "ok" := bool
+
 
 -- setActivePageAccess : WebData User -> Page -> Page
 -- setActivePageAccess user page =
