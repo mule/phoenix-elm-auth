@@ -10,23 +10,55 @@ import String
 import Update.Extra exposing (andThen)
 import Debug
 
-type Msg
- = SetEmail String
- | SetDisplayName String
- | SetPassword String
- | SetPasswordConfirm String
- | Register
- | RegisterSucceed (HttpBuilder.Response Bool)
- | RegisterFail (HttpBuilder.Error String)
- | ValidateModel
- | Noop
 
+type InternalMsg
+    = SetEmail String
+    | SetDisplayName String
+    | SetPassword String
+    | SetPasswordConfirm String
+    | Register
+    | RegisterSucceed (HttpBuilder.Response Bool)
+    | RegisterFail (HttpBuilder.Error String)
+    | ValidateModel
+    | Noop
+
+type OutMsg 
+    = UserRegistered
+
+type Msg 
+    = ForSelf InternalMsg
+    | ForParent OutMsg
+
+type alias TranslationDictionary msg =
+    { onInternalMessage: InternalMsg -> msg
+    , onUserRegistered: msg
+    }
+
+type alias Translator msg =
+    Msg -> msg
+
+
+translator : TranslationDictionary msg -> Translator msg
+translator { onInternalMessage, onUserRegistered } msg =
+    case msg of
+        ForSelf internal ->
+            onInternalMessage internal
+        ForParent UserRegistered ->
+            onUserRegistered 
+
+never : Never -> a
+never n =
+    never n
+
+generateParentMessage : OutMsg -> Cmd Msg
+generateParentMessage outMsg =
+    Task.perform never ForParent (Task.succeed outMsg )
 
 init : ( Model, List Notification )
 init =
     ( emptyModel, [] )
 
-update : Msg -> Model -> (Model, Cmd Msg, List Notification)
+update : InternalMsg -> Model -> (Model, Cmd Msg, List Notification)
 
 update  msg model =
     case Debug.log "Signup action" msg of
@@ -62,10 +94,16 @@ update  msg model =
                 ( validatedModel, Cmd.none, [] )
 
         Register ->
-            ( { model | registrationPending = True }, registerUser model, [] )
+            let newModel = 
+                    { model | registrationPending = True }
+                command = 
+                    registerUser newModel
+            in
+                (newModel, Cmd.map translator command)
+          
         RegisterSucceed _ -> 
-            ( { model | registrationPending = False }, Cmd.none, [ { level = Success, content = "User registered", dismissed = False } ] )
-            
+            ( { model | registrationPending = False }, (generateParentMessage UserRegistered) , [ { level = Success, content = "User registered", dismissed = False } ] )
+             
         RegisterFail  error ->
             case  error of
                 HttpBuilder.BadResponse response ->
@@ -80,7 +118,7 @@ update  msg model =
             (model, Cmd.none, [])
 
 
-registerUser : Model -> Cmd Msg
+registerUser : Model -> Cmd InternalMsg
 registerUser model =
     let url = 
             "/api/users"

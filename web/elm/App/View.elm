@@ -11,9 +11,10 @@ import Pages.Login.View exposing (..)
 import Pages.PageNotFound.View exposing (..)
 import Pages.SignUp.View exposing (..)
 import Pages.SignUpForm.View exposing (..)
+import Pages.LandingPage.View exposing(..)
 import Components.Notificationbar exposing (..)
 import App.Common exposing (Msg(..), Page(..))
-import Pages.MyAccount.View exposing (..)
+
 import Components.Navbar as Navbar
 import Components.Notificationbar as Notificationbar
 import Debug
@@ -67,8 +68,8 @@ viewMainContent model =
         SignUp ->
             Html.map PageSignUp (Pages.SignUp.View.view model.pageSignUp)
 
-        MyAccount ->
-            Pages.MyAccount.View.view model
+        Landing ->
+            Pages.LandingPage.View.view model.pageLanding
 
         PageNotFound ->
             -- We don't need to pass any cmds, so we can call the view directly

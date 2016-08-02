@@ -8,6 +8,7 @@ import Pages.Login.Update exposing (Msg)
 import Pages.Login.Model
 import Pages.SignUp.Model
 import Pages.SignUp.Update exposing (Msg)
+import Pages.LandingPage.Model
 import Phoenix.Socket
 import Phoenix.Channel
 import Phoenix.Push
@@ -23,6 +24,7 @@ type alias Model =
     , notifications : Array Notification
     , pageSignUp : Pages.SignUp.Model.Model 
     , pageLogin : Pages.Login.Model.Model
+    , pageLanding : Pages.LandingPage.Model.Model
     , phxSocket : Phoenix.Socket.Socket App.Common.Msg
     }
 
@@ -36,11 +38,12 @@ type alias Flags =
 
 emptyModel : Model
 emptyModel =
-    { activePage = Login
+    { activePage = Landing
     , pageLogin = Pages.Login.Model.emptyModel
     , pageSignUp = Pages.SignUp.Model.emptyModel
     , user = User.Model.emptyModel
     , notifications = Array.empty 
+    , pageLanding = Pages.LandingPage.Model.emptyModel
     , phxSocket = Phoenix.Socket.init "ws://localhost:4000/socket/websocket"
         |> Phoenix.Socket.withDebug 
         |> Phoenix.Socket.on "new:msg" "commands:lobby" ReceiveCommandMessage
