@@ -14,6 +14,7 @@ import Pages.SignUpForm.View exposing (..)
 import Pages.LandingPage.View exposing(..)
 import Components.Notificationbar exposing (..)
 import App.Common exposing (Msg(..), Page(..))
+import Pages.SignUp.Update as SignUp
 
 import Components.Navbar as Navbar
 import Components.Notificationbar as Notificationbar
@@ -31,6 +32,10 @@ view model =
                     viewMainContent model
                 ]
             ]
+
+signUpTranslator : SignUp.Translator App.Common.Msg 
+signUpTranslator =
+    SignUp.translator { onInternalMessage = PageSignUp , onUserRegistered = UserRegistered  } 
 
 
 viewHeader model =
@@ -66,7 +71,7 @@ viewMainContent model =
             Pages.Login.View.view model
 
         SignUp ->
-            Html.map PageSignUp (Pages.SignUp.View.view model.pageSignUp)
+            Html.map signUpTranslator (Pages.SignUp.View.view model.pageSignUp)
 
         Landing ->
             Pages.LandingPage.View.view model.pageLanding

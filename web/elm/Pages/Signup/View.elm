@@ -6,7 +6,7 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick, onInput, onSubmit)
 --import App.Common exposing (Msg(..), Page(..))
-import Pages.SignUp.Update exposing (Msg(..)) 
+import Pages.SignUp.Update as SignUp exposing (Msg(..), InternalMsg(..)) 
 import LayoutTemplates.Master as Layout
 import String
 
@@ -46,7 +46,7 @@ signUpForm model =
                     [ 
                         label [ for "display-name" ] [ text "Display Name" ],
                         small [ class "text-help m-l-1" ] [  String.join ", " errors |> text ],
-                        input [type' "text", id "display-name", class "form-control", placeholder "JL. Picard", value model.displayName, onInput SetDisplayName ] []
+                        input [type' "text", id "display-name", class "form-control", placeholder "JL. Picard", value model.displayName, onInput (ForSelf << SetDisplayName) ] []
                     ]
     
         emailField =
@@ -69,7 +69,7 @@ signUpForm model =
                     [ 
                         label [ for "email" ] [ text "Email" ],
                         small [ class "text-help m-l-1" ] [  String.join ", " errors |> text ],
-                        input [type' "email", id "email", inputClasses, placeholder "Enter email", value model.email, onInput SetEmail ] [],
+                        input [type' "email", id "email", inputClasses, placeholder "Enter email", value model.email, onInput (ForSelf << SetEmail) ] [],
                         small [ class "text-muted" ] [ text "We shall never share your email with anyone else" ]
                     ]
 
@@ -89,13 +89,13 @@ signUpForm model =
                     [ 
                         label [ for "password" ] [ text "Password" ],
                         small [ class "text-help m-l-1" ] [  String.join ", " errors |> text ],
-                        input [type' "password", id "password", class "form-control", placeholder "Enter password", value model.password, onInput SetPassword ] []
+                        input [type' "password", id "password", class "form-control", placeholder "Enter password", value model.password, onInput (ForSelf << SetPassword) ] []
                     ]
 
         confirmPasswordField =
             formGroup []
                 [ 
-                    input [type' "password", id "passwordConfirm", class "form-control", placeholder "Confirm password", value model.passwordConfirmation, onInput SetPasswordConfirm ] []
+                    input [type' "password", id "passwordConfirm", class "form-control", placeholder "Confirm password", value model.passwordConfirmation, onInput (ForSelf << SetPasswordConfirm) ] []
                 ]
 
         registerButton disabled =
@@ -106,7 +106,7 @@ signUpForm model =
                     ("disabled", disabled)
                 ]
             in
-                button [ classes, onClick Register ] [ text "Register" ]
+                button [ classes, onClick (ForSelf Register) ] [ text "Register" ]
 
         providerButtonRow model = 
             formGroup [] <| authProviderButtons model.registrationPending authProviders

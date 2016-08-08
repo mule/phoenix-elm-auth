@@ -1,14 +1,14 @@
-module Pages.SignUp.Update exposing (update, Msg(..))
+module Pages.SignUp.Update exposing (update, Msg(..), TranslationDictionary, Translator, translator, InternalMsg(..))
 import Pages.SignUp.Model exposing (..)
 import Http
 import HttpBuilder exposing (withHeader, withJsonBody, stringReader, jsonReader, send)
 import Task exposing (Task)
 import Json.Decode exposing (Decoder, bool, (:=))
 import Json.Encode exposing (encode, object, string)
-import App.Notifications exposing (Notification, NotificationLevel(..))
 import String
 import Update.Extra exposing (andThen)
 import Debug
+
 
 
 type InternalMsg
@@ -54,11 +54,11 @@ generateParentMessage : OutMsg -> Cmd Msg
 generateParentMessage outMsg =
     Task.perform never ForParent (Task.succeed outMsg )
 
-init : ( Model, List Notification )
+init : ( Model )
 init =
-    ( emptyModel, [] )
+    ( emptyModel )
 
-update : InternalMsg -> Model -> (Model, Cmd Msg, List Notification)
+update : InternalMsg -> Model -> (Model, Cmd Msg)
 
 update  msg model =
     case Debug.log "Signup action" msg of
@@ -91,34 +91,29 @@ update  msg model =
                     validateModel model
                 test = Debug.log "validated model" validatedModel
             in
-                ( validatedModel, Cmd.none, [] )
+                ( validatedModel, Cmd.none )
 
         Register ->
-            let newModel = 
-                    { model | registrationPending = True }
-                command = 
-                    registerUser newModel
-            in
-                (newModel, Cmd.map translator command)
-          
+            ( { model | registrationPending = True }, registerUser model)
+                 
         RegisterSucceed _ -> 
-            ( { model | registrationPending = False }, (generateParentMessage UserRegistered) , [ { level = Success, content = "User registered", dismissed = False } ] )
+            ( { model | registrationPending = False }, (generateParentMessage UserRegistered) )
              
         RegisterFail  error ->
             case  error of
                 HttpBuilder.BadResponse response ->
                     case Debug.log "Register response status" response.status of
                         422 -> 
-                            ( { model | registrationPending = False }, Cmd.none, [ { level = Error, content = response.statusText, dismissed = False } ] )
+                            ( { model | registrationPending = False }, Cmd.none )
                         _ ->
-                            ( { model | registrationPending = False }, Cmd.none, [ { level = Error, content = response.statusText, dismissed = False } ] )
+                            ( { model | registrationPending = False }, Cmd.none )
                 _ ->
-                    ( { model | registrationPending = False }, Cmd.none, [] )
+                    ( { model | registrationPending = False }, Cmd.none)
         Noop ->
-            (model, Cmd.none, [])
+            (model, Cmd.none)
 
 
-registerUser : Model -> Cmd InternalMsg
+registerUser : Model -> Cmd Msg
 registerUser model =
     let url = 
             "/api/users"
@@ -142,8 +137,7 @@ registerUser model =
             |> withJsonBody user
             |> send (jsonReader decodeRegisterResponse) stringReader
     in
-        --Task.perform RegisterFail RegisterSucceed (Http.post decodeRegisterResponse url  <| Http.string  <| encode 0 user)
-        Task.perform RegisterFail RegisterSucceed postRequest 
+        Cmd.map ForSelf ( Task.perform  RegisterFail RegisterSucceed postRequest ) 
 
 decodeRegisterResponse : Decoder Bool
 decodeRegisterResponse = 

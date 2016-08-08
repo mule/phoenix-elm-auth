@@ -7,8 +7,9 @@ import Array exposing (..)
 import Pages.Login.Update exposing (Msg)
 import Pages.Login.Model
 import Pages.SignUp.Model
-import Pages.SignUp.Update exposing (Msg)
+import Pages.SignUp.Update as SignUp
 import Pages.LandingPage.Model
+import Update.Extra exposing (andThen)
 import Phoenix.Socket
 import Phoenix.Channel
 import Phoenix.Push
@@ -57,6 +58,11 @@ init flags =
             {model | user = { authenticated = flags.authenticated , id = flags.userId, name = flags.userName, avatarUrl = "" }}
     in
          modelWithFlags ! []
+
+signUpTranslator : SignUp.Translator App.Common.Msg 
+signUpTranslator =
+    SignUp.translator { onInternalMessage = PageSignUp , onUserRegistered = UserRegistered  } 
+
  
 update : App.Common.Msg -> Model -> ( Model, Cmd App.Common.Msg )
 update appMsg model =
@@ -74,13 +80,10 @@ update appMsg model =
                 )
 
         PageSignUp msg ->
-            let 
-                ( signUpModel, signUpPageCmd, pageNotifications ) = Pages.SignUp.Update.update msg model.pageSignUp
-                appendedNotifications = pageNotifications |> fromList |> Array.append model.notifications
+            let ( signUpModel, signUpCmd ) =
+                SignUp.update msg model.pageSignUp
             in
-                ( { model | pageSignUp = signUpModel, notifications = appendedNotifications  }
-                , Cmd.map PageSignUp signUpPageCmd
-                )
+                { model | pageSignUp = signUpModel } ! [ Cmd.map signUpTranslator signUpCmd ]
 
         SetActivePage page ->
             { model | activePage = page } ! []
@@ -100,6 +103,9 @@ update appMsg model =
             model ! []
         LogoutFailed _ ->
             model ! []
+        UserRegistered ->
+            ( model, Cmd.none ) 
+            |> andThen update (SetActivePage Landing)
         Noop -> 
             model ! []  
 
