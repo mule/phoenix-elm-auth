@@ -11926,7 +11926,7 @@ var _user$project$App_Update$update = F2(
 		var _p0 = A2(_elm_lang$core$Debug$log, 'App action', appMsg);
 		switch (_p0.ctor) {
 			case 'Logout':
-				return {ctor: '_Tuple2', _0: _user$project$App_Update$emptyModel, _1: _user$project$App_Update$logoutUser};
+				return {ctor: '_Tuple2', _0: model, _1: _user$project$App_Update$logoutUser};
 			case 'PageLogin':
 				return A2(
 					_elm_lang$core$Platform_Cmd_ops['!'],
@@ -11997,7 +11997,7 @@ var _user$project$App_Update$update = F2(
 			case 'LogoutSucceed':
 				return A2(
 					_elm_lang$core$Platform_Cmd_ops['!'],
-					model,
+					_user$project$App_Update$emptyModel,
 					_elm_lang$core$Native_List.fromArray(
 						[]));
 			case 'LogoutFailed':

@@ -1,8 +1,20 @@
 defmodule PhoenixAuthKata.SessionController do
     use PhoenixAuthKata.Web, :controller
 
+    def index(conn, _params) do
+        user = conn.assigns[:current_user]
+        case is_nil(user) do
+            true ->
+                conn
+                |> json(%{authenticated: false})
+            false ->
+                conn
+                |> json(%{authenticated: true, userId: user.id, display_name: user.display_name})
+        end
+    end
+
     def create(conn, %{"session" => %{"email" => email, "password" => pass }}) do
-        case PhoenixAuthKata.Auth.login_by_username_and_passwod(conn, email, pass, repo: Repo) do
+        case PhoenixAuthKata.Auth.login_by_username_and_password(conn, email, pass, repo: Repo) do
             {:ok, conn} ->
                 conn
                 |> json(%{ok: true})
@@ -15,6 +27,6 @@ defmodule PhoenixAuthKata.SessionController do
     def delete(conn, _) do
         conn 
         |> PhoenixAuthKata.Auth.logout()
-        |> json(%{ok: true})
+        |> redirect to: page_path(conn, :index)
     end
 end

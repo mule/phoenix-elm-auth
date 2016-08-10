@@ -1,17 +1,17 @@
 module User.Model exposing (..)
 
 type alias User =
-    { avatarUrl : String
-    , name : String
-    , id : String
+    { avatarUrl : Maybe String
+    , name : Maybe String
+    , id : Maybe String
     , authenticated : Bool 
     }
 
 
 emptyModel : User 
 emptyModel = 
-    { avatarUrl = ""
-    , name = ""
-    , id = ""
+    { avatarUrl = Nothing
+    , name = Nothing
+    , id = Nothing
     , authenticated = False
     }

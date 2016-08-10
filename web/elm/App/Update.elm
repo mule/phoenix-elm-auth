@@ -15,7 +15,7 @@ import Phoenix.Channel
 import Phoenix.Push
 import Http
 import HttpBuilder exposing (withHeader, withJsonBody, stringReader, jsonReader, send)
-import Json.Decode exposing (Decoder, bool, (:=))
+import Json.Decode exposing (Decoder, bool, object4, string, (:=))
 import Task exposing (Task)
 import Debug
 
@@ -68,7 +68,7 @@ update : App.Common.Msg -> Model -> ( Model, Cmd App.Common.Msg )
 update appMsg model =
     case Debug.log "App action" appMsg of
         Logout ->
-            (emptyModel, logoutUser)
+            (model, logoutUser)
         PageLogin msg ->
             model ! []
         PhoenixMsg msg ->
@@ -100,7 +100,7 @@ update appMsg model =
             in
                 {model | notifications = updatedNotifications } ! []
         LogoutSucceed _ ->
-            model ! []
+            emptyModel ! []
         LogoutFailed _ ->
             model ! []
         UserRegistered ->
@@ -113,13 +113,31 @@ update appMsg model =
 logoutUser : Cmd App.Common.Msg
 logoutUser = 
     let url =
-        "/api/sessions/1" 
+            "/api/sessions/1" 
         logoutRequest = 
             HttpBuilder.delete url
             |> send (jsonReader decodeLogoutResponse) stringReader
     in
         Task.perform LogoutFailed LogoutSucceed logoutRequest
             
+fetchCurrentUser : Cmd App.Common.Msg
+fetchCurrentUser = 
+    let url = 
+            "api/sessions/"
+        currentUserRequest =
+            HttpBuilder.get url
+            |> send (jsonReader decodeUserResponse) stringReader
+    in
+        Task.perform UserFetchFailed UserFetchSucceed currentUserRequest
+
+decodeUserResponse : Decocoder User
+decodeUserResponse =
+    object4 User
+        (maybe ("name" := string))
+        (maybe ("id" := string))
+        (maybe ("avatarUrl" := string))
+        ("authenticated" := bool)
+
 
 decodeLogoutResponse : Decoder Bool
 decodeLogoutResponse = 
