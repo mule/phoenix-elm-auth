@@ -1,6 +1,6 @@
 module Main exposing (..) 
 import App.Router exposing (..)
-import App.Update exposing (init, update, Model, Flags)
+import App.Update exposing (init, update, Model)
 import App.View exposing (view)
 import App.Common exposing (Msg(..))
 import Html.App as Html
@@ -10,12 +10,12 @@ import Phoenix.Channel
 import Phoenix.Push
 import Debug
 
-main : Program Flags
+main : Program Never
 main =
     let test =
         Debug.log "Starting authkata"
     in
-        RouteUrl.programWithFlags
+        RouteUrl.program
             { delta2url = delta2url
             , location2messages = location2messages
             , init = App.Update.init

@@ -11892,11 +11892,11 @@ var _user$project$App_Update$decodeUserResponse = A5(
 	_elm_lang$core$Json_Decode$object4,
 	_user$project$User_Model$User,
 	_elm_lang$core$Json_Decode$maybe(
+		A2(_elm_lang$core$Json_Decode_ops[':='], 'avatarUrl', _elm_lang$core$Json_Decode$string)),
+	_elm_lang$core$Json_Decode$maybe(
 		A2(_elm_lang$core$Json_Decode_ops[':='], 'name', _elm_lang$core$Json_Decode$string)),
 	_elm_lang$core$Json_Decode$maybe(
-		A2(_elm_lang$core$Json_Decode_ops[':='], 'userId', _elm_lang$core$Json_Decode$string)),
-	_elm_lang$core$Json_Decode$maybe(
-		A2(_elm_lang$core$Json_Decode_ops[':='], 'avatarUrl', _elm_lang$core$Json_Decode$string)),
+		A2(_elm_lang$core$Json_Decode_ops[':='], 'userId', _elm_lang$core$Json_Decode$int)),
 	A2(_elm_lang$core$Json_Decode_ops[':='], 'authenticated', _elm_lang$core$Json_Decode$bool));
 var _user$project$App_Update$fetchCurrentUser = function () {
 	var url = 'api/sessions/';

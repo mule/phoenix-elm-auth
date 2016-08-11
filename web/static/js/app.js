@@ -28,4 +28,4 @@ import Elm from "./main.js";
 // import socket from "./socket"
 
 var elmDiv = document.getElementById('elm-main')
-  , elmApp = Elm.Main.embed(elmDiv, {authenticated: window.authenticated, userId: window.userId, userName: window.userName});
+  , elmApp = Elm.Main.embed(elmDiv);

@@ -1,4 +1,4 @@
-module App.Update exposing (init, update, Model, Flags)
+module App.Update exposing (init, update, Model)
 import App.Common exposing (..)
 import App.Notifications exposing (Notification, NotificationLevel(..))
 import Exts.RemoteData exposing (RemoteData(..), WebData)
@@ -15,7 +15,7 @@ import Phoenix.Channel
 import Phoenix.Push
 import Http
 import HttpBuilder exposing (withHeader, withJsonBody, stringReader, jsonReader, send)
-import Json.Decode exposing (Decoder, bool, object4, string, maybe, (:=))
+import Json.Decode exposing (Decoder, bool, object4, string, maybe, int, (:=))
 import Task exposing (Task)
 import Debug
 
@@ -29,12 +29,6 @@ type alias Model =
     , phxSocket : Phoenix.Socket.Socket App.Common.Msg
     }
 
-
-type alias Flags =
-    { authenticated : Bool
-    , userId : String
-    , userName : String
-    }
 
 
 emptyModel : Model
@@ -50,8 +44,8 @@ emptyModel =
         |> Phoenix.Socket.on "new:msg" "commands:lobby" ReceiveCommandMessage
     }
 
-init : Flags -> ( Model, Cmd App.Common.Msg )
-init flags =   
+init : ( Model, Cmd App.Common.Msg )
+init =   
     emptyModel ! [fetchCurrentUser]
 
 signUpTranslator : SignUp.Translator App.Common.Msg 
@@ -132,10 +126,11 @@ fetchCurrentUser =
 decodeUserResponse : Decoder User
 decodeUserResponse =
     object4 User
-        (maybe ("name" := string))
-        (maybe ("userId" := string))
         (maybe ("avatarUrl" := string))
+        (maybe ("name" := string))
+        (maybe ("userId" := int))
         ("authenticated" := bool)
+        
 
 
 decodeLogoutResponse : Decoder Bool
