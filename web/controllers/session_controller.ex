@@ -9,7 +9,7 @@ defmodule PhoenixAuthKata.SessionController do
                 |> json(%{authenticated: false})
             false ->
                 conn
-                |> json(%{authenticated: true, userId: user.id, display_name: user.display_name})
+                |> json(%{authenticated: true, userId: user.id, name: user.display_name})
         end
     end
 

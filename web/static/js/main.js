@@ -11492,7 +11492,7 @@ var _rgrempel$elm_route_url$RouteUrl$NavigationApp = F6(
 var _rgrempel$elm_route_url$RouteUrl$ModifyEntry = {ctor: 'ModifyEntry'};
 var _rgrempel$elm_route_url$RouteUrl$NewEntry = {ctor: 'NewEntry'};
 
-var _user$project$User_Model$emptyModel = {avatarUrl: '', name: '', id: '', authenticated: false};
+var _user$project$User_Model$emptyModel = {avatarUrl: _elm_lang$core$Maybe$Nothing, name: _elm_lang$core$Maybe$Nothing, id: _elm_lang$core$Maybe$Nothing, authenticated: false};
 var _user$project$User_Model$User = F4(
 	function (a, b, c, d) {
 		return {avatarUrl: a, name: b, id: c, authenticated: d};
@@ -11854,6 +11854,12 @@ var _user$project$App_Common$Noop = {ctor: 'Noop'};
 var _user$project$App_Common$SetActivePage = function (a) {
 	return {ctor: 'SetActivePage', _0: a};
 };
+var _user$project$App_Common$UserFetchSuccesfull = function (a) {
+	return {ctor: 'UserFetchSuccesfull', _0: a};
+};
+var _user$project$App_Common$UserFetchFailed = function (a) {
+	return {ctor: 'UserFetchFailed', _0: a};
+};
 var _user$project$App_Common$UserRegistered = {ctor: 'UserRegistered'};
 var _user$project$App_Common$LogoutFailed = function (a) {
 	return {ctor: 'LogoutFailed', _0: a};
@@ -11882,6 +11888,25 @@ var _user$project$Pages_LandingPage_Model$emptyModel = {};
 var _user$project$Pages_LandingPage_Model$Model = {};
 
 var _user$project$App_Update$decodeLogoutResponse = A2(_elm_lang$core$Json_Decode_ops[':='], 'ok', _elm_lang$core$Json_Decode$bool);
+var _user$project$App_Update$decodeUserResponse = A5(
+	_elm_lang$core$Json_Decode$object4,
+	_user$project$User_Model$User,
+	_elm_lang$core$Json_Decode$maybe(
+		A2(_elm_lang$core$Json_Decode_ops[':='], 'name', _elm_lang$core$Json_Decode$string)),
+	_elm_lang$core$Json_Decode$maybe(
+		A2(_elm_lang$core$Json_Decode_ops[':='], 'userId', _elm_lang$core$Json_Decode$string)),
+	_elm_lang$core$Json_Decode$maybe(
+		A2(_elm_lang$core$Json_Decode_ops[':='], 'avatarUrl', _elm_lang$core$Json_Decode$string)),
+	A2(_elm_lang$core$Json_Decode_ops[':='], 'authenticated', _elm_lang$core$Json_Decode$bool));
+var _user$project$App_Update$fetchCurrentUser = function () {
+	var url = 'api/sessions/';
+	var currentUserRequest = A3(
+		_lukewestby$elm_http_builder$HttpBuilder$send,
+		_lukewestby$elm_http_builder$HttpBuilder$jsonReader(_user$project$App_Update$decodeUserResponse),
+		_lukewestby$elm_http_builder$HttpBuilder$stringReader,
+		_lukewestby$elm_http_builder$HttpBuilder$get(url));
+	return A3(_elm_lang$core$Task$perform, _user$project$App_Common$UserFetchFailed, _user$project$App_Common$UserFetchSuccesfull, currentUserRequest);
+}();
 var _user$project$App_Update$logoutUser = function () {
 	var url = '/api/sessions/1';
 	var logoutRequest = A3(
@@ -11909,17 +11934,11 @@ var _user$project$App_Update$emptyModel = {
 			_fbonetti$elm_phoenix_socket$Phoenix_Socket$init('ws://localhost:4000/socket/websocket')))
 };
 var _user$project$App_Update$init = function (flags) {
-	var model = _user$project$App_Update$emptyModel;
-	var modelWithFlags = _elm_lang$core$Native_Utils.update(
-		model,
-		{
-			user: {authenticated: flags.authenticated, id: flags.userId, name: flags.userName, avatarUrl: ''}
-		});
 	return A2(
 		_elm_lang$core$Platform_Cmd_ops['!'],
-		modelWithFlags,
+		_user$project$App_Update$emptyModel,
 		_elm_lang$core$Native_List.fromArray(
-			[]));
+			[_user$project$App_Update$fetchCurrentUser]));
 };
 var _user$project$App_Update$update = F2(
 	function (appMsg, model) {
@@ -12011,7 +12030,25 @@ var _user$project$App_Update$update = F2(
 					_ccapndave$elm_update_extra$Update_Extra$andThen,
 					_user$project$App_Update$update,
 					_user$project$App_Common$SetActivePage(_user$project$App_Common$Landing),
-					{ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none});
+					A2(
+						_elm_lang$core$Platform_Cmd_ops['!'],
+						model,
+						_elm_lang$core$Native_List.fromArray(
+							[_user$project$App_Update$fetchCurrentUser])));
+			case 'UserFetchSuccesfull':
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						model,
+						{user: _p0._0.data}),
+					_elm_lang$core$Native_List.fromArray(
+						[]));
+			case 'UserFetchFailed':
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					model,
+					_elm_lang$core$Native_List.fromArray(
+						[]));
 			default:
 				return A2(
 					_elm_lang$core$Platform_Cmd_ops['!'],
@@ -12796,6 +12833,8 @@ var _user$project$Components_Notificationbar$view = function (model) {
 };
 
 var _user$project$Components_Navbar$userData = function (user) {
+	var userName = A2(_elm_lang$core$Maybe$withDefault, '', user.name);
+	var test = A2(_elm_lang$core$Debug$log, 'User data: ', user);
 	var _p0 = user.authenticated;
 	if (_p0 === true) {
 		return A2(
@@ -12811,7 +12850,7 @@ var _user$project$Components_Navbar$userData = function (user) {
 						_elm_lang$core$String$join,
 						' ',
 						_elm_lang$core$Native_List.fromArray(
-							['Signed in as', user.name])))
+							['Signed in as', userName])))
 				]));
 	} else {
 		return A2(

@@ -6,6 +6,7 @@ import App.Common exposing (..)
 import App.Update exposing (Model)
 import String
 import User.Model exposing (User)
+import Debug
 
 
 view : Model -> Html Msg
@@ -43,11 +44,16 @@ navbarButtons model =
 
 userData : User -> Html Msg
 userData user =
-    case user.authenticated of
-        True ->
-            span [ class "navbar-text pull-xs-right m-l-1" ] [ text <| String.join " " [ "Signed in as", user.name ] ]
-        False ->
-            span [] []
+    let test =
+            Debug.log "User data: " user 
+        userName =
+            Maybe.withDefault "" user.name
+    in
+        case user.authenticated of
+            True ->
+                span [ class "navbar-text pull-xs-right m-l-1" ] [ text <| String.join " " [ "Signed in as", userName ] ]
+            False ->
+                span [] []
 
 
 

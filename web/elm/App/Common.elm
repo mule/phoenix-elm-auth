@@ -8,6 +8,7 @@ import Json.Encode as JE
 import Json.Decode as JD exposing ((:=))
 import Dict
 import App.Notifications exposing(..)
+import User.Model exposing(User)
 import HttpBuilder
 
 type Page
@@ -26,5 +27,7 @@ type Msg
     | LogoutSucceed (HttpBuilder.Response Bool)
     | LogoutFailed  (HttpBuilder.Error String)
     | UserRegistered
+    | UserFetchFailed (HttpBuilder.Error String)
+    | UserFetchSuccesfull (HttpBuilder.Response User)
     | SetActivePage Page
     | Noop

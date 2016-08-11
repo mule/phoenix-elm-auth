@@ -15,7 +15,7 @@ import Phoenix.Channel
 import Phoenix.Push
 import Http
 import HttpBuilder exposing (withHeader, withJsonBody, stringReader, jsonReader, send)
-import Json.Decode exposing (Decoder, bool, object4, string, (:=))
+import Json.Decode exposing (Decoder, bool, object4, string, maybe, (:=))
 import Task exposing (Task)
 import Debug
 
@@ -52,12 +52,7 @@ emptyModel =
 
 init : Flags -> ( Model, Cmd App.Common.Msg )
 init flags =   
-    let model =
-         emptyModel
-        modelWithFlags =
-            {model | user = { authenticated = flags.authenticated , id = flags.userId, name = flags.userName, avatarUrl = "" }}
-    in
-         modelWithFlags ! []
+    emptyModel ! [fetchCurrentUser]
 
 signUpTranslator : SignUp.Translator App.Common.Msg 
 signUpTranslator =
@@ -104,8 +99,12 @@ update appMsg model =
         LogoutFailed _ ->
             model ! []
         UserRegistered ->
-            ( model, Cmd.none ) 
+            model ! [fetchCurrentUser]
             |> andThen update (SetActivePage Landing)
+        UserFetchSuccesfull userResponse ->
+            {model | user = userResponse.data} ! []
+        UserFetchFailed error ->
+            model ! []
         Noop -> 
             model ! []  
 
@@ -128,13 +127,13 @@ fetchCurrentUser =
             HttpBuilder.get url
             |> send (jsonReader decodeUserResponse) stringReader
     in
-        Task.perform UserFetchFailed UserFetchSucceed currentUserRequest
+        Task.perform UserFetchFailed UserFetchSuccesfull currentUserRequest
 
-decodeUserResponse : Decocoder User
+decodeUserResponse : Decoder User
 decodeUserResponse =
     object4 User
         (maybe ("name" := string))
-        (maybe ("id" := string))
+        (maybe ("userId" := string))
         (maybe ("avatarUrl" := string))
         ("authenticated" := bool)
 
