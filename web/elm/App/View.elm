@@ -37,6 +37,10 @@ signUpTranslator : SignUp.Translator App.Common.Msg
 signUpTranslator =
     SignUp.translator { onInternalMessage = PageSignUp , onUserRegistered = UserRegistered  } 
 
+loginTranslator : Login.Translator App.Common.Msg
+loginTranslator =
+    Login.translator { onInternalMessage = PageLogin, onUserLoggedIn = UserLoggedIn }
+
 
 viewHeader model =
     let buttonClasses =
@@ -68,7 +72,7 @@ viewMainContent model =
     case Debug.log "view" model.activePage of
 
         Login ->
-            Pages.Login.View.view model
+            Html.map loginTranslator (Pages.Login.View.view model.pageLogin)
 
         SignUp ->
             Html.map signUpTranslator (Pages.SignUp.View.view model.pageSignUp)

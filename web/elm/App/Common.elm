@@ -1,5 +1,5 @@
 module App.Common exposing (Msg(..), Page(..))
-import Pages.Login.Update exposing (Msg(..))
+import Pages.Login.Update as Login 
 import Pages.SignUp.Update exposing (InternalMsg)
 import Phoenix.Socket
 import Phoenix.Channel
@@ -19,7 +19,7 @@ type Page
 
 type Msg
     = Logout
-    | PageLogin Pages.Login.Update.Msg
+    | PageLogin Login.InternalMsg
     | PageSignUp Pages.SignUp.Update.InternalMsg
     | PhoenixMsg (Phoenix.Socket.Msg Msg)
     | ReceiveCommandMessage JE.Value
@@ -29,5 +29,6 @@ type Msg
     | UserRegistered
     | UserFetchFailed (HttpBuilder.Error String)
     | UserFetchSuccesfull (HttpBuilder.Response User)
+    | UserLoggedIn User
     | SetActivePage Page
     | Noop

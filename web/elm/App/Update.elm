@@ -4,7 +4,7 @@ import App.Notifications exposing (Notification, NotificationLevel(..))
 import Exts.RemoteData exposing (RemoteData(..), WebData)
 import User.Model exposing (..)
 import Array exposing (..)
-import Pages.Login.Update exposing (Msg)
+import Pages.Login.Update as Login
 import Pages.Login.Model
 import Pages.SignUp.Model
 import Pages.SignUp.Update as SignUp
@@ -52,14 +52,20 @@ signUpTranslator : SignUp.Translator App.Common.Msg
 signUpTranslator =
     SignUp.translator { onInternalMessage = PageSignUp , onUserRegistered = UserRegistered  } 
 
- 
+loginTranslator : Login.Translator App.Common.Msg
+loginTranslator =
+    Login.translator { onInternalMessage = PageLogin, onUserLoggedIn = UserLoggedIn }
+
 update : App.Common.Msg -> Model -> ( Model, Cmd App.Common.Msg )
 update appMsg model =
     case Debug.log "App action" appMsg of
         Logout ->
             (model, logoutUser)
         PageLogin msg ->
-            model ! []
+            let (loginModel, loginCmd) =
+                Login.update msg model.pageLogin
+            in
+                { model | pageLogin = loginModel } ! [Cmd.map loginTranslator loginCmd]
         PhoenixMsg msg ->
             let
                 ( phxSocket, phxCmd ) = Phoenix.Socket.update msg model.phxSocket
@@ -99,6 +105,8 @@ update appMsg model =
             {model | user = userResponse.data} ! []
         UserFetchFailed error ->
             model ! []
+        UserLoggedIn authenticatedUser ->
+            {model | user = authenticatedUser  } ! []
         Noop -> 
             model ! []  
 
