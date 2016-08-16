@@ -9,13 +9,17 @@ import Task
 import HttpBuilder exposing (withHeader, withJsonBody, stringReader, jsonReader, send)
 import User.Model exposing (..)
 import Pages.Login.Model as Login exposing (..)
+import Json.Decode exposing (Decoder, bool, (:=))
+import Json.Encode exposing (encode, object, string)
 
 
 type InternalMsg
-    = FetchFail Http.Error
-    | FetchSucceed User
-    | SetName String
-    | TryLogin
+    = LoginFail Http.Error
+    | LoginSucceed User
+    | SetEmail String
+    | SetPassword String
+    | TryLocalLogin
+    | TryOAuthLogin
 
 type OutMsg
     = UserLoggedIn User
@@ -53,26 +57,39 @@ init : ( Model, Cmd Msg )
 init =
     Login.emptyModel ! []
 
-
 update : InternalMsg -> Model -> ( Model, Cmd Msg)
 update msg model =
     case msg of
-        FetchSucceed newUserData ->
+        LoginSucceed newUserData ->
             model ! [generateParentMessage (UserLoggedIn newUserData) ]
-        FetchFail err ->
+        LoginFail err ->
             ( model, Cmd.none )
+        SetEmail emailTxt ->
+            ({ model | email = emailTxt }, Cmd.none)
+        SetPassword passwordTxt ->
+            {model | password = passwordTxt } ! [ Cmd.none ]
+        TryLocalLogin ->
+            (model, login model)
 
-        SetName name ->
-            ({ model | name = name }, Cmd.none)
-
-        TryLogin ->
-            (model, Cmd.none)
-
-login: model -> Cmd Msg
-login model =
+localLogin: model -> Cmd Msg
+localLogin model =
     let url =
-        "api/sessions"
-        
+            "api/sessions"
+        user =
+            object 
+            [
+                ("email", model.email ),
+                ("password", model.password)
+            ]
+        createSessionRequest =
+            HttpBuilder.create url
+            |> withHeader "Content-type" "application/json"
+            |> withJsonBody user
+            |> send (jsonReader decodeLoginResponse) stringReader
+        in
+            Cmd.map ForSelf ( Task.perform  LoginFail LoginSucceed createSessionRequest ) 
+
+
 
 
 
