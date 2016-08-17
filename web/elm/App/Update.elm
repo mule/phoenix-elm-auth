@@ -81,7 +81,18 @@ update appMsg model =
                 { model | pageSignUp = signUpModel } ! [ Cmd.map signUpTranslator signUpCmd ]
 
         SetActivePage page ->
-            { model | activePage = page } ! []
+            case (page, model.user.authenticated) of
+                (Login, True) ->
+                    {model | activePage = page } ! []
+                    |> andThen update (SetActivePage Landing)
+                (Login, False) ->
+                    {model | activePage = page } ! []
+                (SignUp, True) ->
+                    {model | activePage = Landing } ! []
+                (SignUp, False) ->
+                    {model | activePage = page } ! []
+                (_,_) -> 
+                    { model | activePage = page } ! []
         
         ReceiveCommandMessage raw ->
              model ! [] 
@@ -96,6 +107,7 @@ update appMsg model =
                 {model | notifications = updatedNotifications } ! []
         LogoutSucceed _ ->
             emptyModel ! []
+            |> andThen update (SetActivePage Landing)
         LogoutFailed _ ->
             model ! []
         UserRegistered ->
@@ -107,6 +119,7 @@ update appMsg model =
             model ! []
         UserLoggedIn authenticatedUser ->
             {model | user = authenticatedUser  } ! []
+            |> andThen update (SetActivePage Landing)
         Noop -> 
             model ! []  
 

@@ -13,11 +13,12 @@ defmodule PhoenixAuthKata.SessionController do
         end
     end
 
-    def create(conn, %{"session" => %{"email" => email, "password" => pass }}) do
+    def create(conn, %{"email" => email, "password" => pass }) do
         case PhoenixAuthKata.Auth.login_by_username_and_password(conn, email, pass, repo: Repo) do
             {:ok, conn} ->
+                user = conn.assigns[:current_user]
                 conn
-                |> json(%{ok: true})
+                |> json(%{authenticated: true, userId: user.id, name: user.display_name})
             {:error, _reason, conn} ->
                 conn
                 |> json(%{ok: false, message: "Invalid username/password"})

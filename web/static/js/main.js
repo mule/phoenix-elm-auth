@@ -12268,11 +12268,63 @@ var _user$project$App_Update$update = F2(
 							A2(_elm_lang$core$Platform_Cmd$map, _user$project$App_Update$signUpTranslator, signUpCmd)
 						]));
 			case 'SetActivePage':
+				var _p5 = _p0._0;
+				var _p4 = {ctor: '_Tuple2', _0: _p5, _1: model.user.authenticated};
+				_v1_4:
+				do {
+					if (_p4._1 === true) {
+						switch (_p4._0.ctor) {
+							case 'Login':
+								return A3(
+									_ccapndave$elm_update_extra$Update_Extra$andThen,
+									_user$project$App_Update$update,
+									_user$project$App_Common$SetActivePage(_user$project$App_Common$Landing),
+									A2(
+										_elm_lang$core$Platform_Cmd_ops['!'],
+										_elm_lang$core$Native_Utils.update(
+											model,
+											{activePage: _p5}),
+										_elm_lang$core$Native_List.fromArray(
+											[])));
+							case 'SignUp':
+								return A2(
+									_elm_lang$core$Platform_Cmd_ops['!'],
+									_elm_lang$core$Native_Utils.update(
+										model,
+										{activePage: _user$project$App_Common$Landing}),
+									_elm_lang$core$Native_List.fromArray(
+										[]));
+							default:
+								break _v1_4;
+						}
+					} else {
+						switch (_p4._0.ctor) {
+							case 'Login':
+								return A2(
+									_elm_lang$core$Platform_Cmd_ops['!'],
+									_elm_lang$core$Native_Utils.update(
+										model,
+										{activePage: _p5}),
+									_elm_lang$core$Native_List.fromArray(
+										[]));
+							case 'SignUp':
+								return A2(
+									_elm_lang$core$Platform_Cmd_ops['!'],
+									_elm_lang$core$Native_Utils.update(
+										model,
+										{activePage: _p5}),
+									_elm_lang$core$Native_List.fromArray(
+										[]));
+							default:
+								break _v1_4;
+						}
+					}
+				} while(false);
 				return A2(
 					_elm_lang$core$Platform_Cmd_ops['!'],
 					_elm_lang$core$Native_Utils.update(
 						model,
-						{activePage: _p0._0}),
+						{activePage: _p5}),
 					_elm_lang$core$Native_List.fromArray(
 						[]));
 			case 'ReceiveCommandMessage':
@@ -12282,15 +12334,15 @@ var _user$project$App_Update$update = F2(
 					_elm_lang$core$Native_List.fromArray(
 						[]));
 			case 'DismissNotification':
-				var _p5 = _p0._0;
+				var _p7 = _p0._0;
 				var updatedNotifications = function () {
-					var _p4 = A2(_elm_lang$core$Array$get, _p5, model.notifications);
-					if (_p4.ctor === 'Just') {
+					var _p6 = A2(_elm_lang$core$Array$get, _p7, model.notifications);
+					if (_p6.ctor === 'Just') {
 						return A3(
 							_elm_lang$core$Array$set,
-							_p5,
+							_p7,
 							_elm_lang$core$Native_Utils.update(
-								_p4._0,
+								_p6._0,
 								{dismissed: true}),
 							model.notifications);
 					} else {
@@ -12305,11 +12357,15 @@ var _user$project$App_Update$update = F2(
 					_elm_lang$core$Native_List.fromArray(
 						[]));
 			case 'LogoutSucceed':
-				return A2(
-					_elm_lang$core$Platform_Cmd_ops['!'],
-					_user$project$App_Update$emptyModel,
-					_elm_lang$core$Native_List.fromArray(
-						[]));
+				return A3(
+					_ccapndave$elm_update_extra$Update_Extra$andThen,
+					_user$project$App_Update$update,
+					_user$project$App_Common$SetActivePage(_user$project$App_Common$Landing),
+					A2(
+						_elm_lang$core$Platform_Cmd_ops['!'],
+						_user$project$App_Update$emptyModel,
+						_elm_lang$core$Native_List.fromArray(
+							[])));
 			case 'LogoutFailed':
 				return A2(
 					_elm_lang$core$Platform_Cmd_ops['!'],
@@ -12341,13 +12397,17 @@ var _user$project$App_Update$update = F2(
 					_elm_lang$core$Native_List.fromArray(
 						[]));
 			case 'UserLoggedIn':
-				return A2(
-					_elm_lang$core$Platform_Cmd_ops['!'],
-					_elm_lang$core$Native_Utils.update(
-						model,
-						{user: _p0._0}),
-					_elm_lang$core$Native_List.fromArray(
-						[]));
+				return A3(
+					_ccapndave$elm_update_extra$Update_Extra$andThen,
+					_user$project$App_Update$update,
+					_user$project$App_Common$SetActivePage(_user$project$App_Common$Landing),
+					A2(
+						_elm_lang$core$Platform_Cmd_ops['!'],
+						_elm_lang$core$Native_Utils.update(
+							model,
+							{user: _p0._0}),
+						_elm_lang$core$Native_List.fromArray(
+							[])));
 			default:
 				return A2(
 					_elm_lang$core$Platform_Cmd_ops['!'],
@@ -12396,14 +12456,27 @@ var _user$project$App_Router$location2messages = function (location) {
 };
 var _user$project$App_Router$delta2url = F2(
 	function (previous, current) {
-		var _p1 = A2(_elm_lang$core$Debug$log, 'delta2url', current.activePage);
-		switch (_p1.ctor) {
+		var _p1 = A2(
+			_elm_lang$core$Debug$log,
+			'delta2url',
+			{ctor: '_Tuple2', _0: current.activePage, _1: current.user.authenticated});
+		switch (_p1._0.ctor) {
 			case 'Login':
-				return _elm_lang$core$Maybe$Just(
-					A2(_rgrempel$elm_route_url$RouteUrl$UrlChange, _rgrempel$elm_route_url$RouteUrl$NewEntry, '/#login'));
+				if (_p1._1 === true) {
+					return _elm_lang$core$Maybe$Just(
+						A2(_rgrempel$elm_route_url$RouteUrl$UrlChange, _rgrempel$elm_route_url$RouteUrl$NewEntry, '/#'));
+				} else {
+					return _elm_lang$core$Maybe$Just(
+						A2(_rgrempel$elm_route_url$RouteUrl$UrlChange, _rgrempel$elm_route_url$RouteUrl$NewEntry, '/#login'));
+				}
 			case 'SignUp':
-				return _elm_lang$core$Maybe$Just(
-					A2(_rgrempel$elm_route_url$RouteUrl$UrlChange, _rgrempel$elm_route_url$RouteUrl$NewEntry, '/#signup'));
+				if (_p1._1 === true) {
+					return _elm_lang$core$Maybe$Just(
+						A2(_rgrempel$elm_route_url$RouteUrl$UrlChange, _rgrempel$elm_route_url$RouteUrl$NewEntry, '/#'));
+				} else {
+					return _elm_lang$core$Maybe$Just(
+						A2(_rgrempel$elm_route_url$RouteUrl$UrlChange, _rgrempel$elm_route_url$RouteUrl$NewEntry, '/#signup'));
+				}
 			case 'Landing':
 				return _elm_lang$core$Maybe$Just(
 					A2(_rgrempel$elm_route_url$RouteUrl$UrlChange, _rgrempel$elm_route_url$RouteUrl$NewEntry, '/#'));

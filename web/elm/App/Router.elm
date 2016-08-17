@@ -9,18 +9,18 @@ import Debug
 
 delta2url : Model -> Model -> Maybe UrlChange
 delta2url previous current =
-    case Debug.log "delta2url" current.activePage of
-
-        Login ->
-            Just <| UrlChange NewEntry "/#login"
-
-        SignUp ->
-            Just <| UrlChange NewEntry "/#signup"
-
-        Landing ->
+    case Debug.log "delta2url" (current.activePage, current.user.authenticated) of
+        (Login, True) ->
             Just <| UrlChange NewEntry "/#"
-
-        PageNotFound ->
+        (Login, False) ->
+            Just <| UrlChange NewEntry "/#login"
+        (SignUp, True) ->
+            Just <| UrlChange NewEntry "/#"
+        (SignUp, False) ->
+            Just <| UrlChange NewEntry "/#signup"
+        (Landing, _) ->
+            Just <| UrlChange NewEntry "/#"
+        (PageNotFound, _) ->
             Just <| UrlChange NewEntry "/#404"
 
 
@@ -29,7 +29,6 @@ location2messages location =
     case Debug.log "location2messages" location.hash of
         "" ->
             []
-
         "#login" ->
             [ SetActivePage Login ]
 
