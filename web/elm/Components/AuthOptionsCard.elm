@@ -2,25 +2,26 @@ module Components.AuthOptionsCard exposing (view)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
+import Pages.Login.Update exposing ( Msg(..), InternalMsg(..) )
 
-view : String -> List (String, Attribute msg) -> Html msg
+view : String -> List (String, Attribute Msg) -> Html Msg
 
 view title providers =
 
     let listItem headingText content =
             li [ class "list-group-item" ] [ h5 [ class "text-xs-center m-b-1" ] [ text headingText ], content]
 
-        formInput inputType labelText id'  =
+        formInput inputType labelText id' inputMsg =
             div [ class "form-group m-l-1" ] [ 
                 label [ for id' ] [ text labelText ],
-                input [ type' inputType, class "form-control m-l-1", id id'  ] []
+                input [ type' inputType, class "form-control m-l-1", id id', onInput inputMsg ] []
             ]
 
         submitBtn = 
-            button [ type' "submit", class "btn btn-primary m-l-1" ] [ text "Login" ]
+            button [ class "btn btn-primary m-l-1", onClick (ForSelf TryLocalLogin) ] [ text "Login" ]
 
         loginForm = 
-            Html.form [ class "form-inline center-block" ] [ formInput "email" "Email" "email", formInput "password" "Password" "password", submitBtn ]
+            Html.form [ class "form-inline center-block" ] [ formInput "email" "Email" "email" (ForSelf << SetEmail), formInput "password" "Password" "password" (ForSelf << SetPassword), submitBtn ]
         
         in
             

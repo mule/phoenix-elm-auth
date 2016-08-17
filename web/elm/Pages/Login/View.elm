@@ -9,11 +9,12 @@ import User.Model exposing (..)
 --import Pages.Login.Model exposing (..)
 --import Pages.Login.Update exposing (..)
 import Components.AuthOptionsCard as AuthOptionsCard
-import App.Common exposing (Msg(..), Page(..))
-import App.Update exposing (Model)
+import Pages.Login.Model exposing (..)
+import Pages.Login.Update exposing ( Msg(..), InternalMsg(..) )
+
 import LayoutTemplates.Master as Master
 
-view :  Model -> Html App.Common.Msg
+view :  Model -> Html Msg
 -- view user model =
 --     let
 --         spinner =

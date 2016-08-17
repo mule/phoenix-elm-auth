@@ -1,5 +1,5 @@
 
-module Pages.Login.Update exposing (update, Msg(..), TranslationDictionary, Translator, InternalMsg, translator)
+module Pages.Login.Update exposing (update, Msg(..), TranslationDictionary, Translator, InternalMsg(..), translator)
 
 import Exts.RemoteData exposing (RemoteData(..), WebData)
 import Http
@@ -8,18 +8,18 @@ import String exposing (isEmpty)
 import Task
 import HttpBuilder exposing (withHeader, withJsonBody, stringReader, jsonReader, send)
 import User.Model exposing (..)
-import Pages.Login.Model as Login exposing (..)
-import Json.Decode exposing (Decoder, bool, (:=))
+import Pages.Login.Model  exposing (..)
+import Json.Decode exposing (Decoder, bool, object4, string, maybe, int, (:=))
 import Json.Encode exposing (encode, object, string)
 
 
 type InternalMsg
-    = LoginFail Http.Error
-    | LoginSucceed User
+    = LoginFail (HttpBuilder.Error String)
+    | LoginSucceed (HttpBuilder.Response User)
     | SetEmail String
     | SetPassword String
     | TryLocalLogin
-    | TryOAuthLogin
+
 
 type OutMsg
     = UserLoggedIn User
@@ -55,13 +55,13 @@ generateParentMessage outMsg =
 
 init : ( Model, Cmd Msg )
 init =
-    Login.emptyModel ! []
+    Pages.Login.Model.emptyModel ! []
 
 update : InternalMsg -> Model -> ( Model, Cmd Msg)
 update msg model =
     case msg of
-        LoginSucceed newUserData ->
-            model ! [generateParentMessage (UserLoggedIn newUserData) ]
+        LoginSucceed loginResponse ->
+            model ! [generateParentMessage (UserLoggedIn loginResponse.data) ]
         LoginFail err ->
             ( model, Cmd.none )
         SetEmail emailTxt ->
@@ -69,28 +69,35 @@ update msg model =
         SetPassword passwordTxt ->
             {model | password = passwordTxt } ! [ Cmd.none ]
         TryLocalLogin ->
-            (model, login model)
+            (model, localLogin model)
 
-localLogin: model -> Cmd Msg
+localLogin: Model -> Cmd Msg
 localLogin model =
     let url =
             "api/sessions"
         user =
             object 
             [
-                ("email", model.email ),
-                ("password", model.password)
+                ("email", Json.Encode.string model.email ),
+                ("password", Json.Encode.string model.password)
             ]
         createSessionRequest =
-            HttpBuilder.create url
+            HttpBuilder.post url
             |> withHeader "Content-type" "application/json"
             |> withJsonBody user
-            |> send (jsonReader decodeLoginResponse) stringReader
+            |> send (jsonReader decodeUserResponse) stringReader
         in
             Cmd.map ForSelf ( Task.perform  LoginFail LoginSucceed createSessionRequest ) 
 
 
 
+decodeUserResponse : Decoder User
+decodeUserResponse =
+    object4 User
+        (maybe ("avatarUrl" := Json.Decode.string))
+        (maybe ("name" := Json.Decode.string))
+        (maybe ("userId" := int))
+        ("authenticated" := bool)
 
 
 

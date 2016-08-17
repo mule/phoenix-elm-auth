@@ -15,6 +15,7 @@ import Pages.LandingPage.View exposing(..)
 import Components.Notificationbar exposing (..)
 import App.Common exposing (Msg(..), Page(..))
 import Pages.SignUp.Update as SignUp
+import Pages.Login.Update as Login
 
 import Components.Navbar as Navbar
 import Components.Notificationbar as Notificationbar
