@@ -21,7 +21,9 @@ defmodule PhoenixAuthKata.SessionController do
                 |> json(%{authenticated: true, userId: user.id, name: user.display_name})
             {:error, _reason, conn} ->
                 conn
-                |> json(%{ok: false, message: "Invalid username/password"})
+                |> put_status(401)
+                |> json(%{ok: false, errors: ["Invalid username/password"]})
+                |> halt()
         end
     end
 

@@ -1,5 +1,5 @@
 module App.Common exposing (Msg(..), Page(..))
-import Pages.Login.Update as Login 
+import Pages.Login.Update as Login exposing(InternalMsg)
 import Pages.SignUp.Update exposing (InternalMsg)
 import Phoenix.Socket
 import Phoenix.Channel
@@ -30,5 +30,6 @@ type Msg
     | UserFetchFailed (HttpBuilder.Error String)
     | UserFetchSuccesfull (HttpBuilder.Response User)
     | UserLoggedIn User
+    | NotificationReceived Notification
     | SetActivePage Page
     | Noop

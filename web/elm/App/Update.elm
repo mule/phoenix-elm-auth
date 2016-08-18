@@ -120,6 +120,9 @@ update appMsg model =
         UserLoggedIn authenticatedUser ->
             {model | user = authenticatedUser  } ! []
             |> andThen update (SetActivePage Landing)
+        Notify notification ->
+            let notifications' = model.notifications.push notification
+            {model | notifications = notifications') ! []
         Noop -> 
             model ! []  
 
