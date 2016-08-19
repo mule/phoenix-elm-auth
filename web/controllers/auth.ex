@@ -30,8 +30,6 @@ defmodule PhoenixAuthKata.Auth do
     end   
 
     def  login_by_username_and_password(conn, email, password, opts) do
-        Logger.debug email
-        Logger.debug password
         repo = Keyword.fetch!(opts, :repo)
         user = repo.get_by(PhoenixAuthKata.User, email: email)
 

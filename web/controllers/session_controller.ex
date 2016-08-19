@@ -19,10 +19,15 @@ defmodule PhoenixAuthKata.SessionController do
                 user = conn.assigns[:current_user]
                 conn
                 |> json(%{authenticated: true, userId: user.id, name: user.display_name})
-            {:error, _reason, conn} ->
+            {:error, :unauthorized, conn} ->
                 conn
                 |> put_status(401)
-                |> json(%{ok: false, errors: ["Invalid username/password"]})
+                |> json(%{ok: false, errors: ["Invalid password"]})
+                |> halt()
+            {:error, :not_found, conn} ->
+                conn
+                |> put_status(401)
+                |> json(%{ok: false, errors: ["User with this email does not exist"]})
                 |> halt()
         end
     end

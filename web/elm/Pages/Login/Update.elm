@@ -84,7 +84,6 @@ update msg model =
                 in
                     model ! [Notify notifications |> generateParentMessage]
 
-
         SetEmail emailTxt ->
             ({ model | email = emailTxt }, Cmd.none)
         SetPassword passwordTxt ->

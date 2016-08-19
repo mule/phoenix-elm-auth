@@ -40,7 +40,9 @@ signUpTranslator =
 
 loginTranslator : Login.Translator App.Common.Msg
 loginTranslator =
-    Login.translator { onInternalMessage = PageLogin, onUserLoggedIn = UserLoggedIn }
+    Login.translator { onInternalMessage = PageLogin,
+                        onUserLoggedIn = UserLoggedIn,
+                        onNotify = NotificationsReceived }
 
 
 viewHeader model =

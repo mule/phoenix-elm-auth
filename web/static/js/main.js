@@ -11682,6 +11682,26 @@ var _user$project$Pages_Login_Model$Model = F2(
 		return {email: a, password: b};
 	});
 
+var _user$project$App_Notifications$Notification = F3(
+	function (a, b, c) {
+		return {level: a, content: b, dismissed: c};
+	});
+var _user$project$App_Notifications$Success = {ctor: 'Success'};
+var _user$project$App_Notifications$Info = {ctor: 'Info'};
+var _user$project$App_Notifications$Warning = {ctor: 'Warning'};
+var _user$project$App_Notifications$Error = {ctor: 'Error'};
+
+var _user$project$Pages_Login_Update$decodeErrorResponse = A3(
+	_elm_lang$core$Json_Decode$object2,
+	F2(
+		function (v0, v1) {
+			return {ctor: '_Tuple2', _0: v0, _1: v1};
+		}),
+	A2(_elm_lang$core$Json_Decode_ops[':='], 'ok', _elm_lang$core$Json_Decode$bool),
+	A2(
+		_elm_lang$core$Json_Decode_ops[':='],
+		'errors',
+		_elm_lang$core$Json_Decode$array(_elm_lang$core$Json_Decode$string)));
 var _user$project$Pages_Login_Update$decodeUserResponse = A5(
 	_elm_lang$core$Json_Decode$object4,
 	_user$project$User_Model$User,
@@ -11712,12 +11732,16 @@ var _user$project$Pages_Login_Update$translator = F2(
 		if (_p2.ctor === 'ForSelf') {
 			return _p1.onInternalMessage(_p2._0);
 		} else {
-			return _p1.onUserLoggedIn(_p2._0._0);
+			if (_p2._0.ctor === 'UserLoggedIn') {
+				return _p1.onUserLoggedIn(_p2._0._0);
+			} else {
+				return _p1.onNotify(_p2._0._0);
+			}
 		}
 	});
-var _user$project$Pages_Login_Update$TranslationDictionary = F2(
-	function (a, b) {
-		return {onInternalMessage: a, onUserLoggedIn: b};
+var _user$project$Pages_Login_Update$TranslationDictionary = F3(
+	function (a, b, c) {
+		return {onInternalMessage: a, onUserLoggedIn: b, onNotify: c};
 	});
 var _user$project$Pages_Login_Update$TryLocalLogin = {ctor: 'TryLocalLogin'};
 var _user$project$Pages_Login_Update$SetPassword = function (a) {
@@ -11731,6 +11755,9 @@ var _user$project$Pages_Login_Update$LoginSucceed = function (a) {
 };
 var _user$project$Pages_Login_Update$LoginFail = function (a) {
 	return {ctor: 'LoginFail', _0: a};
+};
+var _user$project$Pages_Login_Update$Notify = function (a) {
+	return {ctor: 'Notify', _0: a};
 };
 var _user$project$Pages_Login_Update$UserLoggedIn = function (a) {
 	return {ctor: 'UserLoggedIn', _0: a};
@@ -11767,7 +11794,7 @@ var _user$project$Pages_Login_Update$localLogin = function (model) {
 	var createSessionRequest = A3(
 		_lukewestby$elm_http_builder$HttpBuilder$send,
 		_lukewestby$elm_http_builder$HttpBuilder$jsonReader(_user$project$Pages_Login_Update$decodeUserResponse),
-		_lukewestby$elm_http_builder$HttpBuilder$stringReader,
+		_lukewestby$elm_http_builder$HttpBuilder$jsonReader(_user$project$Pages_Login_Update$decodeErrorResponse),
 		A2(
 			_lukewestby$elm_http_builder$HttpBuilder$withJsonBody,
 			user,
@@ -11795,7 +11822,52 @@ var _user$project$Pages_Login_Update$update = F2(
 							_user$project$Pages_Login_Update$UserLoggedIn(_p3._0.data))
 						]));
 			case 'LoginFail':
-				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+				switch (_p3._0.ctor) {
+					case 'BadResponse':
+						var notifications = A2(
+							_elm_lang$core$Array$map,
+							function (error) {
+								return A3(_user$project$App_Notifications$Notification, _user$project$App_Notifications$Error, error, false);
+							},
+							_elm_lang$core$Basics$snd(_p3._0._0.data));
+						return A2(
+							_elm_lang$core$Platform_Cmd_ops['!'],
+							model,
+							_elm_lang$core$Native_List.fromArray(
+								[
+									_user$project$Pages_Login_Update$generateParentMessage(
+									_user$project$Pages_Login_Update$Notify(notifications))
+								]));
+					case 'UnexpectedPayload':
+						var notifications = _elm_lang$core$Array$fromList(
+							_elm_lang$core$Native_List.fromArray(
+								[
+									A3(_user$project$App_Notifications$Notification, _user$project$App_Notifications$Error, _p3._0._0, false)
+								]));
+						return A2(
+							_elm_lang$core$Platform_Cmd_ops['!'],
+							model,
+							_elm_lang$core$Native_List.fromArray(
+								[
+									_user$project$Pages_Login_Update$generateParentMessage(
+									_user$project$Pages_Login_Update$Notify(notifications))
+								]));
+					default:
+						var notificationMsg = 'No connection or server not available';
+						var notifications = _elm_lang$core$Array$fromList(
+							_elm_lang$core$Native_List.fromArray(
+								[
+									A3(_user$project$App_Notifications$Notification, _user$project$App_Notifications$Error, notificationMsg, false)
+								]));
+						return A2(
+							_elm_lang$core$Platform_Cmd_ops['!'],
+							model,
+							_elm_lang$core$Native_List.fromArray(
+								[
+									_user$project$Pages_Login_Update$generateParentMessage(
+									_user$project$Pages_Login_Update$Notify(notifications))
+								]));
+				}
 			case 'SetEmail':
 				return {
 					ctor: '_Tuple2',
@@ -12118,15 +12190,6 @@ var _user$project$Pages_SignUp_Update$update = F2(
 		}
 	});
 
-var _user$project$App_Notifications$Notification = F3(
-	function (a, b, c) {
-		return {level: a, content: b, dismissed: c};
-	});
-var _user$project$App_Notifications$Success = {ctor: 'Success'};
-var _user$project$App_Notifications$Info = {ctor: 'Info'};
-var _user$project$App_Notifications$Warning = {ctor: 'Warning'};
-var _user$project$App_Notifications$Error = {ctor: 'Error'};
-
 var _user$project$App_Common$PageNotFound = {ctor: 'PageNotFound'};
 var _user$project$App_Common$Landing = {ctor: 'Landing'};
 var _user$project$App_Common$SignUp = {ctor: 'SignUp'};
@@ -12134,6 +12197,9 @@ var _user$project$App_Common$Login = {ctor: 'Login'};
 var _user$project$App_Common$Noop = {ctor: 'Noop'};
 var _user$project$App_Common$SetActivePage = function (a) {
 	return {ctor: 'SetActivePage', _0: a};
+};
+var _user$project$App_Common$NotificationsReceived = function (a) {
+	return {ctor: 'NotificationsReceived', _0: a};
 };
 var _user$project$App_Common$UserLoggedIn = function (a) {
 	return {ctor: 'UserLoggedIn', _0: a};
@@ -12201,7 +12267,7 @@ var _user$project$App_Update$logoutUser = function () {
 	return A3(_elm_lang$core$Task$perform, _user$project$App_Common$LogoutFailed, _user$project$App_Common$LogoutSucceed, logoutRequest);
 }();
 var _user$project$App_Update$loginTranslator = _user$project$Pages_Login_Update$translator(
-	{onInternalMessage: _user$project$App_Common$PageLogin, onUserLoggedIn: _user$project$App_Common$UserLoggedIn});
+	{onInternalMessage: _user$project$App_Common$PageLogin, onUserLoggedIn: _user$project$App_Common$UserLoggedIn, onNotify: _user$project$App_Common$NotificationsReceived});
 var _user$project$App_Update$signUpTranslator = _user$project$Pages_SignUp_Update$translator(
 	{onInternalMessage: _user$project$App_Common$PageSignUp, onUserRegistered: _user$project$App_Common$UserRegistered});
 var _user$project$App_Update$emptyModel = {
@@ -12349,6 +12415,7 @@ var _user$project$App_Update$update = F2(
 						return model.notifications;
 					}
 				}();
+				var test = A2(_elm_lang$core$Debug$log, 'notifications', model.notifications);
 				return A2(
 					_elm_lang$core$Platform_Cmd_ops['!'],
 					_elm_lang$core$Native_Utils.update(
@@ -12408,6 +12475,15 @@ var _user$project$App_Update$update = F2(
 							{user: _p0._0}),
 						_elm_lang$core$Native_List.fromArray(
 							[])));
+			case 'NotificationsReceived':
+				var notifications$ = A2(_elm_lang$core$Array$append, model.notifications, _p0._0);
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						model,
+						{notifications: notifications$}),
+					_elm_lang$core$Native_List.fromArray(
+						[]));
 			default:
 				return A2(
 					_elm_lang$core$Platform_Cmd_ops['!'],
@@ -13211,11 +13287,16 @@ var _user$project$Components_Notificationbar$view = function (model) {
 			[
 				_elm_lang$html$Html_Attributes$class('row')
 			]),
-		_elm_lang$core$Array$toList(
+		A2(
+			_elm_lang$core$List$map,
+			_elm_lang$core$Basics$uncurry(_user$project$Components_Notificationbar$notificationItem),
 			A2(
-				_elm_lang$core$Array$indexedMap,
-				_user$project$Components_Notificationbar$notificationItem,
-				A2(_elm_lang$core$Array$filter, _user$project$Components_Notificationbar$isNotDismissed, model))));
+				_elm_lang$core$List$filter,
+				function (pair) {
+					return _user$project$Components_Notificationbar$isNotDismissed(
+						_elm_lang$core$Basics$snd(pair));
+				},
+				_elm_lang$core$Array$toIndexedList(model))));
 };
 
 var _user$project$Components_Navbar$userData = function (user) {
@@ -13420,7 +13501,7 @@ var _user$project$App_View$viewHeader = function (model) {
 			]));
 };
 var _user$project$App_View$loginTranslator = _user$project$Pages_Login_Update$translator(
-	{onInternalMessage: _user$project$App_Common$PageLogin, onUserLoggedIn: _user$project$App_Common$UserLoggedIn});
+	{onInternalMessage: _user$project$App_Common$PageLogin, onUserLoggedIn: _user$project$App_Common$UserLoggedIn, onNotify: _user$project$App_Common$NotificationsReceived});
 var _user$project$App_View$signUpTranslator = _user$project$Pages_SignUp_Update$translator(
 	{onInternalMessage: _user$project$App_Common$PageSignUp, onUserRegistered: _user$project$App_Common$UserRegistered});
 var _user$project$App_View$viewMainContent = function (model) {

@@ -10,7 +10,11 @@ import Array exposing (..)
 view : Array Notification -> Html Msg
 
 view  model =
-    model |> Array.filter isNotDismissed |> Array.indexedMap notificationItem |> toList |> div [ class "row" ]
+    model 
+    |> Array.toIndexedList 
+    |> List.filter (\pair -> snd pair |> isNotDismissed)
+    |> List.map (uncurry notificationItem) 
+    |> div [ class "row" ]
 
 notificationItem : Int -> Notification -> Html Msg
 notificationItem index notification =

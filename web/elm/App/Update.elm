@@ -60,7 +60,7 @@ loginTranslator =
     Login.translator {
         onInternalMessage = PageLogin,
         onUserLoggedIn = UserLoggedIn,
-        onNotify = NotificationReceived }
+        onNotify = NotificationsReceived }
 
 update : App.Common.Msg -> Model -> ( Model, Cmd App.Common.Msg )
 update appMsg model =
@@ -103,12 +103,14 @@ update appMsg model =
         ReceiveCommandMessage raw ->
              model ! [] 
         DismissNotification index ->
-            let updatedNotifications = 
-                case Array.get index model.notifications of 
-                    Just value ->
-                        Array.set index { value | dismissed = True } model.notifications
-                    Nothing ->
-                        model.notifications
+            let test = 
+                    Debug.log "notifications" model.notifications
+                updatedNotifications = 
+                    case Array.get index model.notifications of 
+                        Just value ->
+                            Array.set index { value | dismissed = True } model.notifications
+                        Nothing ->
+                            model.notifications
             in
                 {model | notifications = updatedNotifications } ! []
         LogoutSucceed _ ->
@@ -126,9 +128,11 @@ update appMsg model =
         UserLoggedIn authenticatedUser ->
             {model | user = authenticatedUser  } ! []
             |> andThen update (SetActivePage Landing)
-        NotificationsReceiced notifications ->
-            let notifications' = model.notifications.append notifications
-            {model | notifications = notifications') ! []
+        NotificationsReceived notifications ->
+            let notifications' =
+                 Array.append model.notifications notifications
+            in
+                {model | notifications = notifications'} ! []
         Noop -> 
             model ! []  
 

@@ -4,6 +4,7 @@ import Pages.SignUp.Update exposing (InternalMsg)
 import Phoenix.Socket
 import Phoenix.Channel
 import Phoenix.Push
+import Array exposing (..)
 import Json.Encode as JE
 import Json.Decode as JD exposing ((:=))
 import Dict
