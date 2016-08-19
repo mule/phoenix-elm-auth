@@ -50,11 +50,17 @@ init =
 
 signUpTranslator : SignUp.Translator App.Common.Msg 
 signUpTranslator =
-    SignUp.translator { onInternalMessage = PageSignUp , onUserRegistered = UserRegistered  } 
+    SignUp.translator {
+                        onInternalMessage = PageSignUp, 
+                        onUserRegistered = UserRegistered
+                        } 
 
 loginTranslator : Login.Translator App.Common.Msg
 loginTranslator =
-    Login.translator { onInternalMessage = PageLogin, onUserLoggedIn = UserLoggedIn }
+    Login.translator {
+        onInternalMessage = PageLogin,
+        onUserLoggedIn = UserLoggedIn,
+        onNotify = NotificationReceived }
 
 update : App.Common.Msg -> Model -> ( Model, Cmd App.Common.Msg )
 update appMsg model =
@@ -120,8 +126,8 @@ update appMsg model =
         UserLoggedIn authenticatedUser ->
             {model | user = authenticatedUser  } ! []
             |> andThen update (SetActivePage Landing)
-        Notify notification ->
-            let notifications' = model.notifications.push notification
+        NotificationsReceiced notifications ->
+            let notifications' = model.notifications.append notifications
             {model | notifications = notifications') ! []
         Noop -> 
             model ! []  

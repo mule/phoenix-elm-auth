@@ -30,6 +30,6 @@ type Msg
     | UserFetchFailed (HttpBuilder.Error String)
     | UserFetchSuccesfull (HttpBuilder.Response User)
     | UserLoggedIn User
-    | NotificationReceived Notification
+    | NotificationsReceived (Array Notification)
     | SetActivePage Page
     | Noop
