@@ -36,7 +36,10 @@ view model =
 
 signUpTranslator : SignUp.Translator App.Common.Msg 
 signUpTranslator =
-    SignUp.translator { onInternalMessage = PageSignUp , onUserRegistered = UserRegistered  } 
+    SignUp.translator { onInternalMessage = PageSignUp, 
+                        onUserRegistered = UserRegistered,
+                        onNotify = NotificationsReceived
+                          } 
 
 loginTranslator : Login.Translator App.Common.Msg
 loginTranslator =

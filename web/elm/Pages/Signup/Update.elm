@@ -3,7 +3,9 @@ import Pages.SignUp.Model exposing (..)
 import Http
 import HttpBuilder exposing (withHeader, withJsonBody, stringReader, jsonReader, send)
 import Task exposing (Task)
-import Json.Decode exposing (Decoder, bool, (:=))
+import Array exposing (..)
+import App.Notifications exposing (..)
+import Json.Decode exposing (Decoder, bool, object2, array, (:=))
 import Json.Encode exposing (encode, object, string)
 import String
 import Update.Extra exposing (andThen)
@@ -18,12 +20,13 @@ type InternalMsg
     | SetPasswordConfirm String
     | Register
     | RegisterSucceed (HttpBuilder.Response Bool)
-    | RegisterFail (HttpBuilder.Error String)
+    | RegisterFail (HttpBuilder.Error (Bool, Array String))
     | ValidateModel
     | Noop
 
 type OutMsg 
     = UserRegistered
+    | Notify (Array Notification)
 
 type Msg 
     = ForSelf InternalMsg
@@ -32,19 +35,21 @@ type Msg
 type alias TranslationDictionary msg =
     { onInternalMessage: InternalMsg -> msg
     , onUserRegistered: msg
+    , onNotify: (Array Notification) -> msg
     }
 
 type alias Translator msg =
     Msg -> msg
 
-
 translator : TranslationDictionary msg -> Translator msg
-translator { onInternalMessage, onUserRegistered } msg =
+translator { onInternalMessage, onUserRegistered, onNotify } msg =
     case msg of
         ForSelf internal ->
             onInternalMessage internal
         ForParent UserRegistered ->
-            onUserRegistered 
+            onUserRegistered
+        ForParent (Notify notifications) ->
+            onNotify notifications
 
 never : Never -> a
 never n =
@@ -100,15 +105,10 @@ update  msg model =
             ( { model | registrationPending = False }, (generateParentMessage UserRegistered) )
              
         RegisterFail  error ->
-            case  error of
-                HttpBuilder.BadResponse response ->
-                    case Debug.log "Register response status" response.status of
-                        422 -> 
-                            ( { model | registrationPending = False }, Cmd.none )
-                        _ ->
-                            ( { model | registrationPending = False }, Cmd.none )
-                _ ->
-                    ( { model | registrationPending = False }, Cmd.none)
+            let notifications =
+                createNotifications error
+            in
+                model ! [Notify notifications |> generateParentMessage]
         Noop ->
             (model, Cmd.none)
 
@@ -135,13 +135,19 @@ registerUser model =
             HttpBuilder.post url
             |> withHeader "Content-type" "application/json"
             |> withJsonBody user
-            |> send (jsonReader decodeRegisterResponse) stringReader
+            |> send (jsonReader decodeRegisterResponse) (jsonReader decodeErrorResponse)
     in
         Cmd.map ForSelf ( Task.perform  RegisterFail RegisterSucceed postRequest ) 
 
 decodeRegisterResponse : Decoder Bool
 decodeRegisterResponse = 
         "ok" := bool
+
+decodeErrorResponse : Decoder (Bool, Array String)
+decodeErrorResponse =
+        object2 (,)
+            ("ok" := bool)
+            ("errors" := array Json.Decode.string)
 
 validateRequired : String -> String -> Maybe String
 

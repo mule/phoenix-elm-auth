@@ -18,11 +18,17 @@ defmodule PhoenixAuthKata.UserController do
                 |> PhoenixAuthKata.Auth.login(user)
                 |> json(%{ok: true, data: user})
             {:error, changeset} ->
-                errors = Enum.into(changeset.errors, %{})
+                errors = changeset_errors_to_string changeset.errors
                 conn
                 |> put_status(422)
                 |> json(%{ok: false, errors: errors })
                 |> halt()
+        end
+    end
+
+    defp changeset_errors_to_string(errors) do
+        errors |> Enum.map fn(errorTuple) ->
+             "#{elem(errorTuple,0) |> to_string} #{elem(errorTuple,1)}"
         end
     end
 

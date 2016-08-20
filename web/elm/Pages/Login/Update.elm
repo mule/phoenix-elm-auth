@@ -11,7 +11,7 @@ import Array exposing (..)
 import Pages.Login.Model  exposing (..)
 import Json.Decode exposing (Decoder, bool, object4, object2, array, string, maybe, int, (:=))
 import Json.Encode exposing (encode, object, string)
-import App.Notifications exposing (Notification, NotificationLevel)
+import App.Notifications exposing (Notification, NotificationLevel, createNotifications)
 
 
 type InternalMsg
@@ -66,24 +66,11 @@ update msg model =
     case msg of
         LoginSucceed loginResponse ->
             model ! [generateParentMessage (UserLoggedIn loginResponse.data) ]
-        LoginFail (HttpBuilder.BadResponse response) ->
-            let notifications = 
-                snd response.data |> Array.map (\error -> Notification App.Notifications.Error error False)
-            in
-                model ! [generateParentMessage <| Notify notifications]
-        LoginFail (HttpBuilder.UnexpectedPayload error) ->
-            let notifications = 
-                    Array.fromList [Notification App.Notifications.Error error False]
+        LoginFail error ->
+           let notifications =
+                createNotifications error
             in
                 model ! [Notify notifications |> generateParentMessage]
-        LoginFail _ ->
-            let notificationMsg = 
-                "No connection or server not available"
-                notifications =
-                    Array.fromList [Notification App.Notifications.Error notificationMsg False]
-                in
-                    model ! [Notify notifications |> generateParentMessage]
-
         SetEmail emailTxt ->
             ({ model | email = emailTxt }, Cmd.none)
         SetPassword passwordTxt ->
